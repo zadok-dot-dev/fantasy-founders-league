@@ -81,6 +81,8 @@ nav.tabs button{
 nav.tabs button[aria-current="page"]{
   color:var(--ink);background:var(--paper-2);border-color:var(--rule);
 }
+nav.tabs button.signout{margin-left:10px;border-color:transparent;font-size:13px}
+nav.tabs button.signout:hover{color:var(--ink);text-decoration:underline}
 
 main{padding:28px 0 72px}
 .lede{max-width:62ch;color:var(--ink-soft);margin:0 0 26px}
@@ -201,6 +203,7 @@ footer.foot{border-top:1px solid var(--rule);margin-top:44px;padding:16px 0 0;co
     <nav class="tabs" id="tabs" hidden>
       <button data-screen="draft" aria-current="page">Your fund</button>
       <button data-screen="board">Leaderboard</button>
+      <button id="b-signout" class="signout">Sign out</button>
     </nav>
   </div>
 </header>
@@ -210,14 +213,14 @@ footer.foot{border-top:1px solid var(--rule);margin-top:44px;padding:16px 0 0;co
   <!-- GATE -->
   <section class="screen on" id="s-gate">
     <div class="gate sheet">
-      <h2>Open your fund</h2>
-      <p class="note">New here? Pick a fund name and a PIN — that's your account. Coming back? Same two things.</p>
+      <h2 id="gate-title">Open your fund</h2>
+      <p class="note" id="gate-note">Pick a fund name and a PIN — that's your account.</p>
       <label class="field"><span>Fund name</span><input id="f-fund" autocomplete="off" placeholder="Paper Wealth Capital" maxlength="40"></label>
       <label class="field" id="wrap-gp"><span>Your name</span><input id="f-gp" autocomplete="off" placeholder="Alex" maxlength="30"></label>
       <label class="field"><span>PIN</span><input id="f-pin" type="password" inputmode="numeric" autocomplete="off" placeholder="4+ digits" maxlength="12"></label>
       <div class="row-actions">
-        <button class="btn" id="b-create">Create fund</button>
-        <button class="btn ghost" id="b-signin">I already have one</button>
+        <button class="btn" id="b-go">Create fund</button>
+        <button class="btn ghost" id="b-mode">I already have one</button>
       </div>
       <div class="msg" id="gate-msg"></div>
     </div>
@@ -326,7 +329,7 @@ function show(name){
   ["gate","draft","board"].forEach(function(s){
     $("s-"+s).classList.toggle("on", s === name);
   });
-  Array.prototype.forEach.call(document.querySelectorAll("#tabs button"), function(b){
+  Array.prototype.forEach.call(document.querySelectorAll("#tabs button[data-screen]"), function(b){
     if(b.dataset.screen === name) b.setAttribute("aria-current","page");
     else b.removeAttribute("aria-current");
   });
@@ -335,39 +338,95 @@ function show(name){
 
 /* ---------- auth (name + PIN, friends-game grade) ---------- */
 
-$("b-create").addEventListener("click", function(){
+var mode = "create"; // "create" | "signin"
+
+function setMode(next){
+  mode = next;
+  var creating = mode === "create";
+  $("wrap-gp").hidden = !creating;
+  $("gate-title").textContent = creating ? "Open your fund" : "Sign back in";
+  $("gate-note").textContent  = creating
+    ? "Pick a fund name and a PIN — that's your account."
+    : "Your fund name and PIN. That's it.";
+  $("b-go").textContent   = creating ? "Create fund" : "Sign in";
+  $("b-mode").textContent = creating ? "I already have one" : "Create a new fund";
+  say("gate-msg","");
+}
+
+$("b-mode").addEventListener("click", function(){
+  setMode(mode === "create" ? "signin" : "create");
+  $("f-fund").focus();
+});
+
+// Sign in with an existing fund. Returns a promise; `quiet` suppresses
+// the "no match" error so the create flow can fall through to it.
+function signIn(fund, pin, quiet){
+  return db.rpc("verify_manager", {p_fund_name:fund, p_pin:pin}).then(function(r){
+    if(r.error){ say("gate-msg","Couldn't sign in: " + r.error.message, "bad"); return false; }
+    if(!r.data){
+      if(!quiet) say("gate-msg","No fund matches that name and PIN.","bad");
+      return false;
+    }
+    return db.from("managers_public").select("id,fund_name,display_name").eq("id", r.data).single()
+      .then(function(m){
+        if(m.error || !m.data){ say("gate-msg","Signed in, but couldn't load the fund.","bad"); return false; }
+        signedIn(m.data);
+        return true;
+      });
+  });
+}
+
+$("b-go").addEventListener("click", function(){
   var fund = $("f-fund").value.trim();
   var gp   = $("f-gp").value.trim();
   var pin  = $("f-pin").value.trim();
+
+  if(mode === "signin"){
+    if(!fund || !pin) return say("gate-msg","Enter your fund name and PIN.","bad");
+    say("gate-msg","Checking…");
+    return signIn(fund, pin, false);
+  }
+
   if(!fund || !gp || pin.length < 4){
     return say("gate-msg","Fill in a fund name, your name, and a PIN of at least 4 characters.","bad");
   }
   say("gate-msg","Opening the fund…");
   db.rpc("create_manager", {p_fund_name:fund, p_display_name:gp, p_pin:pin})
     .then(function(r){
-      if(r.error){
-        return say("gate-msg", r.error.message || "Couldn't create the fund.", "bad");
+      if(!r.error){
+        var m = Array.isArray(r.data) ? r.data[0] : r.data;
+        if(m && m.id) return signedIn(m);
+        return say("gate-msg","Couldn't create the fund. Try again.","bad");
       }
-      var m = Array.isArray(r.data) ? r.data[0] : r.data;
-      if(!m || !m.id) return say("gate-msg","Couldn't create the fund. Try again.","bad");
-      signedIn(m);
+      // Name already exists: if the PIN matches, just sign them in.
+      if(/taken/i.test(r.error.message || "")){
+        say("gate-msg","That fund already exists — signing you in…");
+        return signIn(fund, pin, true).then(function(ok){
+          if(!ok) say("gate-msg","That fund name is taken, and the PIN doesn't match it.","bad");
+        });
+      }
+      say("gate-msg", r.error.message || "Couldn't create the fund.", "bad");
     });
 });
 
-$("b-signin").addEventListener("click", function(){
-  var fund = $("f-fund").value.trim();
-  var pin  = $("f-pin").value.trim();
-  if(!fund || !pin) return say("gate-msg","Enter your fund name and PIN.","bad");
-  say("gate-msg","Checking…");
-  db.rpc("verify_manager", {p_fund_name:fund, p_pin:pin}).then(function(r){
-    if(r.error) return say("gate-msg","Couldn't sign in: " + r.error.message, "bad");
-    if(!r.data) return say("gate-msg","No fund matches that name and PIN.","bad");
-    return db.from("managers_public").select("id,fund_name,display_name").eq("id", r.data).single()
-      .then(function(m){
-        if(m.error || !m.data) return say("gate-msg","Signed in, but couldn't load the fund.","bad");
-        signedIn(m.data);
-      });
+// Enter submits from any field
+["f-fund","f-gp","f-pin"].forEach(function(id){
+  $(id).addEventListener("keydown", function(e){
+    if(e.key === "Enter"){ e.preventDefault(); $("b-go").click(); }
   });
+});
+
+$("b-signout").addEventListener("click", function(){
+  me = null;
+  picks = {};
+  activeFilter = 1;
+  store("ffl_me", null);
+  $("tabs").hidden = true;
+  $("draft-live").hidden = false;
+  $("draft-done").hidden = true;
+  $("f-fund").value = ""; $("f-gp").value = ""; $("f-pin").value = "";
+  setMode("signin");
+  show("gate");
 });
 
 function signedIn(m){
@@ -592,7 +651,7 @@ function loadBoard(){
 
 /* ---------- boot ---------- */
 
-Array.prototype.forEach.call(document.querySelectorAll("#tabs button"), function(b){
+Array.prototype.forEach.call(document.querySelectorAll("#tabs button[data-screen]"), function(b){
   b.addEventListener("click", function(){ show(b.dataset.screen); });
 });
 
