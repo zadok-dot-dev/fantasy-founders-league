@@ -190,6 +190,28 @@ table.board th.num,table.board td.num{text-align:right;padding-right:0}
 footer.foot{border-top:1px solid var(--rule);margin-top:44px;padding:16px 0 0;color:var(--ink-soft);font-size:12.5px}
 .tablewrap{overflow-x:auto}
 .spin{color:var(--ink-soft);padding:24px 0}
+
+/* how it works */
+.how-gate{max-width:640px;margin:34px auto 0}
+.how h2{font-size:22px;margin-bottom:6px}
+.how h3{font-size:16px;margin:26px 0 8px}
+.how p{margin:0 0 12px;max-width:66ch}
+.how > p:first-of-type{color:var(--ink-soft)}
+.how ol.steps{list-style:none;counter-reset:s;margin:0 0 6px;padding:0}
+.how ol.steps li{counter-increment:s;padding:10px 0 10px 38px;position:relative;border-bottom:1px solid var(--rule);max-width:66ch}
+.how ol.steps li::before{
+  content:counter(s);position:absolute;left:0;top:10px;
+  font-family:Newsreader,serif;font-size:15px;color:var(--brass);
+}
+.how ol.steps li b{font-weight:500}
+.how ol.steps li span{display:block;color:var(--ink-soft);font-size:13.5px}
+table.scoring{width:100%;border-collapse:collapse;max-width:560px}
+table.scoring th{text-align:left;font-weight:500;font-size:12.5px;color:var(--ink-soft);
+  border-bottom:1px solid var(--rule-strong);padding:0 10px 6px 0}
+table.scoring th.num,table.scoring td.num{text-align:right;padding-right:0}
+table.scoring td{border-bottom:1px solid var(--rule);padding:8px 10px 8px 0}
+table.scoring td.num{font-family:Newsreader,serif;font-size:16px}
+.fine{font-size:13px;color:var(--ink-soft);max-width:66ch}
 </style>
 </head>
 <body>
@@ -203,6 +225,7 @@ footer.foot{border-top:1px solid var(--rule);margin-top:44px;padding:16px 0 0;co
     <nav class="tabs" id="tabs" hidden>
       <button data-screen="draft" aria-current="page">Your fund</button>
       <button data-screen="board">Leaderboard</button>
+      <button data-screen="how">How it works</button>
       <button id="b-signout" class="signout">Sign out</button>
     </nav>
   </div>
@@ -224,6 +247,12 @@ footer.foot{border-top:1px solid var(--rule);margin-top:44px;padding:16px 0 0;co
       </div>
       <div class="msg" id="gate-msg"></div>
     </div>
+    <div class="how-gate" id="how-gate"></div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="screen" id="s-how">
+    <div id="how-tab"></div>
   </section>
 
   <!-- DRAFT / PORTFOLIO -->
@@ -330,7 +359,7 @@ function show(name){
   if(!me) name = "gate";
   $("tabs").hidden = !me;
 
-  ["gate","draft","board"].forEach(function(s){
+  ["gate","draft","board","how"].forEach(function(s){
     $("s-"+s).classList.toggle("on", s === name);
   });
   Array.prototype.forEach.call(document.querySelectorAll("#tabs button[data-screen]"), function(b){
@@ -339,6 +368,45 @@ function show(name){
   });
   if(name === "board") loadBoard();
 }
+
+/* ---------- how it works (rendered in two places) ---------- */
+
+var HOW = [
+'<div class="how">',
+  '<h2>How it works</h2>',
+  '<p>You run a $100M venture fund. You draft five startups. Real news about those companies moves your score.</p>',
+
+  '<h3>Building your fund</h3>',
+  '<ol class="steps">',
+    '<li><b>Open a fund</b><span>Pick a fund name and a PIN. That is your whole account.</span></li>',
+    '<li><b>Fill five slots</b><span>One company per stage — an anchor decacorn, a growth-stage name, a Series B, an early bet — plus a wildcard from any stage.</span></li>',
+    '<li><b>Stay under $100M</b><span>Every company has a price. An anchor eats nearly half your fund, so a big name at the top means going cheap further down.</span></li>',
+    '<li><b>Lock it in</b><span>Your portfolio is final for the season. Pick carefully.</span></li>',
+  '</ol>',
+
+  '<h3>Scoring</h3>',
+  '<p>Each week the commissioner logs what actually happened to these companies. Points land on every fund holding them.</p>',
+  '<div class="tablewrap"><table class="scoring">',
+    '<thead><tr><th>What happens</th><th class="num">Points</th></tr></thead><tbody>',
+    '<tr><td>Goes public or gets acquired</td><td class="num">+50</td></tr>',
+    '<tr><td>Raises at a higher valuation</td><td class="num">+15</td></tr>',
+    '<tr><td>Raises a round</td><td class="num">+10</td></tr>',
+    '<tr><td>Big launch or a viral moment</td><td class="num">+10</td></tr>',
+    '<tr><td>Raises at a lower valuation</td><td class="num">&minus;15</td></tr>',
+    '<tr><td>Layoffs</td><td class="num">&minus;10</td></tr>',
+    '<tr><td>Founder or exec walks</td><td class="num">&minus;10</td></tr>',
+    '<tr><td>Shuts down</td><td class="num">&minus;30</td></tr>',
+    '</tbody>',
+  '</table></div>',
+
+  '<h3>Winning</h3>',
+  '<p>Your fund scores the combined points of all five holdings. Highest total on the leaderboard takes it.</p>',
+  '<p class="fine">Company prices are set from recent reported valuations and are approximate. Scoring is a judgment call by the commissioner, not an automated feed — the aim is a fun league, not a real index.</p>',
+'</div>'
+].join("");
+
+$("how-gate").innerHTML = HOW;
+$("how-tab").innerHTML  = HOW;
 
 /* ---------- auth (name + PIN, friends-game grade) ---------- */
 
