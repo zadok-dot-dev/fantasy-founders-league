@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fantasy Founders League</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Sans:wght@400;450;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#ECEFE9;
+  --paper-2:#E3E8DF;
+  --ink:#17211D;
+  --ink-soft:#4C5A53;
+  --rule:#C2CCBE;
+  --rule-strong:#93A28E;
+  --gain:#1C6B45;
+  --loss:#9A2B22;
+  --brass:#8A6A17;
+  --field:#F6F8F3;
+
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+:root:not([data-theme="light"]){
+  @media (prefers-color-scheme: dark){
+    --paper:#141A17;
+    --paper-2:#1B231F;
+    --ink:#E6EBE4;
+    --ink-soft:#94A39B;
+    --rule:#2E3A34;
+    --rule-strong:#48574F;
+    --gain:#58C08A;
+    --loss:#E0776B;
+    --brass:#D2AC4E;
+    --field:#101512;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#141A17;
+  --paper-2:#1B231F;
+  --ink:#E6EBE4;
+  --ink-soft:#94A39B;
+  --rule:#2E3A34;
+  --rule-strong:#48574F;
+  --gain:#58C08A;
+  --loss:#E0776B;
+  --brass:#D2AC4E;
+  --field:#101512;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:15px;line-height:1.55;
+  font-variant-numeric:tabular-nums;
+}
+h1,h2,h3{font-family:Newsreader,Georgia,"Times New Roman",serif;font-weight:500;margin:0;line-height:1.15}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+/* masthead */
+header.top{border-bottom:1px solid var(--rule-strong);background:var(--paper)}
+.top-in{max-width:1080px;margin:0 auto;padding:18px 20px 14px;
+  display:flex;gap:18px;align-items:baseline;flex-wrap:wrap}
+.mark{font-family:Newsreader,serif;font-size:26px;letter-spacing:-.01em}
+.mark em{font-style:italic;color:var(--brass)}
+.sub{color:var(--ink-soft);font-size:13px}
+nav.tabs{margin-left:auto;display:flex;gap:2px}
+nav.tabs button{
+  background:none;border:1px solid transparent;border-bottom:none;
+  padding:7px 14px;font-size:14px;color:var(--ink-soft);border-radius:3px 3px 0 0;
+}
+nav.tabs button[aria-current="page"]{
+  color:var(--ink);background:var(--paper-2);border-color:var(--rule);
+}
+
+main{padding:28px 0 72px}
+.lede{max-width:62ch;color:var(--ink-soft);margin:0 0 26px}
+.screen{display:none}
+.screen.on{display:block}
+
+/* term sheet card */
+.sheet{background:var(--paper-2);border:1px solid var(--rule);border-top:3px solid var(--rule-strong);padding:22px 22px 26px}
+.sheet h2{font-size:23px;margin-bottom:4px}
+.sheet .note{color:var(--ink-soft);font-size:13.5px;margin:0 0 18px}
+
+/* gate */
+.gate{max-width:440px;margin:8px auto}
+.field{display:block;margin-bottom:14px}
+.field span{display:block;font-size:13px;color:var(--ink-soft);margin-bottom:5px}
+.field input{
+  width:100%;padding:10px 12px;background:var(--field);color:var(--ink);
+  border:1px solid var(--rule);border-radius:2px;font:inherit;
+}
+.field input:focus{border-color:var(--rule-strong)}
+.btn{
+  background:var(--ink);color:var(--paper);border:1px solid var(--ink);
+  padding:10px 18px;border-radius:2px;font-weight:500;
+}
+.btn:hover{background:var(--ink-soft);border-color:var(--ink-soft)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn.ghost{background:none;color:var(--ink);border-color:var(--rule-strong)}
+.btn.ghost:hover{background:var(--paper)}
+.row-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.msg{font-size:13.5px;margin-top:12px;min-height:1.2em}
+.msg.bad{color:var(--loss)}
+.msg.ok{color:var(--gain)}
+
+/* draft layout */
+.draft-grid{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:26px;align-items:start}
+@media (max-width:860px){.draft-grid{grid-template-columns:1fr}}
+
+.capital{border:1px solid var(--rule);background:var(--paper-2);padding:16px 16px 18px;position:sticky;top:calc(14px + env(safe-area-inset-top,0px))}
+@media (max-width:860px){.capital{position:static}}
+.capital h3{font-size:16px;margin-bottom:2px}
+.cap-figure{font-family:Newsreader,serif;font-size:38px;line-height:1.05;margin:8px 0 2px}
+.cap-figure.over{color:var(--loss)}
+.cap-note{font-size:13px;color:var(--ink-soft);margin-bottom:14px}
+.meter{height:5px;background:var(--rule);margin-bottom:16px}
+.meter i{display:block;height:100%;background:var(--gain)}
+.meter i.over{background:var(--loss)}
+
+ol.slots{list-style:none;margin:0 0 16px;padding:0;border-top:1px solid var(--rule)}
+ol.slots li{border-bottom:1px solid var(--rule);padding:9px 0;display:flex;gap:10px;align-items:baseline}
+.slot-n{font-family:Newsreader,serif;font-size:15px;color:var(--brass);width:1.4em;flex:none}
+.slot-body{flex:1;min-width:0}
+.slot-label{font-size:12.5px;color:var(--ink-soft)}
+.slot-pick{font-size:14.5px}
+.slot-pick.empty{color:var(--ink-soft);font-style:italic}
+.slot-cost{font-size:13px;color:var(--ink-soft);flex:none}
+.slot-drop{background:none;border:none;color:var(--ink-soft);padding:0 0 0 8px;font-size:15px;line-height:1;flex:none}
+.slot-drop:hover{color:var(--loss)}
+
+/* pool */
+.pool-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:10px}
+.pool-head h3{font-size:18px}
+.pool-head .count{font-size:13px;color:var(--ink-soft)}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.filters button{
+  background:none;border:1px solid var(--rule);color:var(--ink-soft);
+  padding:5px 11px;font-size:13px;border-radius:2px;
+}
+.filters button[aria-pressed="true"]{border-color:var(--ink);color:var(--ink);background:var(--paper-2)}
+
+table.pool{width:100%;border-collapse:collapse}
+table.pool th{
+  text-align:left;font-weight:500;font-size:12.5px;color:var(--ink-soft);
+  border-bottom:1px solid var(--rule-strong);padding:0 8px 6px 0;
+}
+table.pool th.num,table.pool td.num{text-align:right;padding-right:0}
+table.pool td{border-bottom:1px solid var(--rule);padding:9px 8px 9px 0;vertical-align:baseline}
+table.pool tr.picked td{opacity:.42}
+.co-name{font-size:15px}
+.co-sector{font-size:12.5px;color:var(--ink-soft)}
+.co-val{font-size:12.5px;color:var(--ink-soft)}
+.unverified{color:var(--brass);font-size:12px}
+.pick-btn{
+  background:none;border:1px solid var(--rule-strong);color:var(--ink);
+  padding:4px 12px;font-size:13px;border-radius:2px;white-space:nowrap;
+}
+.pick-btn:hover:not([disabled]){background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.pick-btn[disabled]{opacity:.35;cursor:not-allowed}
+
+/* portfolio / leaderboard */
+table.board{width:100%;border-collapse:collapse}
+table.board th{text-align:left;font-weight:500;font-size:12.5px;color:var(--ink-soft);
+  border-bottom:1px solid var(--rule-strong);padding:0 10px 6px 0}
+table.board td{border-bottom:1px solid var(--rule);padding:11px 10px 11px 0}
+table.board th.num,table.board td.num{text-align:right;padding-right:0}
+.rank{font-family:Newsreader,serif;color:var(--brass);width:2em}
+.pts{font-family:Newsreader,serif;font-size:19px}
+.pts.up{color:var(--gain)}
+.pts.down{color:var(--loss)}
+.you{background:var(--paper-2)}
+.fund-name{font-size:15.5px}
+.gp{font-size:12.5px;color:var(--ink-soft)}
+
+.empty{border:1px dashed var(--rule-strong);padding:26px;text-align:center;color:var(--ink-soft)}
+.empty p{margin:0 0 14px}
+footer.foot{border-top:1px solid var(--rule);margin-top:44px;padding:16px 0 0;color:var(--ink-soft);font-size:12.5px}
+.tablewrap{overflow-x:auto}
+.spin{color:var(--ink-soft);padding:24px 0}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <div>
+      <div class="mark">Fantasy <em>Founders</em> League</div>
+      <div class="sub">Draft five startups. Run a $100M fund. Beat your friends.</div>
+    </div>
+    <nav class="tabs" id="tabs" hidden>
+      <button data-screen="draft" aria-current="page">Your fund</button>
+      <button data-screen="board">Leaderboard</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- GATE -->
+  <section class="screen on" id="s-gate">
+    <div class="gate sheet">
+      <h2>Open your fund</h2>
+      <p class="note">New here? Pick a fund name and a PIN — that's your account. Coming back? Same two things.</p>
+      <label class="field"><span>Fund name</span><input id="f-fund" autocomplete="off" placeholder="Paper Wealth Capital" maxlength="40"></label>
+      <label class="field" id="wrap-gp"><span>Your name</span><input id="f-gp" autocomplete="off" placeholder="Alex" maxlength="30"></label>
+      <label class="field"><span>PIN</span><input id="f-pin" type="password" inputmode="numeric" autocomplete="off" placeholder="4+ digits" maxlength="12"></label>
+      <div class="row-actions">
+        <button class="btn" id="b-create">Create fund</button>
+        <button class="btn ghost" id="b-signin">I already have one</button>
+      </div>
+      <div class="msg" id="gate-msg"></div>
+    </div>
+  </section>
+
+  <!-- DRAFT / PORTFOLIO -->
+  <section class="screen" id="s-draft">
+    <div id="draft-live">
+      <p class="lede" id="draft-lede">Five slots, one per stage, plus a wildcard. Total spend can't cross $100M — so an anchor position costs you somewhere else.</p>
+      <div class="draft-grid">
+        <aside class="capital">
+          <h3>Capital committed</h3>
+          <div class="cap-figure" id="cap-fig">$0M</div>
+          <div class="cap-note" id="cap-note">of $100M available</div>
+          <div class="meter"><i id="cap-bar" style="width:0%"></i></div>
+          <ol class="slots" id="slots"></ol>
+          <button class="btn" id="b-lock" disabled>Lock in portfolio</button>
+          <div class="msg" id="draft-msg"></div>
+        </aside>
+        <div>
+          <div class="pool-head">
+            <h3>Free agent pool</h3>
+            <span class="count" id="pool-count"></span>
+          </div>
+          <div class="filters" id="filters"></div>
+          <div class="tablewrap">
+            <table class="pool">
+              <thead><tr>
+                <th>Company</th><th class="num">Cost</th><th></th>
+              </tr></thead>
+              <tbody id="pool-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="draft-done" hidden>
+      <div class="sheet">
+        <h2 id="done-fund">—</h2>
+        <p class="note" id="done-sub">Portfolio locked</p>
+        <div class="tablewrap">
+          <table class="board">
+            <thead><tr><th></th><th>Position</th><th class="num">Cost</th><th class="num">Points</th></tr></thead>
+            <tbody id="done-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEADERBOARD -->
+  <section class="screen" id="s-board">
+    <p class="lede">Scores update when the admin logs a funding round, a launch, a down-round or a shutdown against a company in your portfolio.</p>
+    <div class="tablewrap">
+      <table class="board">
+        <thead><tr><th class="rank"></th><th>Fund</th><th class="num">Slots</th><th class="num">Points</th></tr></thead>
+        <tbody id="board-body"></tbody>
+      </table>
+    </div>
+    <div id="board-empty" hidden class="empty"><p>No funds have been opened yet. Yours can be the first.</p></div>
+  </section>
+
+  <footer class="foot">
+    Valuations in the pool are unverified starting figures — check them before you run a real season.
+  </footer>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+(function(){
+"use strict";
+
+var SB_URL = "https://jkbqpjqehzcjcsjnoobi.supabase.co";
+var SB_KEY = "sb_publishable_Pn-9srwR262fL859vOOtsA_UEsnNT3f";
+var db = window.supabase.createClient(SB_URL, SB_KEY);
+
+var BUDGET = 100;
+var TIERS = [
+  {n:1, label:"Mega / anchor",  hint:"Decacorn, $10B+"},
+  {n:2, label:"Growth tech",    hint:"Series C/D, $1B–$10B"},
+  {n:3, label:"Mid-stage",      hint:"Series B, $100M–$1B"},
+  {n:4, label:"Early stage",    hint:"Seed / Series A"},
+  {n:5, label:"Wildcard",       hint:"Any stage, whatever's left"}
+];
+
+var me = null;            // {id, fund_name, display_name}
+var startups = [];        // full pool
+var picks = {};           // slot -> startup object
+var activeFilter = 1;
+
+function $(id){ return document.getElementById(id); }
+function money(m){ return "$" + m + "M"; }
+function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+  return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+
+function store(k,v){ try{ if(v===null) localStorage.removeItem(k); else localStorage.setItem(k,v);}catch(e){} }
+function recall(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+
+function say(el, text, kind){
+  var n = $(el); n.textContent = text || "";
+  n.className = "msg" + (kind ? " " + kind : "");
+}
+
+function show(name){
+  ["gate","draft","board"].forEach(function(s){
+    $("s-"+s).classList.toggle("on", s === name);
+  });
+  Array.prototype.forEach.call(document.querySelectorAll("#tabs button"), function(b){
+    if(b.dataset.screen === name) b.setAttribute("aria-current","page");
+    else b.removeAttribute("aria-current");
+  });
+  if(name === "board") loadBoard();
+}
+
+/* ---------- auth (name + PIN, friends-game grade) ---------- */
+
+$("b-create").addEventListener("click", function(){
+  var fund = $("f-fund").value.trim();
+  var gp   = $("f-gp").value.trim();
+  var pin  = $("f-pin").value.trim();
+  if(!fund || !gp || pin.length < 4){
+    return say("gate-msg","Fill in a fund name, your name, and a PIN of at least 4 characters.","bad");
+  }
+  say("gate-msg","Opening the fund…");
+  db.rpc("create_manager", {p_fund_name:fund, p_display_name:gp, p_pin:pin})
+    .then(function(r){
+      if(r.error){
+        return say("gate-msg", r.error.message || "Couldn't create the fund.", "bad");
+      }
+      var m = Array.isArray(r.data) ? r.data[0] : r.data;
+      if(!m || !m.id) return say("gate-msg","Couldn't create the fund. Try again.","bad");
+      signedIn(m);
+    });
+});
+
+$("b-signin").addEventListener("click", function(){
+  var fund = $("f-fund").value.trim();
+  var pin  = $("f-pin").value.trim();
+  if(!fund || !pin) return say("gate-msg","Enter your fund name and PIN.","bad");
+  say("gate-msg","Checking…");
+  db.rpc("verify_manager", {p_fund_name:fund, p_pin:pin}).then(function(r){
+    if(r.error) return say("gate-msg","Couldn't sign in: " + r.error.message, "bad");
+    if(!r.data) return say("gate-msg","No fund matches that name and PIN.","bad");
+    return db.from("managers_public").select("id,fund_name,display_name").eq("id", r.data).single()
+      .then(function(m){
+        if(m.error || !m.data) return say("gate-msg","Signed in, but couldn't load the fund.","bad");
+        signedIn(m.data);
+      });
+  });
+});
+
+function signedIn(m){
+  me = m;
+  store("ffl_me", JSON.stringify(m));
+  $("tabs").hidden = false;
+  say("gate-msg","");
+  show("draft");
+  loadPool().then(loadMyRoster);
+}
+
+/* ---------- pool + draft ---------- */
+
+function loadPool(){
+  $("pool-body").innerHTML = '<tr><td colspan="3" class="spin">Loading the pool…</td></tr>';
+  return db.from("startups").select("*").order("tier").order("cost_millions",{ascending:false})
+    .then(function(r){
+      if(r.error){
+        $("pool-body").innerHTML = '<tr><td colspan="3" class="spin">Couldn\'t load companies: ' + esc(r.error.message) + '</td></tr>';
+        return;
+      }
+      startups = r.data || [];
+      renderFilters();
+      renderPool();
+      renderSlots();
+    });
+}
+
+function loadMyRoster(){
+  if(!me) return;
+  return db.from("rosters").select("slot, startups(*)").eq("manager_id", me.id).order("slot")
+    .then(function(r){
+      if(r.error || !r.data || !r.data.length) return;
+      renderLocked(r.data);
+    });
+}
+
+function renderFilters(){
+  var f = $("filters"); f.innerHTML = "";
+  TIERS.forEach(function(t){
+    var b = document.createElement("button");
+    b.textContent = "Slot " + t.n + " · " + t.label;
+    b.setAttribute("aria-pressed", String(t.n === activeFilter));
+    b.addEventListener("click", function(){
+      activeFilter = t.n; renderFilters(); renderPool();
+    });
+    f.appendChild(b);
+  });
+}
+
+function spent(){
+  return Object.keys(picks).reduce(function(a,k){ return a + picks[k].cost_millions; }, 0);
+}
+function remaining(){ return BUDGET - spent(); }
+function isPicked(id){
+  return Object.keys(picks).some(function(k){ return picks[k].id === id; });
+}
+
+function eligible(s){
+  // slot 1-4 must match tier; slot 5 takes anything
+  if(activeFilter === 5) return true;
+  return s.tier === activeFilter;
+}
+
+function renderPool(){
+  var tbody = $("pool-body");
+  var list = startups.filter(eligible);
+  $("pool-count").textContent = list.length + " available for slot " + activeFilter;
+  tbody.innerHTML = "";
+
+  if(!list.length){
+    tbody.innerHTML = '<tr><td colspan="3" class="spin">No companies in this tier yet.</td></tr>';
+    return;
+  }
+
+  var budgetLeftIfSwapped = remaining() + (picks[activeFilter] ? picks[activeFilter].cost_millions : 0);
+
+  list.forEach(function(s){
+    var taken = isPicked(s.id);
+    var affordable = s.cost_millions <= budgetLeftIfSwapped;
+    var tr = document.createElement("tr");
+    if(taken) tr.className = "picked";
+
+    tr.innerHTML =
+      '<td><div class="co-name">' + esc(s.name) + '</div>' +
+      '<div class="co-sector">' + esc(s.sector || "") + '</div>' +
+      '<div class="co-val">' + esc(s.valuation_note || "") +
+      (s.verified ? '' : ' <span class="unverified">unverified</span>') + '</div></td>' +
+      '<td class="num">' + money(s.cost_millions) + '</td>' +
+      '<td class="num"></td>';
+
+    var btn = document.createElement("button");
+    btn.className = "pick-btn";
+    if(taken){ btn.textContent = "In portfolio"; btn.disabled = true; }
+    else if(!affordable){ btn.textContent = "Over budget"; btn.disabled = true; }
+    else { btn.textContent = "Draft"; btn.addEventListener("click", function(){ pick(s); }); }
+    tr.lastElementChild.appendChild(btn);
+    tbody.appendChild(tr);
+  });
+}
+
+function pick(s){
+  picks[activeFilter] = s;
+  renderSlots(); renderPool();
+  var next = TIERS.map(function(t){return t.n;}).filter(function(n){ return !picks[n]; })[0];
+  if(next){ activeFilter = next; renderFilters(); renderPool(); }
+}
+
+function drop(slot){
+  delete picks[slot];
+  renderSlots(); renderPool();
+}
+
+function renderSlots(){
+  var ol = $("slots"); ol.innerHTML = "";
+  TIERS.forEach(function(t){
+    var p = picks[t.n];
+    var li = document.createElement("li");
+    li.innerHTML =
+      '<span class="slot-n">' + t.n + '</span>' +
+      '<span class="slot-body">' +
+        '<span class="slot-pick' + (p ? '' : ' empty') + '">' + (p ? esc(p.name) : t.label) + '</span>' +
+        '<span class="slot-label">' + (p ? esc(t.label) : esc(t.hint)) + '</span>' +
+      '</span>' +
+      '<span class="slot-cost">' + (p ? money(p.cost_millions) : "—") + '</span>';
+    if(p){
+      var x = document.createElement("button");
+      x.className = "slot-drop"; x.textContent = "×";
+      x.setAttribute("aria-label","Remove " + p.name);
+      x.addEventListener("click", function(){ drop(t.n); });
+      li.appendChild(x);
+    }
+    ol.appendChild(li);
+  });
+
+  var used = spent(), over = used > BUDGET;
+  $("cap-fig").textContent = money(used);
+  $("cap-fig").className = "cap-figure" + (over ? " over" : "");
+  $("cap-note").textContent = over
+    ? money(used - BUDGET) + " over the cap"
+    : "of " + money(BUDGET) + " available";
+  var bar = $("cap-bar");
+  bar.style.width = Math.min(100, (used / BUDGET) * 100) + "%";
+  bar.className = over ? "over" : "";
+
+  var full = TIERS.every(function(t){ return !!picks[t.n]; });
+  $("b-lock").disabled = !(full && !over);
+}
+
+$("b-lock").addEventListener("click", function(){
+  if(!me) return;
+  var rows = TIERS.map(function(t){
+    return { manager_id: me.id, startup_id: picks[t.n].id, slot: t.n };
+  });
+  $("b-lock").disabled = true;
+  say("draft-msg","Locking in…");
+  db.from("rosters").insert(rows).then(function(r){
+    if(r.error){
+      $("b-lock").disabled = false;
+      var dup = /duplicate|unique/i.test(r.error.message);
+      return say("draft-msg", dup
+        ? "This fund already has a locked portfolio."
+        : "Couldn't lock it in: " + r.error.message, "bad");
+    }
+    say("draft-msg","");
+    loadMyRoster();
+  });
+});
+
+function renderLocked(rows){
+  $("draft-live").hidden = true;
+  $("draft-done").hidden = false;
+  $("done-fund").textContent = me.fund_name;
+  var total = rows.reduce(function(a,r){ return a + (r.startups.total_points||0); }, 0);
+  var cost  = rows.reduce(function(a,r){ return a + r.startups.cost_millions; }, 0);
+  $("done-sub").textContent = "General partner " + me.display_name +
+    " · " + money(cost) + " deployed · " + total + " points";
+  var body = $("done-body"); body.innerHTML = "";
+  rows.forEach(function(r){
+    var s = r.startups, t = TIERS[r.slot-1];
+    var pts = s.total_points || 0;
+    var tr = document.createElement("tr");
+    tr.innerHTML =
+      '<td class="rank">' + r.slot + '</td>' +
+      '<td><div class="fund-name">' + esc(s.name) + '</div>' +
+      '<div class="gp">' + esc(t ? t.label : "") + (s.last_move_note ? " · " + esc(s.last_move_note) : "") + '</div></td>' +
+      '<td class="num">' + money(s.cost_millions) + '</td>' +
+      '<td class="num"><span class="pts ' + (pts>0?"up":pts<0?"down":"") + '">' +
+        (pts>0?"+":"") + pts + '</span></td>';
+    body.appendChild(tr);
+  });
+}
+
+/* ---------- leaderboard ---------- */
+
+function loadBoard(){
+  var body = $("board-body");
+  body.innerHTML = '<tr><td colspan="4" class="spin">Loading…</td></tr>';
+  db.from("leaderboard").select("*").order("total_points",{ascending:false}).then(function(r){
+    if(r.error){
+      body.innerHTML = '<tr><td colspan="4" class="spin">Couldn\'t load the leaderboard: ' + esc(r.error.message) + '</td></tr>';
+      return;
+    }
+    var rows = r.data || [];
+    $("board-empty").hidden = rows.length > 0;
+    body.innerHTML = "";
+    rows.forEach(function(m, i){
+      var pts = m.total_points || 0;
+      var tr = document.createElement("tr");
+      if(me && m.manager_id === me.id) tr.className = "you";
+      tr.innerHTML =
+        '<td class="rank">' + (i+1) + '</td>' +
+        '<td><div class="fund-name">' + esc(m.fund_name) + '</div>' +
+        '<div class="gp">' + esc(m.display_name) + '</div></td>' +
+        '<td class="num">' + m.slots_filled + ' / 5</td>' +
+        '<td class="num"><span class="pts ' + (pts>0?"up":pts<0?"down":"") + '">' +
+          (pts>0?"+":"") + pts + '</span></td>';
+      body.appendChild(tr);
+    });
+  });
+}
+
+/* ---------- boot ---------- */
+
+Array.prototype.forEach.call(document.querySelectorAll("#tabs button"), function(b){
+  b.addEventListener("click", function(){ show(b.dataset.screen); });
+});
+
+var saved = recall("ffl_me");
+if(saved){
+  try{
+    me = JSON.parse(saved);
+    if(me && me.id){
+      $("tabs").hidden = false;
+      show("draft");
+      loadPool().then(loadMyRoster);
+    } else { me = null; }
+  }catch(e){ me = null; store("ffl_me", null); }
+}
+})();
+</script>
+</body>
+</html>
