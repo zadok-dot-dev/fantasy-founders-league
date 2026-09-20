@@ -326,6 +326,10 @@ function say(el, text, kind){
 }
 
 function show(name){
+  // Nothing but the gate exists until there's a signed-in fund.
+  if(!me) name = "gate";
+  $("tabs").hidden = !me;
+
   ["gate","draft","board"].forEach(function(s){
     $("s-"+s).classList.toggle("on", s === name);
   });
@@ -338,7 +342,7 @@ function show(name){
 
 /* ---------- auth (name + PIN, friends-game grade) ---------- */
 
-var mode = "create"; // "create" | "signin"
+var mode = "signin"; // "create" | "signin"
 
 function setMode(next){
   mode = next;
@@ -420,19 +424,19 @@ $("b-signout").addEventListener("click", function(){
   me = null;
   picks = {};
   activeFilter = 1;
+  startups = [];
   store("ffl_me", null);
-  $("tabs").hidden = true;
   $("draft-live").hidden = false;
   $("draft-done").hidden = true;
   $("f-fund").value = ""; $("f-gp").value = ""; $("f-pin").value = "";
   setMode("signin");
   show("gate");
+  $("f-fund").focus();
 });
 
 function signedIn(m){
   me = m;
   store("ffl_me", JSON.stringify(m));
-  $("tabs").hidden = false;
   say("gate-msg","");
   show("draft");
   loadPool().then(loadMyRoster);
@@ -658,13 +662,18 @@ Array.prototype.forEach.call(document.querySelectorAll("#tabs button[data-screen
 var saved = recall("ffl_me");
 if(saved){
   try{
-    me = JSON.parse(saved);
-    if(me && me.id){
-      $("tabs").hidden = false;
-      show("draft");
-      loadPool().then(loadMyRoster);
-    } else { me = null; }
-  }catch(e){ me = null; store("ffl_me", null); }
+    var s = JSON.parse(saved);
+    me = (s && s.id) ? s : null;
+  }catch(e){ me = null; }
+}
+if(!me) store("ffl_me", null);
+
+if(me){
+  show("draft");
+  loadPool().then(loadMyRoster);
+} else {
+  setMode("signin");
+  show("gate");
 }
 })();
 </script>
