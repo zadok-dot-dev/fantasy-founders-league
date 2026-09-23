@@ -1079,6 +1079,7 @@ const WHY = {
 const XLABEL = {ok:"Buy", picked:"Selected", selling:"Selling", held:"In your fund", over:"Over cap"};
 
 /* ================= state ================= */
+const OWNER_ID = 2; // commissioner's own manager id; fund-rename UI is client-side gated to this (server enforces it too)
 let session = null;      // {token, id, fund_name, display_name, is_admin}
 let fund = null;         // my_fund payload
 let startups = [];
@@ -2183,6 +2184,13 @@ function renderFundDetail(){
       '<button class="btn btn-quiet btn-sm" type="button" data-fd="pin">Reset PIN</button></div>' +
       '<div class="manage-row" style="margin-top:16px"><button class="btn btn-quiet btn-sm danger" type="button" data-fd="delete">Delete fund</button>' +
       '<span class="adm-note" style="margin:0">For test and spam funds. Can\'t be undone.</span></div></section>';
+  const canRename = session && session.id === OWNER_ID;
+  const rename = canRename ?
+    '<section class="panel"><h3 class="h3">Rename fund</h3>' +
+      '<p class="adm-note" style="margin:0">Only visible to you.</p>' +
+      '<div class="manage-row"><input class="in in-sm" id="fd-name" maxlength="40" placeholder="New fund name" value="' + esc(m.fund_name) + '" aria-label="New fund name">' +
+      '<button class="btn btn-quiet btn-sm" type="button" data-fd="rename">Rename</button></div>' +
+      '<p class="msg" id="fd-name-msg" role="status" aria-live="polite"></p></section>' : '';
   $("fund-detail").innerHTML =
     '<div class="fd-top"><button class="link" type="button" data-fd="back">All funds</button>' +
       '<h2 class="h2">' + esc(m.fund_name) + (house ? ' <span class="tag house">House</span>' : '') + '</h2>' +
@@ -2192,7 +2200,7 @@ function renderFundDetail(){
       '<section class="panel"><h3 class="h3">' + (g ? "Lineup for GW" + g : "Final lineup") + '</h3>' +
         (house && g ? '<p class="adm-note" style="margin:0 0 4px">House swaps follow the normal rules (same stage, under $100M) and count from GW' + g + '. They don\'t use a weekly transfer.</p>' : '') +
         '<ul class="alineup">' + rows + '</ul><p class="msg" id="fd-msg" role="status" aria-live="polite"></p></section>' +
-      manage +
+      rename + manage +
     '</div><div>' +
       '<section class="panel"><h3 class="h3">Transfers</h3><ul class="history">' + transfers + '</ul></section>' +
       '<section class="panel"><h3 class="h3">Scored events</h3><ol class="feed">' + feed + '</ol></section>' +
@@ -2217,6 +2225,20 @@ async function fundAction(btn){
     try{ await call("admin_reset_pin", Object.assign(T(), {p_manager_id:f.manager.id, p_pin:pin})); $("fd-pin").value = ""; toast("PIN reset. Send it to " + f.manager.display_name + "."); }
     catch(e){ toast(e.message); }
     finally{ btn.disabled = false; }
+  }
+  if(act === "rename"){
+    const name = $("fd-name").value.trim();
+    if(!name){ say("fd-name-msg", "Enter a fund name.", "bad"); return; }
+    if(name === f.manager.fund_name){ say("fd-name-msg", "That's already the name.", null); return; }
+    btn.disabled = true;
+    try{
+      admFund = await call("admin_rename_fund", Object.assign(T(), {p_manager_id:f.manager.id, p_fund_name:name}));
+      if(session && f.manager.id === session.id){
+        session.fund_name = name; store("ffl_session", JSON.stringify(session));
+        if($("fund-name")) $("fund-name").textContent = name;
+      }
+      renderFundDetail(); toast("Renamed to " + name + ".");
+    }catch(e){ say("fd-name-msg", e.message, "bad"); btn.disabled = false; }
   }
   if(act === "delete"){
     if(!btn.dataset.armed){
