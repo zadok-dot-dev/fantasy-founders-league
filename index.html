@@ -3,746 +3,1250 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Fantasy Founders League</title>
+<title>Fantasy Founders League: fantasy football for startups</title>
+<meta name="description" content="You get $100M. Write five checks. Draft a fund of real startups and score when they raise, launch or go public.">
+<meta property="og:title" content="Fantasy Founders League">
+<meta property="og:description" content="You get $100M. Write five checks. Fantasy football for startups.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ffl.zadok.dev">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Fantasy Founders League">
+<meta name="twitter:description" content="You get $100M. Write five checks. Fantasy football for startups.">
+<meta name="theme-color" content="#0F3B2B">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Sans:wght@400;450;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
 <style>
+/* ============ tokens ============ */
 :root{
-  --paper:#ECEFE9;
-  --paper-2:#E3E8DF;
-  --ink:#17211D;
-  --ink-soft:#4C5A53;
-  --rule:#C2CCBE;
-  --rule-strong:#93A28E;
-  --gain:#1C6B45;
-  --loss:#9A2B22;
-  --brass:#8A6A17;
-  --field:#F6F8F3;
+  --paper:#EEF1E8;
+  --paper-hi:#F9FAF5;
+  --tint:#DEE7DA;
+  --ink:#0E2A1F;
+  --ink-2:#3C574B;
+  --ink-3:#687F74;
+  --line:#CBD6C7;
+  --line-2:#9DB19F;
 
+  --note:#0F3B2B;
+  --note-2:#0C3124;
+  --note-ink:#EAF2E6;
+  --note-ink-2:#A9C4B5;
+  --note-line:#3E7C61;
+  --tick-up:#8BE0B0;
+  --tick-down:#F5A69C;
+
+  --gold:#B08424;
+  --gain:#0F7446;
+  --loss:#A5302B;
+
+  --s1:#0F3B2B; --s2:#2B6751; --s3:#4F8C70; --s4:#86B39A; --s5:#C09330;
+
+  --shadow:0 1px 0 rgba(14,42,31,.05), 0 18px 40px -18px rgba(14,42,31,.35);
+
+  color-scheme:light;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
 }
-:root:not([data-theme="light"]){
-  @media (prefers-color-scheme: dark){
-    --paper:#141A17;
-    --paper-2:#1B231F;
-    --ink:#E6EBE4;
-    --ink-soft:#94A39B;
-    --rule:#2E3A34;
-    --rule-strong:#48574F;
-    --gain:#58C08A;
-    --loss:#E0776B;
-    --brass:#D2AC4E;
-    --field:#101512;
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0B2119; --paper-hi:#0F291F; --tint:#163629;
+    --ink:#E4EDE1; --ink-2:#B3C6B9; --ink-3:#7F9A8C;
+    --line:#1F4032; --line-2:#2F5A47;
+    --note:#07170F; --note-2:#0A1E15; --note-ink:#E4EDE1; --note-ink-2:#93B2A2; --note-line:#1F5A43;
+    --gold:#D6AE55; --gain:#55CC8E; --loss:#F08176;
+    --s1:#D3E6D7; --s2:#9FC9B0; --s3:#70A98B; --s4:#4B8067; --s5:#D6AE55;
+    --shadow:0 18px 40px -18px rgba(0,0,0,.7);
+    color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --paper:#141A17;
-  --paper-2:#1B231F;
-  --ink:#E6EBE4;
-  --ink-soft:#94A39B;
-  --rule:#2E3A34;
-  --rule-strong:#48574F;
-  --gain:#58C08A;
-  --loss:#E0776B;
-  --brass:#D2AC4E;
-  --field:#101512;
+  --paper:#0B2119; --paper-hi:#0F291F; --tint:#163629;
+  --ink:#E4EDE1; --ink-2:#B3C6B9; --ink-3:#7F9A8C;
+  --line:#1F4032; --line-2:#2F5A47;
+  --note:#07170F; --note-2:#0A1E15; --note-ink:#E4EDE1; --note-ink-2:#93B2A2; --note-line:#1F5A43;
+  --gold:#D6AE55; --gain:#55CC8E; --loss:#F08176;
+  --s1:#D3E6D7; --s2:#9FC9B0; --s3:#70A98B; --s4:#4B8067; --s5:#D6AE55;
+  --shadow:0 18px 40px -18px rgba(0,0,0,.7);
+  color-scheme:dark;
 }
+
+/* ============ base ============ */
 *,*::before,*::after{box-sizing:border-box}
-html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+[hidden]{display:none!important}
+html{
+  background:var(--paper);
+  scroll-padding-top:calc(env(safe-area-inset-top,0px) + 110px);
+  -webkit-text-size-adjust:100%;
+}
+html.is-landing{background:var(--note)}
 body{
   margin:0;background:var(--paper);color:var(--ink);
-  font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-  font-size:15px;line-height:1.55;
-  font-variant-numeric:tabular-nums;
+  font-family:Archivo,"Helvetica Neue",Arial,sans-serif;
+  font-size:16px;line-height:1.5;
+  font-variant-numeric:tabular-nums lining-nums;
+  -webkit-font-smoothing:antialiased;
 }
-h1,h2,h3{font-family:Newsreader,Georgia,"Times New Roman",serif;font-weight:500;margin:0;line-height:1.15}
+body.has-dock{padding-bottom:96px}
+h1,h2,h3,p{margin:0}
+button,input{font:inherit;color:inherit}
 a{color:inherit}
-button{font:inherit;color:inherit;cursor:pointer}
-:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
-@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1140px;margin:0 auto;padding:0 20px}
+@media (min-width:760px){.wrap{padding:0 32px}}
 
-.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
-
-/* masthead */
-header.top{border-bottom:1px solid var(--rule-strong);background:var(--paper)}
-.top-in{max-width:1080px;margin:0 auto;padding:18px 20px 14px;
-  display:flex;gap:18px;align-items:baseline;flex-wrap:wrap}
-.mark{font-family:Newsreader,serif;font-size:26px;letter-spacing:-.01em}
-.mark em{font-style:italic;color:var(--brass)}
-.sub{color:var(--ink-soft);font-size:13px}
-nav.tabs{margin-left:auto;display:flex;gap:2px}
-nav.tabs button{
-  background:none;border:1px solid transparent;border-bottom:none;
-  padding:7px 14px;font-size:14px;color:var(--ink-soft);border-radius:3px 3px 0 0;
+/* ============ type ============ */
+.display{
+  font-stretch:118%;font-weight:820;
+  font-size:clamp(42px,11vw,96px);line-height:.94;letter-spacing:-.032em;
 }
-nav.tabs button[aria-current="page"]{
-  color:var(--ink);background:var(--paper-2);border-color:var(--rule);
-}
-nav.tabs button.signout{margin-left:10px;border-color:transparent;font-size:13px}
-nav.tabs button.signout:hover{color:var(--ink);text-decoration:underline}
+.display span{display:block}
+.h1{font-stretch:120%;font-weight:800;font-size:clamp(30px,7vw,52px);line-height:1;letter-spacing:-.026em}
+.h2{font-stretch:116%;font-weight:790;font-size:clamp(28px,5.4vw,44px);line-height:1;letter-spacing:-.022em}
+.h3{font-stretch:108%;font-weight:720;font-size:18px;letter-spacing:-.01em;margin-bottom:6px}
+.sub{color:var(--ink-3);margin-top:10px;max-width:52ch}
+.pos{color:var(--gain)}
+.neg{color:var(--loss)}
 
-main{padding:28px 0 72px}
-.lede{max-width:62ch;color:var(--ink-soft);margin:0 0 26px}
-.screen{display:none}
-.screen.on{display:block}
-
-/* term sheet card */
-.sheet{background:var(--paper-2);border:1px solid var(--rule);border-top:3px solid var(--rule-strong);padding:22px 22px 26px}
-.sheet h2{font-size:23px;margin-bottom:4px}
-.sheet .note{color:var(--ink-soft);font-size:13.5px;margin:0 0 18px}
-
-/* gate */
-.gate{max-width:440px;margin:8px auto}
-.field{display:block;margin-bottom:14px}
-.field span{display:block;font-size:13px;color:var(--ink-soft);margin-bottom:5px}
-.field input{
-  width:100%;padding:10px 12px;background:var(--field);color:var(--ink);
-  border:1px solid var(--rule);border-radius:2px;font:inherit;
-}
-.field input:focus{border-color:var(--rule-strong)}
+/* ============ buttons ============ */
 .btn{
-  background:var(--ink);color:var(--paper);border:1px solid var(--ink);
-  padding:10px 18px;border-radius:2px;font-weight:500;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font-stretch:106%;font-weight:680;font-size:16px;line-height:1;
+  padding:15px 22px;border-radius:12px;border:1px solid transparent;
+  cursor:pointer;text-decoration:none;white-space:nowrap;
+  transition:background-color .15s,color .15s,border-color .15s,transform .08s;
 }
-.btn:hover{background:var(--ink-soft);border-color:var(--ink-soft)}
-.btn[disabled]{opacity:.45;cursor:not-allowed}
-.btn.ghost{background:none;color:var(--ink);border-color:var(--rule-strong)}
-.btn.ghost:hover{background:var(--paper)}
-.row-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px}
-.msg{font-size:13.5px;margin-top:12px;min-height:1.2em}
+.btn:active:not(:disabled){transform:translateY(1px)}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn-primary{background:var(--ink);color:var(--paper-hi)}
+.btn-primary:hover:not(:disabled){background:var(--ink-2)}
+.btn-quiet{background:transparent;color:var(--ink);border-color:var(--line-2)}
+.btn-quiet:hover:not(:disabled){background:var(--tint)}
+.btn-light{background:var(--note-ink);color:var(--note)}
+.btn-light:hover:not(:disabled){background:#fff}
+.btn-outline-light{background:transparent;color:var(--note-ink);border-color:color-mix(in srgb,var(--note-ink) 32%,transparent)}
+.btn-outline-light:hover{background:color-mix(in srgb,var(--note-ink) 9%,transparent)}
+.btn.is-confirm,.btn.is-confirm:hover{background:var(--gold);color:#1B1304;border-color:transparent}
+.btn-block{width:100%}
+.link{background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px;font-weight:600}
+
+/* ============ wordmark ============ */
+.mark{
+  display:inline-flex;align-items:center;gap:10px;
+  font-stretch:112%;font-weight:790;font-size:15.5px;letter-spacing:-.012em;
+  background:none;border:0;padding:0;cursor:pointer;color:inherit;text-decoration:none;
+}
+.mark svg{width:28px;height:28px;color:var(--gold);flex:none}
+.mark .short{display:none}
+@media (max-width:350px){.mark .long{display:none}.mark .short{display:inline}}
+
+/* ============ landing: hero ============ */
+.hero{position:relative;background:var(--note);color:var(--note-ink);overflow:hidden;isolation:isolate}
+.hero-art{
+  position:absolute;z-index:-1;pointer-events:none;color:var(--note-line);opacity:.75;
+  width:980px;height:980px;right:-300px;top:-250px;
+}
+.hero-art svg{width:100%;height:100%}
+@media (max-width:760px){.hero-art{width:640px;height:640px;right:-330px;top:-150px;opacity:.6}}
+.lp-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 0}
+.lp-bar .link{color:var(--note-ink);font-size:15px}
+.hero-grid{display:grid;gap:44px;padding:26px 0 48px}
+@media (min-width:980px){.hero-grid{grid-template-columns:1.02fr .98fr;align-items:center;gap:56px;padding:56px 0 72px}}
+.dek{font-size:18px;line-height:1.55;color:var(--note-ink-2);max-width:32em;margin-top:24px}
+.dek b{color:var(--note-ink);font-weight:600}
+.cta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
+.micro{font-size:14px;color:var(--note-ink-2);margin-top:16px}
+.hero-cert{perspective:1400px}
+.hero-cert .cert{transform:rotate(-1.4deg);max-width:540px;margin:0 auto}
+@media (min-width:980px){.hero-cert .cert{margin:0 0 0 auto;transform:rotate(-2deg)}}
+
+/* ticker */
+.ticker{
+  background:var(--note-2);color:var(--note-ink);
+  border-top:1px solid color-mix(in srgb,var(--note-ink) 10%,transparent);
+  overflow:hidden;white-space:nowrap;font-stretch:92%;font-size:14px;
+}
+.ticker-track{display:inline-flex;padding:13px 0;animation:tick 110s linear infinite}
+.ticker:hover .ticker-track{animation-play-state:paused}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.tk{display:inline-flex;align-items:baseline;gap:8px;padding:0 20px;border-right:1px solid color-mix(in srgb,var(--note-ink) 14%,transparent)}
+.tk b{font-weight:640}
+.tk .p{color:var(--note-ink-2)}
+.tk .up{color:var(--tick-up)}
+.tk .dn{color:var(--tick-down)}
+.ticker-wait{padding:13px 20px;color:var(--note-ink-2)}
+
+/* ============ landing: sections ============ */
+.lp-sec{padding:76px 0}
+.lp-sec + .lp-sec{border-top:1px solid var(--line)}
+.sec-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:26px}
+
+/* league rows (landing + app) */
+.league{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.lr{display:grid;grid-template-columns:54px minmax(0,1fr) auto;gap:14px;align-items:center;padding:15px 10px;border-bottom:1px solid var(--line)}
+.lr.you{background:var(--tint)}
+.lr-rank{font-stretch:120%;font-weight:820;font-size:22px;line-height:1}
+.mv{display:block;margin-top:5px;font-size:12px;font-weight:650;font-stretch:100%}
+.mv.up{color:var(--gain)}
+.mv.dn{color:var(--loss)}
+.mv.flat{color:var(--ink-3)}
+.lr-fund{min-width:0}
+.lr-fund b{display:block;font-weight:660;font-size:16.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lr-fund small{color:var(--ink-3);font-size:14px}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--tint);color:var(--ink-2);margin-left:6px}
+.lr.you .tag{background:var(--paper-hi)}
+.lr-pts{text-align:right}
+.lr-pts b{display:block;font-stretch:120%;font-weight:820;font-size:22px;line-height:1}
+.lr-pts small{display:block;margin-top:5px;font-size:12.5px;color:var(--ink-3)}
+.empty-li{list-style:none;padding:28px 10px;color:var(--ink-2);border-bottom:1px solid var(--line)}
+
+/* how it works */
+.how-grid{display:grid;gap:44px}
+@media (min-width:920px){.how-grid{grid-template-columns:1fr 1fr;gap:64px}}
+.steps{list-style:none;counter-reset:st;margin:0;padding:0;border-top:1px solid var(--line)}
+.steps li{counter-increment:st;display:grid;grid-template-columns:44px 1fr;column-gap:12px;padding:16px 0;border-bottom:1px solid var(--line)}
+.steps li::before{content:counter(st);grid-row:span 2;font-stretch:125%;font-weight:820;font-size:26px;line-height:1;color:var(--ink)}
+.steps b{font-weight:680;font-size:17px}
+.steps span{color:var(--ink-2)}
+.how-p{color:var(--ink-2);max-width:46ch;margin-bottom:14px}
+.score{width:100%;border-collapse:collapse}
+.score td{padding:11px 0;border-bottom:1px solid var(--line)}
+.score tr:first-child td{border-top:1px solid var(--line)}
+.score td + td{text-align:right;font-stretch:118%;font-weight:790;font-size:18px;padding-left:16px}
+.win{margin-top:18px;color:var(--ink)}
+.fine{font-size:13.5px;color:var(--ink-3);max-width:70ch;margin-top:30px}
+
+/* join */
+.join-sec{background:var(--tint)}
+.join-card{
+  max-width:480px;margin:0 auto;background:var(--paper-hi);
+  border:1px solid var(--line);border-radius:18px;padding:28px 24px;box-shadow:var(--shadow);
+}
+@media (min-width:600px){.join-card{padding:36px 36px 30px}}
+.join-card .h2{font-size:clamp(28px,6vw,36px)}
+.join-card .sub{margin-bottom:22px}
+.field{display:block;margin-bottom:14px}
+.field span{display:block;font-size:14px;font-weight:600;color:var(--ink-2);margin-bottom:6px}
+.in{
+  width:100%;font-size:17px;padding:14px 14px;border-radius:11px;
+  border:1px solid var(--line-2);background:var(--paper);color:var(--ink);
+  transition:border-color .15s,box-shadow .15s;
+}
+.in::placeholder{color:var(--ink-3);opacity:.8}
+.in:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px color-mix(in srgb,var(--ink) 14%,transparent)}
+.join-card .btn{margin-top:6px}
+.join-alt{margin-top:18px;font-size:15px;color:var(--ink-2)}
+.msg{min-height:1.4em;margin-top:12px;font-size:14.5px;font-weight:550}
 .msg.bad{color:var(--loss)}
 .msg.ok{color:var(--gain)}
 
-/* draft layout */
-.draft-grid{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:26px;align-items:start}
-@media (max-width:860px){.draft-grid{grid-template-columns:1fr}}
+/* footer */
+.lp-foot{background:var(--note);color:var(--note-ink-2);padding:44px 0 52px;font-size:14px}
+.lp-foot .mark{color:var(--note-ink)}
+.lp-foot p{margin-top:12px;max-width:52ch}
+.lp-foot .quip{color:var(--note-ink);font-size:16px}
 
-.capital{border:1px solid var(--rule);background:var(--paper-2);padding:16px 16px 18px;position:sticky;top:calc(14px + env(safe-area-inset-top,0px))}
-@media (max-width:860px){.capital{position:static}}
-.capital h3{font-size:16px;margin-bottom:2px}
-.cap-figure{font-family:Newsreader,serif;font-size:38px;line-height:1.05;margin:8px 0 2px}
-.cap-figure.over{color:var(--loss)}
-.cap-note{font-size:13px;color:var(--ink-soft);margin-bottom:14px}
-.meter{height:5px;background:var(--rule);margin-bottom:16px}
-.meter i{display:block;height:100%;background:var(--gain)}
-.meter i.over{background:var(--loss)}
-
-ol.slots{list-style:none;margin:0 0 16px;padding:0;border-top:1px solid var(--rule)}
-ol.slots li{border-bottom:1px solid var(--rule);padding:9px 0;display:flex;gap:10px;align-items:baseline}
-.slot-n{font-family:Newsreader,serif;font-size:15px;color:var(--brass);width:1.4em;flex:none}
-.slot-body{flex:1;min-width:0}
-.slot-label{font-size:12.5px;color:var(--ink-soft)}
-.slot-pick{font-size:14.5px}
-.slot-pick.empty{color:var(--ink-soft);font-style:italic}
-.slot-cost{font-size:13px;color:var(--ink-soft);flex:none}
-.slot-drop{background:none;border:none;color:var(--ink-soft);padding:0 0 0 8px;font-size:15px;line-height:1;flex:none}
-.slot-drop:hover{color:var(--loss)}
-
-/* pool */
-.pool-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:10px}
-.pool-head h3{font-size:18px}
-.pool-head .count{font-size:13px;color:var(--ink-soft)}
-.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
-.filters button{
-  background:none;border:1px solid var(--rule);color:var(--ink-soft);
-  padding:5px 11px;font-size:13px;border-radius:2px;
+/* ============ certificate ============ */
+.cert{
+  --c-paper:#F4F3E8;--c-ink:#113A2B;--c-line:#2F6B53;--c-soft:#587566;
+  position:relative;color:var(--c-ink);border-radius:6px;padding:10px;
+  background-color:var(--c-paper);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='16' viewBox='0 0 120 16'%3E%3Cg fill='none' stroke='%232F6B53' stroke-opacity='.085' stroke-width='.7'%3E%3Cpath d='M0 8 Q15 0 30 8 T60 8 T90 8 T120 8'/%3E%3Cpath d='M0 8 Q15 16 30 8 T60 8 T90 8 T120 8'/%3E%3C/g%3E%3C/svg%3E");
+  box-shadow:var(--shadow);
+  text-align:left;
 }
-.filters button[aria-pressed="true"]{border-color:var(--ink);color:var(--ink);background:var(--paper-2)}
-
-table.pool{width:100%;border-collapse:collapse}
-table.pool th{
-  text-align:left;font-weight:500;font-size:12.5px;color:var(--ink-soft);
-  border-bottom:1px solid var(--rule-strong);padding:0 8px 6px 0;
+:root[data-theme="dark"] .cert{filter:brightness(.94)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .cert{filter:brightness(.94)}}
+.cert-in{border:3px double var(--c-line);border-radius:3px;padding:20px 18px 16px}
+@media (min-width:560px){.cert-in{padding:24px 26px 18px}}
+.cert-top{display:flex;justify-content:space-between;gap:12px;font-size:12.5px;color:var(--c-soft);font-stretch:96%}
+.cert-name{font-stretch:125%;font-weight:830;font-size:clamp(26px,6.6vw,40px);line-height:1;letter-spacing:-.024em;margin:14px 0 10px;text-wrap:balance;overflow-wrap:anywhere}
+.cert-clause{font-size:14.5px;line-height:1.5;max-width:44ch;margin-bottom:14px}
+.cert-clause b{font-weight:650}
+.cert-pos{list-style:none;margin:0;padding:0;border-top:1px solid rgba(47,107,83,.35)}
+.cert-pos li{display:grid;grid-template-columns:20px minmax(0,1fr) auto 44px;column-gap:10px;align-items:baseline;padding:8px 0;border-bottom:1px solid rgba(47,107,83,.35)}
+.cp-n{font-size:13px;color:var(--c-soft)}
+.cp-name b{display:block;font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cp-name small{display:block;font-size:12px;color:var(--c-soft)}
+.cp-cost{font-stretch:110%;font-weight:650}
+.cp-pts{text-align:right;font-weight:650}
+.cert .pos{color:#0F7446}
+.cert .neg{color:#A5302B}
+.cert-sum{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0 4px}
+.cert-sum dt{font-size:12px;color:var(--c-soft)}
+.cert-sum dd{margin:0;font-stretch:118%;font-weight:790;font-size:20px;line-height:1.2}
+.cert-foot{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-top:8px}
+.sig{flex:1;min-width:0}
+.sig-name{display:block;font-family:"Mrs Saint Delafield","Snell Roundhand","Brush Script MT",cursive;font-size:46px;line-height:1.05;padding:0 4px;white-space:nowrap;overflow:hidden}
+.sig-line{display:block;border-top:1px solid var(--c-ink);padding-top:5px;font-size:12px;color:var(--c-soft)}
+.seal{position:relative;width:104px;height:104px;flex:none;color:var(--c-line)}
+.seal svg{position:absolute;inset:0;width:100%;height:100%}
+.seal-in{
+  position:absolute;inset:23px;border-radius:50%;background:var(--c-paper);
+  border:1px solid var(--c-line);display:grid;place-content:center;text-align:center;
 }
-table.pool th.num,table.pool td.num{text-align:right;padding-right:0}
-table.pool td{border-bottom:1px solid var(--rule);padding:9px 8px 9px 0;vertical-align:baseline}
-table.pool tr.picked td{opacity:.42}
-.co-name{font-size:15px}
-.co-sector{font-size:12.5px;color:var(--ink-soft)}
-.co-val{font-size:12.5px;color:var(--ink-soft)}
-.unverified{color:var(--brass);font-size:12px}
-.pick-btn{
-  background:none;border:1px solid var(--rule-strong);color:var(--ink);
-  padding:4px 12px;font-size:13px;border-radius:2px;white-space:nowrap;
+.seal-in b{font-stretch:120%;font-weight:830;font-size:19px;line-height:1}
+.seal-in small{font-size:10.5px;color:var(--c-soft);margin-top:2px}
+.cert-fine{font-size:12px;color:var(--c-soft);margin-top:12px}
+.cert-ghost{min-height:430px;display:grid;place-content:center;color:var(--c-soft);font-size:14px}
+
+.cert.issued{animation:issue .55s cubic-bezier(.2,.8,.2,1) both}
+.cert.issued .seal{animation:stamp .6s .35s cubic-bezier(.2,.9,.25,1.25) both}
+@keyframes issue{from{opacity:0;transform:translateY(16px) scale(.985)}}
+@keyframes stamp{0%{opacity:0;transform:scale(1.9) rotate(-28deg)}55%{opacity:1}100%{opacity:1;transform:none}}
+
+/* ============ app shell ============ */
+.app-bar{
+  position:sticky;top:env(safe-area-inset-top,0px);z-index:20;
+  background:color-mix(in srgb,var(--paper) 88%,transparent);
+  -webkit-backdrop-filter:saturate(1.3) blur(14px);backdrop-filter:saturate(1.3) blur(14px);
+  border-bottom:1px solid var(--line);
 }
-.pick-btn:hover:not([disabled]){background:var(--ink);color:var(--paper);border-color:var(--ink)}
-.pick-btn[disabled]{opacity:.35;cursor:not-allowed}
-
-/* portfolio / leaderboard */
-table.board{width:100%;border-collapse:collapse}
-table.board th{text-align:left;font-weight:500;font-size:12.5px;color:var(--ink-soft);
-  border-bottom:1px solid var(--rule-strong);padding:0 10px 6px 0}
-table.board td{border-bottom:1px solid var(--rule);padding:11px 10px 11px 0}
-table.board th.num,table.board td.num{text-align:right;padding-right:0}
-.rank{font-family:Newsreader,serif;color:var(--brass);width:2em}
-.pts{font-family:Newsreader,serif;font-size:19px}
-.pts.up{color:var(--gain)}
-.pts.down{color:var(--loss)}
-.you{background:var(--paper-2)}
-.fund-name{font-size:15.5px}
-.gp{font-size:12.5px;color:var(--ink-soft)}
-
-.empty{border:1px dashed var(--rule-strong);padding:26px;text-align:center;color:var(--ink-soft)}
-.empty p{margin:0 0 14px}
-footer.foot{border-top:1px solid var(--rule);margin-top:44px;padding:16px 0 0;color:var(--ink-soft);font-size:12.5px}
-.tablewrap{overflow-x:auto}
-.spin{color:var(--ink-soft);padding:24px 0}
-
-/* how it works */
-.how-gate{max-width:640px;margin:34px auto 0}
-.how h2{font-size:22px;margin-bottom:6px}
-.how h3{font-size:16px;margin:26px 0 8px}
-.how p{margin:0 0 12px;max-width:66ch}
-.how > p:first-of-type{color:var(--ink-soft)}
-.how ol.steps{list-style:none;counter-reset:s;margin:0 0 6px;padding:0}
-.how ol.steps li{counter-increment:s;padding:10px 0 10px 38px;position:relative;border-bottom:1px solid var(--rule);max-width:66ch}
-.how ol.steps li::before{
-  content:counter(s);position:absolute;left:0;top:10px;
-  font-family:Newsreader,serif;font-size:15px;color:var(--brass);
+.app-bar-in{max-width:1140px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;flex-wrap:wrap;gap:10px 14px}
+@media (min-width:760px){.app-bar-in{padding:12px 32px}}
+.app-bar .mark{order:0}
+.tabs{order:2;width:100%;display:flex;gap:2px;padding:3px;border-radius:12px;background:var(--tint)}
+.tabs button{
+  flex:1;border:0;background:none;cursor:pointer;white-space:nowrap;
+  padding:9px 12px;border-radius:9px;font-size:14.5px;font-weight:600;color:var(--ink-2);
+  transition:background-color .15s,color .15s;
 }
-.how ol.steps li b{font-weight:500}
-.how ol.steps li span{display:block;color:var(--ink-soft);font-size:13.5px}
-table.scoring{width:100%;border-collapse:collapse;max-width:560px}
-table.scoring th{text-align:left;font-weight:500;font-size:12.5px;color:var(--ink-soft);
-  border-bottom:1px solid var(--rule-strong);padding:0 10px 6px 0}
-table.scoring th.num,table.scoring td.num{text-align:right;padding-right:0}
-table.scoring td{border-bottom:1px solid var(--rule);padding:8px 10px 8px 0}
-table.scoring td.num{font-family:Newsreader,serif;font-size:16px}
-.fine{font-size:13px;color:var(--ink-soft);max-width:66ch}
+.tabs button:hover{color:var(--ink)}
+.tabs button[aria-current="page"]{background:var(--paper-hi);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08),0 0 0 1px var(--line)}
+.signout{order:1;margin-left:auto;background:none;border:0;cursor:pointer;font-size:14.5px;font-weight:600;color:var(--ink-2);padding:6px 2px}
+.signout:hover{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+@media (min-width:760px){
+  .tabs{order:1;width:auto;margin-left:auto}
+  .tabs button{flex:none;padding:8px 16px}
+  .signout{order:2;margin-left:6px}
+}
+.app-main{max-width:1140px;margin:0 auto;padding:26px 20px 64px}
+@media (min-width:760px){.app-main{padding:36px 32px 80px}}
+.fund-head .sub{margin-top:8px}
+
+/* draft */
+.draft{display:grid;grid-template-columns:minmax(0,1fr);gap:22px;margin-top:24px}
+.draft > *{min-width:0}
+@media (min-width:960px){
+  .draft{grid-template-columns:360px minmax(0,1fr);gap:40px;align-items:start}
+  .draft-side{position:sticky;top:calc(env(safe-area-inset-top,0px) + 86px)}
+}
+.budget{background:var(--paper-hi);border:1px solid var(--line);border-radius:16px;padding:18px 18px 16px}
+.dry{font-stretch:125%;font-weight:830;font-size:46px;line-height:1;letter-spacing:-.03em;transition:color .2s}
+.dry.over{color:var(--loss)}
+.dry-l{font-size:14px;color:var(--ink-3);margin-top:6px}
+.bar{display:flex;height:12px;margin:16px 0 12px;border-radius:999px;overflow:hidden;background:var(--tint);box-shadow:inset 0 0 0 1px var(--line)}
+.bar.over{box-shadow:inset 0 0 0 2px var(--loss)}
+.seg{height:100%;width:0;flex:none;transition:width .28s cubic-bezier(.2,.8,.2,1)}
+.seg + .seg{border-left:1px solid var(--paper-hi)}
+.seg[style*="width: 0"],.seg[style*="width:0"]{border-left:0}
+.seg-res{background:repeating-linear-gradient(135deg,var(--line-2) 0 2px,transparent 2px 6px)}
+.budget-note{font-size:14px;color:var(--ink-2)}
+.budget-note.bad{color:var(--loss);font-weight:600}
+
+.slots{list-style:none;display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;margin:14px -20px 0;padding:2px 20px 6px;scrollbar-width:none}
+.slots::-webkit-scrollbar{display:none}
+.slot{flex:0 0 164px;scroll-snap-align:start;display:flex;position:relative;background:var(--paper-hi);border:1px solid var(--line);border-radius:13px;overflow:hidden;transition:border-color .15s,box-shadow .15s}
+.slot::before{content:"";flex:none;width:5px;background:var(--sw,transparent);transition:background-color .2s}
+.slot.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.slot-btn{flex:1;min-width:0;border:0;background:none;cursor:pointer;text-align:left;padding:10px 10px 11px 11px}
+.slot-k{display:block;font-size:12.5px;color:var(--ink-3);font-weight:550}
+.slot-v{display:block;font-weight:680;font-size:15.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.slot-v.empty{font-weight:450;color:var(--ink-3)}
+.slot-c{display:block;font-size:13.5px;color:var(--ink-2);margin-top:1px;font-stretch:108%;font-weight:600}
+.slot-x{flex:none;width:34px;border:0;background:none;cursor:pointer;color:var(--ink-3);font-size:19px;line-height:1}
+.slot-x:hover{color:var(--loss)}
+@media (min-width:960px){
+  .slots{flex-direction:column;overflow:visible;margin:12px 0 0;padding:0;gap:6px}
+  .slot{flex:none}
+  .slot-btn{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:10px;align-items:baseline;padding:8px 10px 9px 11px}
+  .slot-k{grid-column:1 / -1}
+  .budget{padding:16px 18px 14px}
+  .dry{font-size:42px}
+}
+.side-sign{margin-top:14px}
+@media (max-width:959px){.side-sign{display:none}}
+
+.pool-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:6px 14px;scroll-margin-top:calc(env(safe-area-inset-top,0px) + 124px)}
+.pool-head h2{font-stretch:114%;font-weight:790;font-size:27px;line-height:1.05;letter-spacing:-.018em}
+.pool-head small{font-size:14px;color:var(--ink-3)}
+.search{margin:14px 0 4px}
+.pool{list-style:none;margin:0;padding:0}
+.co{
+  width:calc(100% + 20px);margin:0 -10px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:center;
+  padding:14px 10px;border:0;border-bottom:1px solid var(--line);background:none;cursor:pointer;text-align:left;
+  transition:background-color .12s;
+}
+.co:hover:not([aria-disabled="true"]){background:var(--tint)}
+.co[aria-disabled="true"]{cursor:default}
+.co[aria-disabled="true"] .co-name,.co[aria-disabled="true"] .co-price{opacity:.5}
+.co-name{display:block;font-weight:680;font-size:16.5px}
+.co-meta{display:block;font-size:14px;color:var(--ink-2)}
+.co-val{display:block;font-size:13px;color:var(--ink-3)}
+.co-r{display:flex;flex-direction:column;align-items:flex-end;gap:7px}
+.co-price{font-stretch:116%;font-weight:800;font-size:20px;line-height:1}
+.co-act{font-size:12.5px;font-weight:680;padding:5px 11px;border-radius:999px;background:var(--ink);color:var(--paper-hi);white-space:nowrap}
+.co[data-s="swap"] .co-act{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.co[data-s="here"] .co-act,.co[data-s="held"] .co-act{background:var(--tint);color:var(--ink-2)}
+.co[data-s="over"] .co-act,.co[data-s="tight"] .co-act{background:transparent;color:var(--loss);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--loss) 45%,transparent)}
+
+.dock{
+  position:fixed;left:0;right:0;bottom:0;z-index:30;
+  display:flex;align-items:center;gap:14px;
+  padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));
+  background:var(--note);color:var(--note-ink);
+  box-shadow:0 -10px 30px -14px rgba(0,0,0,.45);
+}
+.dock-info{min-width:0}
+.dock-info b{display:block;font-stretch:118%;font-weight:800;font-size:20px;line-height:1.05}
+.dock-info b.over{color:var(--tick-down)}
+.dock-info small{display:block;font-size:12.5px;color:var(--note-ink-2);white-space:nowrap}
+.dock .btn{margin-left:auto;padding:14px 16px;font-size:15px}
+.dock .btn-light:disabled{opacity:.5}
+@media (min-width:960px){.dock{display:none!important}body.has-dock{padding-bottom:0}}
+
+/* locked */
+.locked{max-width:720px;margin:26px auto 0}
+.share-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.after{color:var(--ink-2);margin-top:20px;max-width:56ch}
+
+/* states */
+.state{padding:40px 0;color:var(--ink-2)}
+.state .btn{margin-top:16px}
+.sk{display:block;border-radius:8px;background:linear-gradient(90deg,var(--tint) 0%,var(--paper-hi) 50%,var(--tint) 100%);background-size:200% 100%;animation:sk 1.3s ease-in-out infinite}
+@keyframes sk{from{background-position:100% 0}to{background-position:-100% 0}}
+.sk-row{height:62px;margin:10px 0}
+.sk-block{height:160px;border-radius:16px}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .ticker{overflow-x:auto}
+}
 </style>
 </head>
 <body>
 
-<header class="top">
-  <div class="top-in">
-    <div>
-      <div class="mark">Fantasy <em>Founders</em> League</div>
-      <div class="sub">Draft five startups. Run a $100M fund. Beat your friends.</div>
-    </div>
-    <nav class="tabs" id="tabs" hidden>
-      <button data-screen="draft" aria-current="page">Your fund</button>
-      <button data-screen="board">Leaderboard</button>
-      <button data-screen="how">How it works</button>
-      <button id="b-signout" class="signout">Sign out</button>
-    </nav>
-  </div>
-</header>
-
-<main class="wrap">
-
-  <!-- GATE -->
-  <section class="screen on" id="s-gate">
-    <div class="gate sheet">
-      <h2 id="gate-title">Open your fund</h2>
-      <p class="note" id="gate-note">Pick a fund name and a PIN — that's your account.</p>
-      <label class="field"><span>Fund name</span><input id="f-fund" autocomplete="off" placeholder="Paper Wealth Capital" maxlength="40"></label>
-      <label class="field" id="wrap-gp"><span>Your name</span><input id="f-gp" autocomplete="off" placeholder="Alex" maxlength="30"></label>
-      <label class="field"><span>PIN</span><input id="f-pin" type="password" inputmode="numeric" autocomplete="off" placeholder="4+ digits" maxlength="12"></label>
-      <div class="row-actions">
-        <button class="btn" id="b-go">Create fund</button>
-        <button class="btn ghost" id="b-mode">I already have one</button>
+<!-- ====================== LANDING (signed out) ====================== -->
+<div id="v-landing">
+  <section class="hero">
+    <div class="hero-art" id="hero-art"></div>
+    <div class="wrap">
+      <nav class="lp-bar" aria-label="Site">
+        <a class="mark" href="#top" aria-label="Fantasy Founders League home"><span class="js-mark"></span><span class="long">Fantasy Founders League</span><span class="short">FFL</span></a>
+        <button class="link" type="button" data-join="signin">Sign in</button>
+      </nav>
+      <div class="hero-grid">
+        <div>
+          <h1 class="display"><span>You get $100M.</span><span>Write five checks.</span></h1>
+          <p class="dek">Fantasy Founders League is fantasy football for startups. <b>Draft a fund of real companies</b>, from OpenAI down to last month's seed round, and score when they raise, ship or go public. Lose points when they lay off, down-round or die.</p>
+          <div class="cta-row">
+            <button class="btn btn-light" type="button" data-join="create">Raise your fund</button>
+            <button class="btn btn-outline-light" type="button" data-join="signin">Sign in</button>
+          </div>
+          <p class="micro">Free to play. No real money, which already puts you ahead of most funds.</p>
+        </div>
+        <div class="hero-cert" id="hero-cert">
+          <div class="cert"><div class="cert-in cert-ghost">Pricing the sample fund…</div></div>
+        </div>
       </div>
-      <div class="msg" id="gate-msg"></div>
     </div>
-    <div class="how-gate" id="how-gate"></div>
+    <div class="ticker" aria-label="Current prices in the draft pool">
+      <div class="ticker-track" id="ticker"><span class="ticker-wait">Loading live prices…</span></div>
+    </div>
   </section>
 
-  <!-- HOW IT WORKS -->
-  <section class="screen" id="s-how">
-    <div id="how-tab"></div>
+  <section class="lp-sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <h2 class="h2">The league table</h2>
+          <p class="sub" id="lp-count">Loading funds…</p>
+        </div>
+        <button class="btn btn-quiet" type="button" data-join="create">Raise your fund</button>
+      </div>
+      <ol class="league" id="lp-league">
+        <li class="empty-li" style="border:0;padding:0"><span class="sk sk-row"></span><span class="sk sk-row"></span></li>
+      </ol>
+    </div>
   </section>
 
-  <!-- DRAFT / PORTFOLIO -->
-  <section class="screen" id="s-draft">
-    <div id="draft-live">
-      <p class="lede" id="draft-lede">Five slots, one per stage, plus a wildcard. Total spend can't cross $100M — so an anchor position costs you somewhere else.</p>
-      <div class="draft-grid">
-        <aside class="capital">
-          <h3>Capital committed</h3>
-          <div class="cap-figure" id="cap-fig">$0M</div>
-          <div class="cap-note" id="cap-note">of $100M available</div>
-          <div class="meter"><i id="cap-bar" style="width:0%"></i></div>
-          <ol class="slots" id="slots"></ol>
-          <button class="btn" id="b-lock" disabled>Lock in portfolio</button>
-          <div class="msg" id="draft-msg"></div>
+  <section class="lp-sec">
+    <div class="wrap" id="how-landing"></div>
+  </section>
+
+  <section class="lp-sec join-sec" id="join">
+    <div class="wrap">
+      <div class="join-card">
+        <h2 class="h2" id="join-title">Welcome back</h2>
+        <p class="sub" id="join-note">Your fund name and PIN. That's it.</p>
+        <form id="join-form" novalidate>
+          <label class="field"><span>Fund name</span><input class="in" id="f-fund" autocomplete="username" placeholder="Paper Wealth Capital" maxlength="40" required></label>
+          <label class="field" id="wrap-gp" hidden><span>Your name</span><input class="in" id="f-gp" autocomplete="name" placeholder="Alex" maxlength="30"></label>
+          <label class="field"><span>PIN</span><input class="in" id="f-pin" type="password" inputmode="numeric" autocomplete="current-password" placeholder="At least 4 digits" maxlength="12" required></label>
+          <button class="btn btn-primary btn-block" id="b-go" type="submit">Sign in</button>
+        </form>
+        <p class="join-alt"><span id="alt-q">New here?</span> <button class="link" id="b-mode" type="button">Raise a fund instead</button></p>
+        <p class="msg" id="gate-msg" role="status" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="lp-foot">
+    <div class="wrap">
+      <span class="mark"><span class="js-mark"></span><span>Fantasy Founders League</span></span>
+      <p class="quip">Not investment advice. Not investments either.</p>
+      <p>Prices come from recent reported valuations and are approximate. Scores are logged weekly by the commissioner from public news.</p>
+    </div>
+  </footer>
+</div>
+
+<!-- ====================== APP (signed in) ====================== -->
+<div id="v-app" hidden>
+  <header class="app-bar">
+    <div class="app-bar-in">
+      <button class="mark" type="button" data-screen="draft" aria-label="Your fund"><span class="js-mark"></span><span class="long">Fantasy Founders League</span><span class="short">FFL</span></button>
+      <nav class="tabs" aria-label="Sections">
+        <button type="button" data-screen="draft">Your fund</button>
+        <button type="button" data-screen="board">League</button>
+        <button type="button" data-screen="how">How it works</button>
+      </nav>
+      <button class="signout" type="button" id="b-signout">Sign out</button>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <!-- draft / portfolio -->
+    <section id="s-draft">
+      <header class="fund-head">
+        <h1 class="h1" id="fund-name"></h1>
+        <p class="sub" id="fund-sub"></p>
+      </header>
+
+      <div id="draft-loading" class="draft" aria-busy="true">
+        <div><span class="sk sk-block"></span></div>
+        <div><span class="sk sk-row"></span><span class="sk sk-row"></span><span class="sk sk-row"></span></div>
+      </div>
+
+      <div id="draft-error" class="state" hidden>
+        <p id="draft-err-text">Couldn't load your fund.</p>
+        <button class="btn btn-quiet" type="button" id="b-retry">Try again</button>
+      </div>
+
+      <div id="draft-live" class="draft" hidden>
+        <aside class="draft-side">
+          <div class="budget">
+            <div class="dry" id="dry-num" aria-live="polite">$100M</div>
+            <p class="dry-l">dry powder left of $100M</p>
+            <div class="bar" id="bar" aria-hidden="true">
+              <span class="seg" style="background:var(--s1)"></span>
+              <span class="seg" style="background:var(--s2)"></span>
+              <span class="seg" style="background:var(--s3)"></span>
+              <span class="seg" style="background:var(--s4)"></span>
+              <span class="seg" style="background:var(--s5)"></span>
+              <span class="seg seg-res"></span>
+            </div>
+            <p class="budget-note" id="budget-note"></p>
+          </div>
+          <ol class="slots" id="slots" aria-label="Your five slots"></ol>
+          <button class="btn btn-primary btn-block side-sign js-sign" type="button" disabled>Fill all five slots</button>
+          <p class="msg" id="draft-msg" role="status" aria-live="polite"></p>
         </aside>
         <div>
-          <div class="pool-head">
-            <h3>Free agent pool</h3>
-            <span class="count" id="pool-count"></span>
+          <div class="pool-head" id="pool-head">
+            <h2 id="pool-title">Pick your anchor</h2>
+            <small id="pool-count"></small>
           </div>
-          <div class="filters" id="filters"></div>
-          <div class="tablewrap">
-            <table class="pool">
-              <thead><tr>
-                <th>Company</th><th class="num">Cost</th><th></th>
-              </tr></thead>
-              <tbody id="pool-body"></tbody>
-            </table>
-          </div>
+          <input class="in search" id="search" type="search" placeholder="Search companies or sectors" autocomplete="off" aria-label="Search companies">
+          <ul class="pool" id="pool"></ul>
         </div>
       </div>
-    </div>
 
-    <div id="draft-done" hidden>
-      <div class="sheet">
-        <h2 id="done-fund">—</h2>
-        <p class="note" id="done-sub">Portfolio locked</p>
-        <div class="tablewrap">
-          <table class="board">
-            <thead><tr><th></th><th>Position</th><th class="num">Cost</th><th class="num">Points</th></tr></thead>
-            <tbody id="done-body"></tbody>
-          </table>
+      <div id="draft-locked" class="locked" hidden>
+        <div id="cert-slot"></div>
+        <div class="share-row">
+          <a class="btn btn-primary" id="share-x" target="_blank" rel="noopener">Post to X</a>
+          <button class="btn btn-quiet" type="button" id="share-copy">Copy link</button>
         </div>
+        <p class="after">Points land each week as the commissioner logs news about your five companies. The league table shows where you stand.</p>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- LEADERBOARD -->
-  <section class="screen" id="s-board">
-    <p class="lede">Scores update when the admin logs a funding round, a launch, a down-round or a shutdown against a company in your portfolio.</p>
-    <div class="tablewrap">
-      <table class="board">
-        <thead><tr><th class="rank"></th><th>Fund</th><th class="num">Slots</th><th class="num">Points</th></tr></thead>
-        <tbody id="board-body"></tbody>
-      </table>
-    </div>
-    <div id="board-empty" hidden class="empty"><p>No funds have been opened yet. Yours can be the first.</p></div>
-  </section>
+    <!-- league -->
+    <section id="s-board" hidden>
+      <header class="fund-head">
+        <h1 class="h1">League table</h1>
+        <p class="sub" id="board-sub">Loading the table…</p>
+      </header>
+      <ol class="league" id="board" style="margin-top:26px"></ol>
+    </section>
 
-  <footer class="foot">
-    Valuations in the pool are unverified starting figures — check them before you run a real season.
-  </footer>
-</main>
+    <!-- how it works -->
+    <section id="s-how" hidden>
+      <div id="how-app"></div>
+    </section>
+  </main>
+
+  <div class="dock" id="dock" hidden>
+    <div class="dock-info"><b id="dock-dry">$100M</b><small id="dock-sub">0 of 5 slots filled</small></div>
+    <button class="btn btn-light js-sign" type="button" disabled>Fill all five slots</button>
+  </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
 (function(){
 "use strict";
 
-var SB_URL = "https://jkbqpjqehzcjcsjnoobi.supabase.co";
-var SB_KEY = "sb_publishable_Pn-9srwR262fL859vOOtsA_UEsnNT3f";
-var db = window.supabase.createClient(SB_URL, SB_KEY);
+/* ---------------- config ---------------- */
+const SB_URL = "https://jkbqpjqehzcjcsjnoobi.supabase.co";
+const SB_KEY = "sb_publishable_Pn-9srwR262fL859vOOtsA_UEsnNT3f";
+const db = window.supabase.createClient(SB_URL, SB_KEY);
 
-var BUDGET = 100;
-var TIERS = [
-  {n:1, label:"Mega / anchor",  hint:"Decacorn, $10B+"},
-  {n:2, label:"Growth tech",    hint:"Series C/D, $1B–$10B"},
-  {n:3, label:"Mid-stage",      hint:"Series B, $100M–$1B"},
-  {n:4, label:"Early stage",    hint:"Seed / Series A"},
-  {n:5, label:"Wildcard",       hint:"Any stage, whatever's left"}
+const BUDGET = 100;
+const SHARE_URL = "https://ffl.zadok.dev";
+const SLOTS = [
+  {n:1, tier:1,    name:"Anchor",   hint:"Decacorn, $10B+",   verb:"Pick your anchor"},
+  {n:2, tier:2,    name:"Growth",   hint:"$1B to $10B",       verb:"Pick a growth company"},
+  {n:3, tier:3,    name:"Series B", hint:"$100M to $1B",      verb:"Pick a Series B"},
+  {n:4, tier:4,    name:"Early",    hint:"Seed or Series A",  verb:"Pick an early bet"},
+  {n:5, tier:null, name:"Wildcard", hint:"Any stage",         verb:"Pick a wildcard"}
 ];
+const SAMPLE = ["Perplexity","ElevenLabs","Harvey AI","Speak","Evervault"];
+const LABEL = {ok:"Draft", swap:"Swap in", here:"Drafted", held:"In your fund", over:"Over cap", tight:"Too tight"};
+const WHY = {
+  ok:"Draft into this slot", swap:"Replace your current pick", here:"Already in this slot",
+  held:"Already in another slot", over:"Would push the fund past $100M",
+  tight:"Would leave too little for your open slots"
+};
 
-var me = null;            // {id, fund_name, display_name}
-var startups = [];        // full pool
-var picks = {};           // slot -> startup object
-var activeFilter = 1;
+/* ---------------- state ---------------- */
+let me = null;
+let startups = [];
+let picks = {};
+let active = 1;
+let query = "";
+let screen = "draft";
+let phase = "loading";
+let mode = "signin";
+let confirming = false, confirmTimer = null, locking = false;
+const reduceMotion = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
 
-function $(id){ return document.getElementById(id); }
-function money(m){ return "$" + m + "M"; }
-function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
-  return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
-
-function store(k,v){ try{ if(v===null) localStorage.removeItem(k); else localStorage.setItem(k,v);}catch(e){} }
+/* ---------------- helpers ---------------- */
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const money = m => (m < 0 ? "\u2212$" + Math.abs(m) : "$" + m) + "M";
+const pts = p => p > 0 ? "+" + p : p < 0 ? "\u2212" + Math.abs(p) : "0";
+const pcls = p => p > 0 ? "pos" : p < 0 ? "neg" : "";
+const plural = (n, one, many) => n + " " + (n === 1 ? one : many);
+const behavior = reduceMotion ? "auto" : "smooth";
+function store(k, v){ try{ v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); }catch(e){} }
 function recall(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
-
-function say(el, text, kind){
-  var n = $(el); n.textContent = text || "";
-  n.className = "msg" + (kind ? " " + kind : "");
+function say(id, text, kind){ const n = $(id); n.textContent = text || ""; n.className = "msg" + (kind ? " " + kind : ""); }
+function fmtDate(d){ try{ return new Date(d).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}); }catch(e){ return ""; } }
+function serial(id){ return "FFL-" + String(id).padStart(6, "0"); }
+function valText(n){
+  n = String(n || "").replace(/\s*\((?:verify[^)]*|may be[^)]*)\)/gi, "").trim();
+  if(!n) return "";
+  return (/^~?\$/.test(n) && !/raised|round/i.test(n)) ? "Valued " + n : n;
 }
 
-function show(name){
-  // Nothing but the gate exists until there's a signed-in fund.
-  if(!me) name = "gate";
-  $("tabs").hidden = !me;
+/* ---------------- guilloché ---------------- */
+function rosette(size, rings, sw){
+  const c = size / 2;
+  let paths = "";
+  rings.forEach(g => {
+    const N = g.steps || 360;
+    for(let k = 0; k < g.count; k++){
+      const ph = k * 2 * Math.PI / g.count;
+      let d = "";
+      for(let i = 0; i <= N; i++){
+        const t = i / N * 2 * Math.PI;
+        const r = c * (g.R + g.A * Math.sin(g.lobes * t + ph));
+        d += (i ? "L" : "M") + (c + r * Math.cos(t)).toFixed(1) + " " + (c + r * Math.sin(t)).toFixed(1);
+      }
+      paths += '<path d="' + d + 'Z"/>';
+    }
+  });
+  return '<svg viewBox="0 0 ' + size + ' ' + size + '" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="' + sw + '">' + paths + '</g></svg>';
+}
+const SEAL = rosette(120, [
+  {R:.86, A:.07, lobes:26, count:6, steps:260},
+  {R:.66, A:.08, lobes:18, count:6, steps:220}
+], .5);
+const MARK = rosette(40, [{R:.66, A:.26, lobes:9, count:4, steps:160}], 1.1);
 
-  ["gate","draft","board","how"].forEach(function(s){
-    $("s-"+s).classList.toggle("on", s === name);
-  });
-  Array.prototype.forEach.call(document.querySelectorAll("#tabs button[data-screen]"), function(b){
-    if(b.dataset.screen === name) b.setAttribute("aria-current","page");
-    else b.removeAttribute("aria-current");
-  });
-  if(name === "board") loadBoard();
+/* ---------------- how it works (shared) ---------------- */
+const SCORING = [
+  ["Goes public or gets acquired", 50],
+  ["Raises at a higher valuation", 15],
+  ["Raises a round", 10],
+  ["Big launch or a viral moment", 10],
+  ["Raises at a lower valuation", -15],
+  ["Lays people off", -10],
+  ["A founder or exec walks", -10],
+  ["Shuts down", -30]
+];
+const HOW =
+  '<div class="sec-head"><div><h2 class="h2">How it works</h2>' +
+  '<p class="sub">Fantasy football rules. Venture capital problems.</p></div></div>' +
+  '<div class="how-grid"><div>' +
+    '<h3 class="h3">Build your fund</h3>' +
+    '<ol class="steps">' +
+      '<li><b>Raise a fund</b><span>Pick a fund name and a PIN. That\'s the whole account.</span></li>' +
+      '<li><b>Fill five slots</b><span>An anchor decacorn, a growth company, a Series B, an early bet, and a wildcard from any stage.</span></li>' +
+      '<li><b>Stay under $100M</b><span>Every company has a price. An anchor eats nearly half the fund, so conviction at the top means scrappiness below.</span></li>' +
+      '<li><b>Sign the term sheet</b><span>Your five positions lock for the season. No transfers, no take-backs.</span></li>' +
+    '</ol></div><div>' +
+    '<h3 class="h3">Score points</h3>' +
+    '<p class="how-p">Each week the commissioner logs what actually happened. Points land on every fund holding that company.</p>' +
+    '<table class="score"><tbody>' +
+      SCORING.map(r => '<tr><td>' + r[0] + '</td><td class="' + pcls(r[1]) + '">' + pts(r[1]) + '</td></tr>').join("") +
+    '</tbody></table>' +
+    '<p class="how-p win">Your fund scores the combined points of all five positions. Top of the league table wins.</p>' +
+  '</div></div>' +
+  '<p class="fine">Prices come from recent reported valuations and are approximate. Scores are logged by hand from public news, so they\'re a judgment call rather than a data feed.</p>';
+
+/* ---------------- certificate ---------------- */
+function certHTML(o){
+  const deployed = o.positions.reduce((a, p) => a + p.cost, 0);
+  const total = o.positions.reduce((a, p) => a + p.points, 0);
+  return '<article class="cert' + (o.issued ? ' issued' : '') + '" aria-label="Fund certificate for ' + esc(o.fund) + '">' +
+    '<div class="cert-in">' +
+      '<div class="cert-top"><span>No. ' + esc(o.serial) + '</span><span>Fund I</span></div>' +
+      '<h3 class="cert-name">' + esc(o.fund) + '</h3>' +
+      '<p class="cert-clause">This certifies that <b>' + esc(o.gp) + '</b> is general partner of a fantasy venture fund of $100,000,000, committed as follows.</p>' +
+      '<ol class="cert-pos">' + o.positions.map(p =>
+        '<li><span class="cp-n">' + p.slot + '</span>' +
+        '<span class="cp-name"><b>' + esc(p.name) + '</b><small>' + esc(p.slotName) + '</small></span>' +
+        '<span class="cp-cost">' + money(p.cost) + '</span>' +
+        '<span class="cp-pts ' + pcls(p.points) + '">' + pts(p.points) + '</span></li>'
+      ).join("") + '</ol>' +
+      '<dl class="cert-sum">' +
+        '<div><dt>Deployed</dt><dd>' + money(deployed) + '</dd></div>' +
+        '<div><dt>Dry powder</dt><dd>' + money(BUDGET - deployed) + '</dd></div>' +
+        '<div><dt>Points</dt><dd class="' + pcls(total) + '">' + pts(total) + '</dd></div>' +
+      '</dl>' +
+      '<div class="cert-foot">' +
+        '<div class="sig"><span class="sig-name">' + esc(o.sig) + '</span><span class="sig-line">General partner</span></div>' +
+        '<div class="seal">' + SEAL + '<span class="seal-in"><b class="' + pcls(total) + '">' + pts(total) + '</b><small>points</small></span></div>' +
+      '</div>' +
+      '<p class="cert-fine">' + esc(o.fine) + '</p>' +
+    '</div></article>';
 }
 
-/* ---------- how it works (rendered in two places) ---------- */
+/* ---------------- data ---------------- */
+function fetchPool(){
+  return db.from("startups").select("*").order("tier").order("cost_millions", {ascending:false})
+    .then(r => { if(r.error) throw r.error; startups = r.data || []; return startups; });
+}
 
-var HOW = [
-'<div class="how">',
-  '<h2>How it works</h2>',
-  '<p>You run a $100M venture fund. You draft five startups. Real news about those companies moves your score.</p>',
+function rankBy(rows, key, out){
+  const sorted = rows.slice().sort((a, b) => b[key] - a[key]);
+  let rank = 0, last = null;
+  sorted.forEach((r, i) => { if(r[key] !== last){ rank = i + 1; last = r[key]; } r[out] = rank; });
+}
 
-  '<h3>Building your fund</h3>',
-  '<ol class="steps">',
-    '<li><b>Open a fund</b><span>Pick a fund name and a PIN. That is your whole account.</span></li>',
-    '<li><b>Fill five slots</b><span>One company per stage — an anchor decacorn, a growth-stage name, a Series B, an early bet — plus a wildcard from any stage.</span></li>',
-    '<li><b>Stay under $100M</b><span>Every company has a price. An anchor eats nearly half your fund, so a big name at the top means going cheap further down.</span></li>',
-    '<li><b>Lock it in</b><span>Your portfolio is final for the season. Pick carefully.</span></li>',
-  '</ol>',
+async function loadLeague(){
+  const [lb, ro, ws] = await Promise.all([
+    db.from("leaderboard").select("*"),
+    db.from("rosters").select("manager_id,startup_id"),
+    db.from("weekly_scores").select("startup_id,points,week_start")
+  ]);
+  if(lb.error) throw lb.error;
+  const rows = (lb.data || []).map(r => Object.assign({}, r, {
+    total_points: Number(r.total_points) || 0,
+    slots_filled: Number(r.slots_filled) || 0
+  }));
+  const weekly = {};
+  let latest = null;
+  if(!ws.error && ws.data && ws.data.length){
+    latest = ws.data.reduce((m, x) => x.week_start > m ? x.week_start : m, ws.data[0].week_start);
+    ws.data.forEach(x => { if(x.week_start === latest) weekly[x.startup_id] = (weekly[x.startup_id] || 0) + x.points; });
+  }
+  const delta = {};
+  if(!ro.error && ro.data) ro.data.forEach(r => { delta[r.manager_id] = (delta[r.manager_id] || 0) + (weekly[r.startup_id] || 0); });
+  rows.forEach(r => { r.week = delta[r.manager_id] || 0; r.prev = r.total_points - r.week; });
+  rankBy(rows, "total_points", "rank");
+  rankBy(rows, "prev", "prevRank");
+  const counts = {};
+  rows.forEach(r => { r.move = latest ? r.prevRank - r.rank : 0; counts[r.rank] = (counts[r.rank] || 0) + 1; });
+  rows.forEach(r => { r.tied = counts[r.rank] > 1; });
+  rows.sort((a, b) => b.total_points - a.total_points || String(a.fund_name).localeCompare(String(b.fund_name)));
+  return {rows, latest};
+}
 
-  '<h3>Scoring</h3>',
-  '<p>Each week the commissioner logs what actually happened to these companies. Points land on every fund holding them.</p>',
-  '<div class="tablewrap"><table class="scoring">',
-    '<thead><tr><th>What happens</th><th class="num">Points</th></tr></thead><tbody>',
-    '<tr><td>Goes public or gets acquired</td><td class="num">+50</td></tr>',
-    '<tr><td>Raises at a higher valuation</td><td class="num">+15</td></tr>',
-    '<tr><td>Raises a round</td><td class="num">+10</td></tr>',
-    '<tr><td>Big launch or a viral moment</td><td class="num">+10</td></tr>',
-    '<tr><td>Raises at a lower valuation</td><td class="num">&minus;15</td></tr>',
-    '<tr><td>Layoffs</td><td class="num">&minus;10</td></tr>',
-    '<tr><td>Founder or exec walks</td><td class="num">&minus;10</td></tr>',
-    '<tr><td>Shuts down</td><td class="num">&minus;30</td></tr>',
-    '</tbody>',
-  '</table></div>',
+function leagueRow(r, latest){
+  const you = me && r.manager_id === me.id;
+  const mv = !latest ? '' :
+    r.move > 0 ? '<span class="mv up" aria-label="Up ' + r.move + '">\u25B2' + r.move + '</span>' :
+    r.move < 0 ? '<span class="mv dn" aria-label="Down ' + (-r.move) + '">\u25BC' + (-r.move) + '</span>' :
+    '<span class="mv flat" aria-label="No change">\u2013</span>';
+  const drafting = r.slots_filled < 5 ? '<span class="tag">Drafting</span>' : '';
+  const yours = you ? '<span class="tag">You</span>' : '';
+  const week = latest && r.week ? '<small class="' + pcls(r.week) + '">' + pts(r.week) + ' this week</small>' : '';
+  return '<li class="lr' + (you ? ' you' : '') + '">' +
+    '<span class="lr-rank">' + (r.tied ? 'T' : '') + r.rank + mv + '</span>' +
+    '<span class="lr-fund"><b>' + esc(r.fund_name) + '</b><small>GP ' + esc(r.display_name) + '</small>' + yours + drafting + '</span>' +
+    '<span class="lr-pts"><b class="' + pcls(r.total_points) + '">' + pts(r.total_points) + '</b>' + week + '</span>' +
+  '</li>';
+}
 
-  '<h3>Winning</h3>',
-  '<p>Your fund scores the combined points of all five holdings. Highest total on the leaderboard takes it.</p>',
-  '<p class="fine">Company prices are set from recent reported valuations and are approximate. Scoring is a judgment call by the commissioner, not an automated feed — the aim is a fun league, not a real index.</p>',
-'</div>'
-].join("");
+/* ---------------- landing ---------------- */
+function cheapest(fits, used){
+  let best = null;
+  startups.forEach(s => { if(used.has(s.id) || !fits(s)) return; if(!best || s.cost_millions < best.cost_millions) best = s; });
+  return best;
+}
 
-$("how-gate").innerHTML = HOW;
-$("how-tab").innerHTML  = HOW;
+function samplePositions(){
+  let chosen = SAMPLE.map(n => startups.find(s => s.name === n));
+  const ok = chosen.every(Boolean) &&
+    chosen.slice(0, 4).every((s, i) => s.tier === i + 1) &&
+    new Set(chosen.map(s => s.id)).size === 5 &&
+    chosen.reduce((a, s) => a + s.cost_millions, 0) <= BUDGET;
+  if(!ok){
+    const used = new Set();
+    chosen = SLOTS.map(sl => { const c = cheapest(s => !sl.tier || s.tier === sl.tier, used); if(c) used.add(c.id); return c; });
+    if(!chosen.every(Boolean)) return null;
+  }
+  return chosen.map((s, i) => ({slot:i + 1, name:s.name, slotName:SLOTS[i].name, cost:s.cost_millions, points:Number(s.total_points) || 0}));
+}
 
-/* ---------- auth (name + PIN, friends-game grade) ---------- */
+function renderTicker(){
+  if(!startups.length) return;
+  const items = startups.slice().sort((a, b) => b.cost_millions - a.cost_millions).map(s => {
+    const p = Number(s.total_points) || 0;
+    const mv = p > 0 ? '<span class="up">\u25B2' + p + '</span>' : p < 0 ? '<span class="dn">\u25BC' + Math.abs(p) + '</span>' : '';
+    return '<span class="tk"><b>' + esc(s.name) + '</b><span class="p">' + money(s.cost_millions) + '</span>' + mv + '</span>';
+  }).join("");
+  $("ticker").innerHTML = items + '<span aria-hidden="true" style="display:inline-flex">' + items + '</span>';
+}
 
-var mode = "signin"; // "create" | "signin"
+function renderSample(){
+  const positions = samplePositions();
+  if(!positions){ $("hero-cert").innerHTML = ''; return; }
+  $("hero-cert").innerHTML = certHTML({
+    fund:"Hypothetical Capital", gp:"you", sig:"Your name", serial:"FFL-SAMPLE",
+    positions, fine:"Sample fund at today's prices. Yours could be better. Probably."
+  });
+}
 
+async function loadLanding(){
+  fetchPool().then(() => { renderTicker(); renderSample(); }).catch(() => {
+    $("ticker").innerHTML = '<span class="ticker-wait">Live prices are unavailable right now.</span>';
+    $("hero-cert").innerHTML = '';
+  });
+  try{
+    const {rows, latest} = await loadLeague();
+    $("lp-count").textContent = rows.length
+      ? plural(rows.length, "fund", "funds") + " raised so far. Here's the top of the table."
+      : "No funds yet. The first one in takes the top line.";
+    $("lp-league").innerHTML = rows.length
+      ? rows.slice(0, 5).map(r => leagueRow(r, latest)).join("")
+      : '<li class="empty-li">An empty table and $100M burning a hole in your pocket.</li>';
+  }catch(e){
+    $("lp-count").textContent = "The league table didn't load. Refresh to try again.";
+    $("lp-league").innerHTML = "";
+  }
+}
+
+function openJoin(m){
+  setMode(m);
+  $("join").scrollIntoView({behavior, block:"start"});
+  setTimeout(() => $("f-fund").focus({preventScroll:true}), reduceMotion ? 0 : 450);
+}
+
+/* ---------------- auth ---------------- */
 function setMode(next){
   mode = next;
-  var creating = mode === "create";
+  const creating = mode === "create";
   $("wrap-gp").hidden = !creating;
-  $("gate-title").textContent = creating ? "Open your fund" : "Sign back in";
-  $("gate-note").textContent  = creating
-    ? "Pick a fund name and a PIN — that's your account."
+  $("join-title").textContent = creating ? "Raise your fund" : "Welcome back";
+  $("join-note").textContent = creating
+    ? "A fund name, your name and a PIN. That's the whole account."
     : "Your fund name and PIN. That's it.";
-  $("b-go").textContent   = creating ? "Create fund" : "Sign in";
-  $("b-mode").textContent = creating ? "I already have one" : "Create a new fund";
-  say("gate-msg","");
+  $("b-go").textContent = creating ? "Raise fund" : "Sign in";
+  $("alt-q").textContent = creating ? "Already have a fund?" : "New here?";
+  $("b-mode").textContent = creating ? "Sign in instead" : "Raise a fund instead";
+  $("f-pin").setAttribute("autocomplete", creating ? "new-password" : "current-password");
+  say("gate-msg", "");
 }
 
-$("b-mode").addEventListener("click", function(){
-  setMode(mode === "create" ? "signin" : "create");
-  $("f-fund").focus();
-});
-
-// Sign in with an existing fund. Returns a promise; `quiet` suppresses
-// the "no match" error so the create flow can fall through to it.
 function signIn(fund, pin, quiet){
-  return db.rpc("verify_manager", {p_fund_name:fund, p_pin:pin}).then(function(r){
-    if(r.error){ say("gate-msg","Couldn't sign in: " + r.error.message, "bad"); return false; }
-    if(!r.data){
-      if(!quiet) say("gate-msg","No fund matches that name and PIN.","bad");
-      return false;
-    }
-    return db.from("managers_public").select("id,fund_name,display_name").eq("id", r.data).single()
-      .then(function(m){
-        if(m.error || !m.data){ say("gate-msg","Signed in, but couldn't load the fund.","bad"); return false; }
-        signedIn(m.data);
-        return true;
-      });
+  return db.rpc("verify_manager", {p_fund_name:fund, p_pin:pin}).then(r => {
+    if(r.error){ say("gate-msg", "Couldn't sign in: " + r.error.message, "bad"); return false; }
+    if(!r.data){ if(!quiet) say("gate-msg", "No fund matches that name and PIN.", "bad"); return false; }
+    return db.from("managers_public").select("id,fund_name,display_name").eq("id", r.data).single().then(m => {
+      if(m.error || !m.data){ say("gate-msg", "Signed in, but the fund didn't load. Try again.", "bad"); return false; }
+      signedIn(m.data);
+      return true;
+    });
   });
 }
 
-$("b-go").addEventListener("click", function(){
-  var fund = $("f-fund").value.trim();
-  var gp   = $("f-gp").value.trim();
-  var pin  = $("f-pin").value.trim();
+function submitJoin(e){
+  if(e) e.preventDefault();
+  const fund = $("f-fund").value.trim();
+  const gp = $("f-gp").value.trim();
+  const pin = $("f-pin").value.trim();
+  const btn = $("b-go");
 
   if(mode === "signin"){
-    if(!fund || !pin) return say("gate-msg","Enter your fund name and PIN.","bad");
-    say("gate-msg","Checking…");
-    return signIn(fund, pin, false);
+    if(!fund || !pin) return say("gate-msg", "Enter your fund name and PIN.", "bad");
+    btn.disabled = true; say("gate-msg", "Checking…");
+    return signIn(fund, pin, false).finally(() => { btn.disabled = false; });
   }
 
-  if(!fund || !gp || pin.length < 4){
-    return say("gate-msg","Fill in a fund name, your name, and a PIN of at least 4 characters.","bad");
-  }
-  say("gate-msg","Opening the fund…");
-  db.rpc("create_manager", {p_fund_name:fund, p_display_name:gp, p_pin:pin})
-    .then(function(r){
-      if(!r.error){
-        var m = Array.isArray(r.data) ? r.data[0] : r.data;
-        if(m && m.id) return signedIn(m);
-        return say("gate-msg","Couldn't create the fund. Try again.","bad");
-      }
-      // Name already exists: if the PIN matches, just sign them in.
-      if(/taken/i.test(r.error.message || "")){
-        say("gate-msg","That fund already exists — signing you in…");
-        return signIn(fund, pin, true).then(function(ok){
-          if(!ok) say("gate-msg","That fund name is taken, and the PIN doesn't match it.","bad");
-        });
-      }
-      say("gate-msg", r.error.message || "Couldn't create the fund.", "bad");
-    });
-});
-
-// Enter submits from any field
-["f-fund","f-gp","f-pin"].forEach(function(id){
-  $(id).addEventListener("keydown", function(e){
-    if(e.key === "Enter"){ e.preventDefault(); $("b-go").click(); }
-  });
-});
-
-$("b-signout").addEventListener("click", function(){
-  me = null;
-  picks = {};
-  activeFilter = 1;
-  startups = [];
-  store("ffl_me", null);
-  $("draft-live").hidden = false;
-  $("draft-done").hidden = true;
-  $("f-fund").value = ""; $("f-gp").value = ""; $("f-pin").value = "";
-  setMode("signin");
-  show("gate");
-  $("f-fund").focus();
-});
+  if(!fund || !gp || pin.length < 4) return say("gate-msg", "Add a fund name, your name and a PIN of at least 4 digits.", "bad");
+  btn.disabled = true; say("gate-msg", "Raising the fund…");
+  db.rpc("create_manager", {p_fund_name:fund, p_display_name:gp, p_pin:pin}).then(r => {
+    if(!r.error){
+      const m = Array.isArray(r.data) ? r.data[0] : r.data;
+      if(m && m.id) return signedIn(m);
+      return say("gate-msg", "The fund didn't save. Try again.", "bad");
+    }
+    if(/taken/i.test(r.error.message || "")){
+      say("gate-msg", "That fund already exists. Signing you in…");
+      return signIn(fund, pin, true).then(ok => { if(!ok) say("gate-msg", "That fund name is taken, and the PIN doesn't match it.", "bad"); });
+    }
+    say("gate-msg", r.error.message || "The fund didn't save. Try again.", "bad");
+  }).finally(() => { btn.disabled = false; });
+}
 
 function signedIn(m){
   me = m;
   store("ffl_me", JSON.stringify(m));
-  say("gate-msg","");
-  show("draft");
-  loadPool().then(loadMyRoster);
+  say("gate-msg", "");
+  enterApp();
 }
 
-/* ---------- pool + draft ---------- */
+function signOut(){
+  me = null; picks = {}; active = 1; query = ""; confirming = false; locking = false;
+  clearTimeout(confirmTimer);
+  store("ffl_me", null);
+  $("f-fund").value = ""; $("f-gp").value = ""; $("f-pin").value = "";
+  setMode("signin");
+  show();
+  window.scrollTo(0, 0);
+  loadLanding();
+}
 
-function loadPool(){
-  $("pool-body").innerHTML = '<tr><td colspan="3" class="spin">Loading the pool…</td></tr>';
-  return db.from("startups").select("*").order("tier").order("cost_millions",{ascending:false})
-    .then(function(r){
-      if(r.error){
-        $("pool-body").innerHTML = '<tr><td colspan="3" class="spin">Couldn\'t load companies: ' + esc(r.error.message) + '</td></tr>';
-        return;
-      }
-      startups = r.data || [];
-      renderFilters();
-      renderPool();
-      renderSlots();
+/* ---------------- views ---------------- */
+function show(next){
+  if(next) screen = next;
+  const authed = !!me;
+  $("v-landing").hidden = authed;
+  $("v-app").hidden = !authed;
+  document.documentElement.classList.toggle("is-landing", !authed);
+  if(authed){
+    ["draft", "board", "how"].forEach(s => { $("s-" + s).hidden = s !== screen; });
+    document.querySelectorAll(".tabs [data-screen]").forEach(b => {
+      if(b.dataset.screen === screen) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
     });
-}
-
-function loadMyRoster(){
-  if(!me) return;
-  return db.from("rosters").select("slot, startups(*)").eq("manager_id", me.id).order("slot")
-    .then(function(r){
-      if(r.error || !r.data || !r.data.length) return;
-      renderLocked(r.data);
-    });
-}
-
-function renderFilters(){
-  var f = $("filters"); f.innerHTML = "";
-  TIERS.forEach(function(t){
-    var b = document.createElement("button");
-    b.textContent = "Slot " + t.n + " · " + t.label;
-    b.setAttribute("aria-pressed", String(t.n === activeFilter));
-    b.addEventListener("click", function(){
-      activeFilter = t.n; renderFilters(); renderPool();
-    });
-    f.appendChild(b);
-  });
-}
-
-function spent(){
-  return Object.keys(picks).reduce(function(a,k){ return a + picks[k].cost_millions; }, 0);
-}
-function remaining(){ return BUDGET - spent(); }
-function isPicked(id){
-  return Object.keys(picks).some(function(k){ return picks[k].id === id; });
-}
-
-function eligible(s){
-  // slot 1-4 must match tier; slot 5 takes anything
-  if(activeFilter === 5) return true;
-  return s.tier === activeFilter;
-}
-
-function renderPool(){
-  var tbody = $("pool-body");
-  var list = startups.filter(eligible);
-  $("pool-count").textContent = list.length + " available for slot " + activeFilter;
-  tbody.innerHTML = "";
-
-  if(!list.length){
-    tbody.innerHTML = '<tr><td colspan="3" class="spin">No companies in this tier yet.</td></tr>';
-    return;
+    if(screen === "board") renderBoard();
   }
+  renderSign();
+}
 
-  var budgetLeftIfSwapped = remaining() + (picks[activeFilter] ? picks[activeFilter].cost_millions : 0);
+function setPhase(p, errText){
+  phase = p;
+  $("draft-loading").hidden = p !== "loading";
+  $("draft-live").hidden = p !== "drafting";
+  $("draft-locked").hidden = p !== "locked";
+  $("draft-error").hidden = p !== "error";
+  if(errText) $("draft-err-text").textContent = errText;
+  renderSign();
+}
 
-  list.forEach(function(s){
-    var taken = isPicked(s.id);
-    var affordable = s.cost_millions <= budgetLeftIfSwapped;
-    var tr = document.createElement("tr");
-    if(taken) tr.className = "picked";
+async function enterApp(){
+  show("draft");
+  window.scrollTo(0, 0);
+  $("fund-name").textContent = me.fund_name;
+  $("fund-sub").textContent = "GP " + me.display_name;
+  setPhase("loading");
+  try{
+    if(!startups.length) await fetchPool();
+    const r = await db.from("rosters").select("slot,created_at,startups(*)").eq("manager_id", me.id).order("slot");
+    if(r.error) throw r.error;
+    if(r.data && r.data.length){ renderLocked(r.data, false); return; }
+    picks = {}; active = 1; query = ""; $("search").value = "";
+    $("fund-sub").textContent = "GP " + me.display_name + ". Five checks, $100M, one shot.";
+    setPhase("drafting");
+    renderDraft();
+  }catch(e){
+    setPhase("error", "Your fund didn't load: " + (e.message || "network error") + ".");
+  }
+}
 
-    tr.innerHTML =
-      '<td><div class="co-name">' + esc(s.name) + '</div>' +
-      '<div class="co-sector">' + esc(s.sector || "") + '</div>' +
-      '<div class="co-val">' + esc(s.valuation_note || "") +
-      (s.verified ? '' : ' <span class="unverified">unverified</span>') + '</div></td>' +
-      '<td class="num">' + money(s.cost_millions) + '</td>' +
-      '<td class="num"></td>';
+/* ---------------- draft ---------------- */
+function spent(){ return SLOTS.reduce((a, sl) => a + (picks[sl.n] ? picks[sl.n].cost_millions : 0), 0); }
+function filled(){ return SLOTS.filter(sl => picks[sl.n]).length; }
 
-    var btn = document.createElement("button");
-    btn.className = "pick-btn";
-    if(taken){ btn.textContent = "In portfolio"; btn.disabled = true; }
-    else if(!affordable){ btn.textContent = "Over budget"; btn.disabled = true; }
-    else { btn.textContent = "Draft"; btn.addEventListener("click", function(){ pick(s); }); }
-    tr.lastElementChild.appendChild(btn);
-    tbody.appendChild(tr);
+// Cheapest way to fill every open slot except `skip`, given an extra company already taken.
+function reserveFor(skip, extraId){
+  const used = new Set();
+  SLOTS.forEach(sl => { if(picks[sl.n] && sl.n !== skip) used.add(picks[sl.n].id); });
+  if(extraId) used.add(extraId);
+  let sum = 0, count = 0;
+  SLOTS.forEach(sl => {
+    if(sl.n === skip || picks[sl.n]) return;
+    const c = cheapest(s => !sl.tier || s.tier === sl.tier, used);
+    if(c){ sum += c.cost_millions; used.add(c.id); count++; }
   });
+  return {sum, count};
 }
 
-function pick(s){
-  picks[activeFilter] = s;
-  renderSlots(); renderPool();
-  var next = TIERS.map(function(t){return t.n;}).filter(function(n){ return !picks[n]; })[0];
-  if(next){ activeFilter = next; renderFilters(); renderPool(); }
+function candidate(s){
+  const cur = picks[active];
+  if(cur && cur.id === s.id) return "here";
+  if(SLOTS.some(sl => picks[sl.n] && picks[sl.n].id === s.id)) return "held";
+  const after = spent() - (cur ? cur.cost_millions : 0) + s.cost_millions;
+  if(after > BUDGET) return "over";
+  if(after + reserveFor(active, s.id).sum > BUDGET) return "tight";
+  return cur ? "swap" : "ok";
 }
 
-function drop(slot){
-  delete picks[slot];
-  renderSlots(); renderPool();
+let dryShown = BUDGET, dryToken = 0;
+function setDry(v){
+  const paint = x => { $("dry-num").textContent = money(x); $("dock-dry").textContent = money(x); };
+  const over = v < 0;
+  $("dry-num").classList.toggle("over", over);
+  $("dock-dry").classList.toggle("over", over);
+  const from = dryShown; dryShown = v;
+  if(reduceMotion || from === v){ paint(v); return; }
+  const token = ++dryToken, t0 = performance.now(), dur = 280;
+  const step = now => {
+    if(token !== dryToken) return;
+    const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+    paint(Math.round(from + (v - from) * e));
+    if(k < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+function renderBudget(){
+  const used = spent(), left = BUDGET - used, res = reserveFor(null, null);
+  setDry(left);
+  const segs = $("bar").children;
+  SLOTS.forEach((sl, i) => { segs[i].style.width = (picks[sl.n] ? picks[sl.n].cost_millions : 0) + "%"; });
+  segs[5].style.width = (left > 0 ? Math.min(left, res.sum) : 0) + "%";
+  $("bar").classList.toggle("over", used > BUDGET);
+  const note = $("budget-note");
+  note.classList.toggle("bad", used > BUDGET);
+  if(used > BUDGET) note.textContent = money(used - BUDGET) + " over the cap. Swap in something cheaper.";
+  else if(res.count) note.textContent = "Keep at least " + money(res.sum) + " for your " + plural(res.count, "open slot", "open slots") + ".";
+  else if(left === 0) note.textContent = "Fully deployed. Every dollar at work.";
+  else note.textContent = "All five checks written, " + money(left) + " left in reserve.";
 }
 
 function renderSlots(){
-  var ol = $("slots"); ol.innerHTML = "";
-  TIERS.forEach(function(t){
-    var p = picks[t.n];
-    var li = document.createElement("li");
-    li.innerHTML =
-      '<span class="slot-n">' + t.n + '</span>' +
-      '<span class="slot-body">' +
-        '<span class="slot-pick' + (p ? '' : ' empty') + '">' + (p ? esc(p.name) : t.label) + '</span>' +
-        '<span class="slot-label">' + (p ? esc(t.label) : esc(t.hint)) + '</span>' +
-      '</span>' +
-      '<span class="slot-cost">' + (p ? money(p.cost_millions) : "—") + '</span>';
-    if(p){
-      var x = document.createElement("button");
-      x.className = "slot-drop"; x.textContent = "×";
-      x.setAttribute("aria-label","Remove " + p.name);
-      x.addEventListener("click", function(){ drop(t.n); });
-      li.appendChild(x);
-    }
-    ol.appendChild(li);
-  });
-
-  var used = spent(), over = used > BUDGET;
-  $("cap-fig").textContent = money(used);
-  $("cap-fig").className = "cap-figure" + (over ? " over" : "");
-  $("cap-note").textContent = over
-    ? money(used - BUDGET) + " over the cap"
-    : "of " + money(BUDGET) + " available";
-  var bar = $("cap-bar");
-  bar.style.width = Math.min(100, (used / BUDGET) * 100) + "%";
-  bar.className = over ? "over" : "";
-
-  var full = TIERS.every(function(t){ return !!picks[t.n]; });
-  $("b-lock").disabled = !(full && !over);
+  $("slots").innerHTML = SLOTS.map(sl => {
+    const p = picks[sl.n], on = sl.n === active;
+    return '<li class="slot' + (on ? ' on' : '') + '" style="--sw:' + (p ? 'var(--s' + sl.n + ')' : 'transparent') + '">' +
+      '<button class="slot-btn" type="button" data-slot="' + sl.n + '" aria-pressed="' + on + '">' +
+        '<span class="slot-k">' + sl.n + ' ' + esc(sl.name) + '</span>' +
+        '<span class="slot-v' + (p ? '' : ' empty') + '">' + esc(p ? p.name : sl.hint) + '</span>' +
+        '<span class="slot-c">' + (p ? money(p.cost_millions) : 'Open') + '</span>' +
+      '</button>' +
+      (p ? '<button class="slot-x" type="button" data-drop="' + sl.n + '" aria-label="Remove ' + esc(p.name) + '">\u00D7</button>' : '') +
+    '</li>';
+  }).join("");
 }
 
-$("b-lock").addEventListener("click", function(){
-  if(!me) return;
-  var rows = TIERS.map(function(t){
-    return { manager_id: me.id, startup_id: picks[t.n].id, slot: t.n };
-  });
-  $("b-lock").disabled = true;
-  say("draft-msg","Locking in…");
-  db.from("rosters").insert(rows).then(function(r){
-    if(r.error){
-      $("b-lock").disabled = false;
-      var dup = /duplicate|unique/i.test(r.error.message);
-      return say("draft-msg", dup
-        ? "This fund already has a locked portfolio."
-        : "Couldn't lock it in: " + r.error.message, "bad");
-    }
-    say("draft-msg","");
-    loadMyRoster();
-  });
-});
-
-function renderLocked(rows){
-  $("draft-live").hidden = true;
-  $("draft-done").hidden = false;
-  $("done-fund").textContent = me.fund_name;
-  var total = rows.reduce(function(a,r){ return a + (r.startups.total_points||0); }, 0);
-  var cost  = rows.reduce(function(a,r){ return a + r.startups.cost_millions; }, 0);
-  $("done-sub").textContent = "General partner " + me.display_name +
-    " · " + money(cost) + " deployed · " + total + " points";
-  var body = $("done-body"); body.innerHTML = "";
-  rows.forEach(function(r){
-    var s = r.startups, t = TIERS[r.slot-1];
-    var pts = s.total_points || 0;
-    var tr = document.createElement("tr");
-    tr.innerHTML =
-      '<td class="rank">' + r.slot + '</td>' +
-      '<td><div class="fund-name">' + esc(s.name) + '</div>' +
-      '<div class="gp">' + esc(t ? t.label : "") + (s.last_move_note ? " · " + esc(s.last_move_note) : "") + '</div></td>' +
-      '<td class="num">' + money(s.cost_millions) + '</td>' +
-      '<td class="num"><span class="pts ' + (pts>0?"up":pts<0?"down":"") + '">' +
-        (pts>0?"+":"") + pts + '</span></td>';
-    body.appendChild(tr);
-  });
+function renderPool(){
+  const sl = SLOTS[active - 1];
+  $("pool-title").textContent = sl.verb;
+  const q = query.trim().toLowerCase();
+  const list = startups.filter(s => (!sl.tier || s.tier === sl.tier) &&
+    (!q || s.name.toLowerCase().includes(q) || String(s.sector || "").toLowerCase().includes(q)));
+  $("pool-count").textContent = plural(list.length, "company", "companies") + (sl.tier ? " at this stage" : " across every stage");
+  if(!list.length){
+    $("pool").innerHTML = '<li class="empty-li">' + (q ? 'Nothing matches \u201C' + esc(query.trim()) + '\u201D. Try a sector like \u201Cfintech\u201D.' : 'No companies at this stage yet.') + '</li>';
+    return;
+  }
+  $("pool").innerHTML = list.map(s => {
+    const st = candidate(s), live = st === "ok" || st === "swap";
+    return '<li><button class="co" type="button" data-id="' + s.id + '" data-s="' + st + '"' + (live ? '' : ' aria-disabled="true"') +
+      ' aria-label="' + esc(s.name) + ', ' + money(s.cost_millions) + '. ' + WHY[st] + '">' +
+      '<span><span class="co-name">' + esc(s.name) + '</span>' +
+      '<span class="co-meta">' + esc(s.sector || "") + '</span>' +
+      '<span class="co-val">' + esc(valText(s.valuation_note)) + '</span></span>' +
+      '<span class="co-r"><span class="co-price">' + money(s.cost_millions) + '</span><span class="co-act">' + LABEL[st] + '</span></span>' +
+    '</button></li>';
+  }).join("");
 }
 
-/* ---------- leaderboard ---------- */
-
-function loadBoard(){
-  var body = $("board-body");
-  body.innerHTML = '<tr><td colspan="4" class="spin">Loading…</td></tr>';
-  db.from("leaderboard").select("*").order("total_points",{ascending:false}).then(function(r){
-    if(r.error){
-      body.innerHTML = '<tr><td colspan="4" class="spin">Couldn\'t load the leaderboard: ' + esc(r.error.message) + '</td></tr>';
-      return;
-    }
-    var rows = r.data || [];
-    $("board-empty").hidden = rows.length > 0;
-    body.innerHTML = "";
-    rows.forEach(function(m, i){
-      var pts = m.total_points || 0;
-      var tr = document.createElement("tr");
-      if(me && m.manager_id === me.id) tr.className = "you";
-      tr.innerHTML =
-        '<td class="rank">' + (i+1) + '</td>' +
-        '<td><div class="fund-name">' + esc(m.fund_name) + '</div>' +
-        '<div class="gp">' + esc(m.display_name) + '</div></td>' +
-        '<td class="num">' + m.slots_filled + ' / 5</td>' +
-        '<td class="num"><span class="pts ' + (pts>0?"up":pts<0?"down":"") + '">' +
-          (pts>0?"+":"") + pts + '</span></td>';
-      body.appendChild(tr);
-    });
-  });
+function signState(){
+  if(locking) return {label:"Signing…", dis:true};
+  if(spent() > BUDGET) return {label:"Over the cap", dis:true};
+  if(filled() < 5) return {label:"Fill all five slots", dis:true};
+  if(confirming) return {label:"Confirm: this is final", dis:false, confirm:true};
+  return {label:"Sign the term sheet", dis:false};
 }
 
-/* ---------- boot ---------- */
+function renderSign(){
+  const st = signState();
+  document.querySelectorAll(".js-sign").forEach(b => {
+    b.textContent = st.label; b.disabled = st.dis; b.classList.toggle("is-confirm", !!st.confirm);
+  });
+  $("dock-sub").textContent = filled() + " of 5 slots filled";
+  const dockOn = !!me && screen === "draft" && phase === "drafting";
+  $("dock").hidden = !dockOn;
+  document.body.classList.toggle("has-dock", dockOn);
+}
 
-Array.prototype.forEach.call(document.querySelectorAll("#tabs button[data-screen]"), function(b){
-  b.addEventListener("click", function(){ show(b.dataset.screen); });
-});
+function renderDraft(){ renderBudget(); renderSlots(); renderPool(); renderSign(); }
 
-var saved = recall("ffl_me");
-if(saved){
+function cancelConfirm(){ confirming = false; clearTimeout(confirmTimer); }
+
+function focusSlot(){
+  const row = $("slots"), el = row.querySelector(".slot.on");
+  if(el && row.scrollWidth > row.clientWidth) row.scrollTo({left: el.offsetLeft - 20, behavior});
+  const head = $("pool-head");
+  if(head.getBoundingClientRect().top < 90) head.scrollIntoView({behavior, block:"start"});
+}
+
+function draft(s){
+  picks[active] = s;
+  cancelConfirm(); say("draft-msg", "");
+  try{ if(navigator.vibrate) navigator.vibrate(8); }catch(e){}
+  const next = SLOTS.find(sl => !picks[sl.n]);
+  const moved = next && next.n !== active;
+  if(next) active = next.n;
+  query = ""; $("search").value = "";
+  renderDraft();
+  if(moved) focusSlot();
+}
+
+async function sign(){
+  if(signState().dis || !me) return;
+  if(!confirming){
+    confirming = true; renderSign();
+    confirmTimer = setTimeout(() => { confirming = false; renderSign(); }, 4000);
+    return;
+  }
+  cancelConfirm(); locking = true; renderSign(); say("draft-msg", "");
+  const rows = SLOTS.map(sl => ({manager_id:me.id, startup_id:picks[sl.n].id, slot:sl.n}));
+  const r = await db.from("rosters").insert(rows);
+  locking = false;
+  if(r.error){
+    const dup = /duplicate|unique/i.test(r.error.message || "");
+    say("draft-msg", dup ? "This fund already signed a term sheet." : "The term sheet didn't save: " + r.error.message, "bad");
+    renderSign();
+    if(dup) enterApp();
+    return;
+  }
+  const back = await db.from("rosters").select("slot,created_at,startups(*)").eq("manager_id", me.id).order("slot");
+  if(back.error || !back.data || !back.data.length){ enterApp(); return; }
+  window.scrollTo({top:0, behavior});
+  renderLocked(back.data, true);
+}
+
+/* ---------------- locked portfolio ---------------- */
+function renderLocked(rows, justSigned){
+  rows = rows.slice().sort((a, b) => a.slot - b.slot);
+  const date = fmtDate(rows[0].created_at);
+  const positions = rows.map(r => ({
+    slot:r.slot, name:r.startups.name, slotName:(SLOTS[r.slot - 1] || {}).name || "",
+    cost:r.startups.cost_millions, points:Number(r.startups.total_points) || 0
+  }));
+  $("fund-sub").textContent = "GP " + me.display_name + ". Term sheet signed " + date + ".";
+  $("cert-slot").innerHTML = certHTML({
+    fund:me.fund_name, gp:me.display_name, sig:me.display_name, serial:serial(me.id),
+    positions, issued:justSigned && !reduceMotion,
+    fine:"Executed " + date + ". Not a security. Barely a fund."
+  });
+  const names = positions.map(p => p.name);
+  const text = "I just raised " + me.fund_name + " on Fantasy Founders League. $100M, five checks: " + names.join(", ") + ".";
+  $("share-x").href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(text) + "&url=" + encodeURIComponent(SHARE_URL);
+  const copyBtn = $("share-copy");
+  copyBtn.textContent = navigator.share ? "Share" : "Copy link";
+  copyBtn.onclick = () => shareOrCopy(text, copyBtn);
+  setPhase("locked");
+}
+
+function shareOrCopy(text, btn){
+  if(navigator.share){
+    navigator.share({title:"Fantasy Founders League", text, url:SHARE_URL}).catch(() => {});
+    return;
+  }
+  const full = text + " " + SHARE_URL;
+  const done = () => { btn.textContent = "Copied"; setTimeout(() => { btn.textContent = "Copy link"; }, 1800); };
+  const fallback = () => {
+    const ta = document.createElement("textarea");
+    ta.value = full; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand("copy"); done(); }catch(e){ btn.textContent = "Copy failed"; }
+    ta.remove();
+  };
   try{
-    var s = JSON.parse(saved);
-    me = (s && s.id) ? s : null;
-  }catch(e){ me = null; }
+    if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(full).then(done, fallback);
+    else fallback();
+  }catch(e){ fallback(); }
 }
+
+/* ---------------- league screen ---------------- */
+async function renderBoard(){
+  $("board-sub").textContent = "Loading the table…";
+  $("board").innerHTML = '<li class="empty-li" style="border:0;padding:0"><span class="sk sk-row"></span><span class="sk sk-row"></span><span class="sk sk-row"></span></li>';
+  try{
+    const {rows, latest} = await loadLeague();
+    $("board-sub").textContent = rows.length
+      ? plural(rows.length, "fund", "funds") + ", ranked by total points. " +
+        (latest ? "Arrows show movement since the last scoring week." : "Scoring starts once the first week of news is logged.")
+      : "No funds yet.";
+    $("board").innerHTML = rows.length
+      ? rows.map(r => leagueRow(r, latest)).join("")
+      : '<li class="empty-li">Nobody else is here yet. Send the link to the group chat.</li>';
+  }catch(e){
+    $("board-sub").textContent = "The league table didn't load.";
+    $("board").innerHTML = '<li class="empty-li">' + esc(e.message || "Network error") + '. Try again in a moment.</li>';
+  }
+}
+
+/* ---------------- wiring ---------------- */
+document.querySelectorAll(".js-mark").forEach(el => { el.outerHTML = MARK; });
+$("hero-art").innerHTML = rosette(1000, [
+  {R:.86, A:.045, lobes:54, count:22, steps:540},
+  {R:.66, A:.055, lobes:38, count:18, steps:420},
+  {R:.44, A:.07,  lobes:24, count:14, steps:300}
+], .55);
+$("how-landing").innerHTML = HOW;
+$("how-app").innerHTML = HOW;
+
+document.querySelectorAll("[data-join]").forEach(b => b.addEventListener("click", () => openJoin(b.dataset.join)));
+$("b-mode").addEventListener("click", () => { setMode(mode === "create" ? "signin" : "create"); $("f-fund").focus(); });
+$("join-form").addEventListener("submit", submitJoin);
+$("b-signout").addEventListener("click", signOut);
+$("b-retry").addEventListener("click", enterApp);
+document.querySelectorAll("#v-app [data-screen]").forEach(b => b.addEventListener("click", () => { show(b.dataset.screen); window.scrollTo(0, 0); }));
+
+$("slots").addEventListener("click", e => {
+  const drop = e.target.closest("[data-drop]");
+  if(drop){ const n = +drop.dataset.drop; delete picks[n]; active = n; cancelConfirm(); renderDraft(); return; }
+  const b = e.target.closest("[data-slot]");
+  if(b){ active = +b.dataset.slot; query = ""; $("search").value = ""; renderDraft(); focusSlot(); }
+});
+$("pool").addEventListener("click", e => {
+  const b = e.target.closest(".co");
+  if(!b || b.getAttribute("aria-disabled") === "true") return;
+  const s = startups.find(x => String(x.id) === b.dataset.id);
+  if(s) draft(s);
+});
+$("search").addEventListener("input", e => { query = e.target.value; renderPool(); });
+document.querySelectorAll(".js-sign").forEach(b => b.addEventListener("click", sign));
+
+/* ---------------- boot ---------------- */
+try{
+  const saved = JSON.parse(recall("ffl_me") || "null");
+  me = saved && saved.id ? saved : null;
+}catch(e){ me = null; }
 if(!me) store("ffl_me", null);
 
-if(me){
-  show("draft");
-  loadPool().then(loadMyRoster);
-} else {
-  setMode("signin");
-  show("gate");
-}
+setMode("signin");
+if(me) enterApp();
+else { show(); loadLanding(); }
 })();
 </script>
 </body>
