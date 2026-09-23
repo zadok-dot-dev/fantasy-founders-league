@@ -423,6 +423,155 @@ a{color:inherit}
   *,*::before,*::after{animation:none!important;transition:none!important}
   .ticker{overflow-x:auto}
 }
+
+/* ================= v2 additions ================= */
+:root{--wire-tag:#E2C27A}
+
+/* certificate rows can be buttons */
+.cert-pos li{display:block;padding:0}
+.cp-row{display:grid;grid-template-columns:20px minmax(0,1fr) auto 44px;column-gap:10px;align-items:baseline;padding:8px 0;width:100%}
+button.cp-row{background:none;border:0;font:inherit;color:inherit;text-align:left;cursor:pointer;border-radius:4px;padding:8px 6px;margin:0 -6px;width:calc(100% + 12px);transition:background-color .12s}
+button.cp-row:hover{background:rgba(47,107,83,.09)}
+.lead-tag{font-style:normal;display:inline-block;background:#9A7219;color:#FFF8E6;border-radius:999px;padding:0 7px;font-size:11px;font-weight:700;margin-left:6px;vertical-align:1px}
+.cert-hint{font-size:12px;color:var(--c-soft);margin-top:10px}
+
+/* app news wire */
+.wire{background:var(--note);color:var(--note-ink);overflow:hidden;white-space:nowrap;font-size:13.5px;font-stretch:94%}
+.wire-track{display:inline-flex;padding:9px 0;animation:tick 150s linear infinite}
+.wire:hover .wire-track,.wire:focus-within .wire-track{animation-play-state:paused}
+.wr{display:inline-flex;gap:8px;align-items:baseline;padding:0 22px;border-right:1px solid color-mix(in srgb,var(--note-ink) 14%,transparent);text-decoration:none;color:var(--note-ink-2)}
+.wr b{color:var(--wire-tag);font-weight:700}
+.wr:hover span{color:var(--note-ink);text-decoration:underline}
+
+/* fund desk */
+.desk{display:grid;gap:18px;grid-template-columns:minmax(0,1fr);grid-template-areas:"week" "cert" "feed";margin-top:24px}
+.desk > *{min-width:0}
+.desk-week{grid-area:week}
+.desk-cert{grid-area:cert}
+.desk-feed{grid-area:feed}
+@media (min-width:960px){
+  .desk{grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);grid-template-areas:"cert week" "cert feed";grid-template-rows:auto 1fr;column-gap:40px;row-gap:18px;align-items:start}
+}
+.panel{background:var(--paper-hi);border:1px solid var(--line);border-radius:16px;padding:18px 18px 14px}
+.panel + .panel{margin-top:16px}
+.panel .h3{margin-bottom:8px}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px}
+.panel-head .h3{margin:0}
+
+.week{background:var(--note);color:var(--note-ink);border-color:transparent;padding:20px 20px 18px}
+.wk-h{font-stretch:118%;font-weight:800;font-size:26px;line-height:1.1;letter-spacing:-.018em}
+.wk-sub{color:var(--note-ink-2);font-size:14.5px;margin-top:6px}
+.wk-list{margin:16px 0 0;border-top:1px solid color-mix(in srgb,var(--note-ink) 16%,transparent)}
+.wk-list > div{display:grid;grid-template-columns:112px minmax(0,1fr);gap:10px;padding:11px 0;border-bottom:1px solid color-mix(in srgb,var(--note-ink) 16%,transparent)}
+.wk-list dt{color:var(--note-ink-2);font-size:14px}
+.wk-list dd{margin:0;font-size:15px}
+.wk-list dd small{display:block;color:var(--note-ink-2);font-size:13px;margin-top:1px}
+.wk-actions{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;margin-top:16px}
+.wk-hint{font-size:13px;color:var(--note-ink-2)}
+
+.feed{list-style:none;margin:0;padding:0}
+.fd{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:14px;padding:11px 0;border-top:1px solid var(--line)}
+.fd:first-child{border-top:0}
+.fd-t{font-weight:660}
+.fd-t small{font-weight:600;color:var(--ink-3);margin-right:8px}
+.fd-note{grid-column:1;color:var(--ink-2);font-size:14px}
+.fd-p{grid-row:1 / span 2;grid-column:2;text-align:right;font-stretch:118%;font-weight:800;font-size:19px;line-height:1.2}
+.fd-p small{display:block;font-size:11.5px;font-weight:700;color:var(--gold);font-stretch:100%}
+.empty-note{color:var(--ink-3);font-size:14.5px;padding:4px 0 6px}
+
+.news-list{list-style:none;margin:0;padding:0}
+.nw{padding:10px 0;border-top:1px solid var(--line)}
+.nw:first-child{border-top:0}
+.nw a{font-weight:600;text-decoration:none}
+.nw a:hover{text-decoration:underline}
+.nw small{display:block;color:var(--ink-3);font-size:13px;margin-top:2px}
+.co-tag{display:inline-block;font-size:12px;font-weight:700;color:var(--ink-2);background:var(--tint);border-radius:6px;padding:1px 6px;margin-right:6px;vertical-align:1px}
+.history{margin-top:6px;font-size:14px;color:var(--ink-2)}
+.history li{padding:4px 0}
+
+/* transfer mode */
+.xfer-head{
+  position:sticky;top:calc(env(safe-area-inset-top,0px) + 104px);z-index:10;
+  background:var(--note);color:var(--note-ink);border-radius:16px;padding:16px 18px;margin:24px 0 18px;
+  box-shadow:0 12px 30px -18px rgba(0,0,0,.5);
+}
+@media (min-width:760px){.xfer-head{top:calc(env(safe-area-inset-top,0px) + 70px)}}
+.xfer-row{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+.xh-title{font-stretch:116%;font-weight:800;font-size:22px;line-height:1.15;letter-spacing:-.015em}
+.xh-sub{color:var(--note-ink-2);font-size:14.5px;margin-top:5px}
+.xfer-head .link{color:var(--note-ink)}
+.xh-go{margin-top:14px}
+.co[data-s="picked"]{background:var(--tint)}
+.co[data-s="picked"] .co-act{background:var(--gold);color:#1B1304}
+.co[data-s="selling"] .co-act{background:transparent;color:var(--loss);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--loss) 45%,transparent)}
+
+/* position sheet */
+dialog.sheet{border:0;padding:0;background:var(--paper-hi);color:var(--ink);width:min(480px,calc(100% - 32px));border-radius:18px;box-shadow:var(--shadow)}
+dialog.sheet::backdrop{background:rgba(7,23,15,.55)}
+.sheet-in{padding:22px 22px calc(18px + env(safe-area-inset-bottom,0px))}
+.sheet-k{font-size:13.5px;color:var(--ink-3);font-weight:600}
+.sheet-in .h2{font-size:30px;margin-top:4px}
+.sheet-actions{display:grid;gap:10px;margin-top:20px}
+@media (max-width:600px){dialog.sheet{margin:auto 0 0;width:100%;max-width:100%;border-radius:18px 18px 0 0}}
+
+/* toast */
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;background:var(--ink);color:var(--paper-hi);padding:12px 18px;border-radius:12px;font-weight:600;font-size:15px;box-shadow:var(--shadow);width:max-content;max-width:calc(100% - 32px)}
+body.has-dock .toast{bottom:calc(98px + env(safe-area-inset-bottom,0px))}
+
+/* leagues */
+.lg-bar{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;justify-content:space-between;margin:22px 0 12px}
+.chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;max-width:100%;padding:2px}
+.chips::-webkit-scrollbar{display:none}
+.chip{border:1px solid var(--line-2);background:none;border-radius:999px;padding:7px 14px;font-weight:600;font-size:14px;color:var(--ink-2);cursor:pointer;white-space:nowrap}
+.chip:hover{color:var(--ink)}
+.chip[aria-selected="true"]{background:var(--ink);color:var(--paper-hi);border-color:var(--ink)}
+.lg-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn-sm{padding:10px 14px;font-size:14px;border-radius:10px}
+.inline-form{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px}
+.inline-form .in{flex:1 1 220px;width:auto}
+.lg-info{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;padding:12px 14px;background:var(--tint);border-radius:12px;margin-bottom:14px}
+.lg-code{font-stretch:115%;font-weight:800;font-size:18px;letter-spacing:.02em}
+.lg-info .sp{flex:1 1 auto}
+.lg-week{margin-top:34px}
+.tag.house{background:var(--gold);color:#1B1304}
+
+/* landing additions */
+.invite{background:var(--wire-tag);color:#1B1304;border-radius:12px;padding:12px 16px;margin-top:6px;font-weight:600;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center}
+.invite .link{color:#1B1304}
+.extras{display:grid;gap:14px;margin-top:26px}
+.extras p{color:var(--ink-2);max-width:48ch}
+.extras b{color:var(--ink)}
+
+/* scoring desk */
+.admin-grid{display:grid;gap:18px;margin-top:22px}
+@media (min-width:960px){.admin-grid{grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);align-items:start}}
+.inbox{list-style:none;margin:0;padding:0}
+.ib{padding:14px 0;border-top:1px solid var(--line)}
+.ib:first-child{border-top:0}
+.ib-title{font-weight:660;text-decoration:none}
+.ib-title:hover{text-decoration:underline}
+.ib-meta{font-size:13px;color:var(--ink-3);margin:3px 0 10px}
+.ib-ctl{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.in-sm{font-size:15px;padding:10px 11px;border-radius:9px}
+.ib .in-sm[data-f="note"]{margin-top:8px}
+.ib-actions{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin-top:10px}
+.form-grid{display:grid;gap:4px}
+.form-grid .field{margin-bottom:8px}
+.form-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.scores{list-style:none;margin:0;padding:0}
+.sc{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.sc:first-child{border-top:0}
+.sc b{font-weight:650}
+.sc small{display:block;color:var(--ink-3);font-size:13px}
+.sc .pts-cell{font-stretch:116%;font-weight:800}
+.xfer-head .msg:empty{display:none}
+.xfer-head .msg{color:#FFD9D2}
+@media (max-width:600px){
+  .xfer-head{padding:12px 14px;margin-top:16px;border-radius:14px}
+  .xh-title{font-size:18px}
+  .xh-sub{font-size:13.5px;margin-top:3px}
+  .xh-go{margin-top:10px;padding:11px 16px;font-size:15px}
+}
 </style>
 </head>
 <body>
@@ -436,6 +585,10 @@ a{color:inherit}
         <a class="mark" href="#top" aria-label="Fantasy Founders League home"><span class="js-mark"></span><span class="long">Fantasy Founders League</span><span class="short">FFL</span></a>
         <button class="link" type="button" data-join="signin">Sign in</button>
       </nav>
+      <div class="invite" id="invite" hidden>
+        <span id="invite-text"></span>
+        <button class="link" type="button" data-join="create">Raise a fund to join</button>
+      </div>
       <div class="hero-grid">
         <div>
           <h1 class="display"><span>You get $100M.</span><span>Write five checks.</span></h1>
@@ -444,7 +597,7 @@ a{color:inherit}
             <button class="btn btn-light" type="button" data-join="create">Raise your fund</button>
             <button class="btn btn-outline-light" type="button" data-join="signin">Sign in</button>
           </div>
-          <p class="micro">Free to play. No real money, which already puts you ahead of most funds.</p>
+          <p class="micro"><span id="season-line"></span> Free to play, and no real money, which already puts you ahead of most funds.</p>
         </div>
         <div class="hero-cert" id="hero-cert">
           <div class="cert"><div class="cert-in cert-ghost">Pricing the sample fund…</div></div>
@@ -496,7 +649,7 @@ a{color:inherit}
     <div class="wrap">
       <span class="mark"><span class="js-mark"></span><span>Fantasy Founders League</span></span>
       <p class="quip">Not investment advice. Not investments either.</p>
-      <p>Prices come from recent reported valuations and are approximate. Scores are logged weekly by the commissioner from public news.</p>
+      <p>Prices come from recent reported valuations and are approximate. Scores are logged weekly by the commissioner from public news. Headlines link to their original publishers.</p>
     </div>
   </footer>
 </div>
@@ -505,34 +658,43 @@ a{color:inherit}
 <div id="v-app" hidden>
   <header class="app-bar">
     <div class="app-bar-in">
-      <button class="mark" type="button" data-screen="draft" aria-label="Your fund"><span class="js-mark"></span><span class="long">Fantasy Founders League</span><span class="short">FFL</span></button>
+      <button class="mark" type="button" data-screen="fund" aria-label="Your fund"><span class="js-mark"></span><span class="long">Fantasy Founders League</span><span class="short">FFL</span></button>
       <nav class="tabs" aria-label="Sections">
-        <button type="button" data-screen="draft">Your fund</button>
-        <button type="button" data-screen="board">League</button>
-        <button type="button" data-screen="how">How it works</button>
+        <button type="button" data-screen="fund">Your fund</button>
+        <button type="button" data-screen="league">League</button>
+        <button type="button" data-screen="how">Rules</button>
+        <button type="button" data-screen="admin" id="tab-admin" hidden>Scoring</button>
       </nav>
       <button class="signout" type="button" id="b-signout">Sign out</button>
     </div>
   </header>
+  <div class="wire" id="wire" hidden aria-label="Approved headlines about pool companies">
+    <div class="wire-track" id="wire-track"></div>
+  </div>
 
   <main class="app-main">
-    <!-- draft / portfolio -->
-    <section id="s-draft">
+    <!-- ============ fund ============ -->
+    <section id="s-fund">
       <header class="fund-head">
         <h1 class="h1" id="fund-name"></h1>
         <p class="sub" id="fund-sub"></p>
       </header>
 
-      <div id="draft-loading" class="draft" aria-busy="true">
+      <div id="fund-loading" class="draft" aria-busy="true">
         <div><span class="sk sk-block"></span></div>
         <div><span class="sk sk-row"></span><span class="sk sk-row"></span><span class="sk sk-row"></span></div>
       </div>
 
-      <div id="draft-error" class="state" hidden>
-        <p id="draft-err-text">Couldn't load your fund.</p>
+      <div id="fund-error" class="state" hidden>
+        <p id="fund-err-text">Your fund didn't load.</p>
         <button class="btn btn-quiet" type="button" id="b-retry">Try again</button>
       </div>
 
+      <div id="fund-closed" class="state" hidden>
+        <p>Season 1 is closed to new funds. The league table has the final standings, and season 2 opens soon.</p>
+      </div>
+
+      <!-- draft -->
       <div id="draft-live" class="draft" hidden>
         <aside class="draft-side">
           <div class="budget">
@@ -562,28 +724,131 @@ a{color:inherit}
         </div>
       </div>
 
-      <div id="draft-locked" class="locked" hidden>
-        <div id="cert-slot"></div>
-        <div class="share-row">
-          <a class="btn btn-primary" id="share-x" target="_blank" rel="noopener">Post to X</a>
-          <button class="btn btn-quiet" type="button" id="share-copy">Copy link</button>
+      <!-- desk (signed fund) -->
+      <div id="desk" class="desk" hidden>
+        <section class="panel week desk-week" id="week-card" aria-live="polite"></section>
+        <div class="desk-cert">
+          <div id="cert-slot"></div>
+          <div class="share-row">
+            <a class="btn btn-primary" id="share-x" target="_blank" rel="noopener">Post to X</a>
+            <button class="btn btn-quiet" type="button" id="share-copy">Copy link</button>
+          </div>
         </div>
-        <p class="after">Points land each week as the commissioner logs news about your five companies. The league table shows where you stand.</p>
+        <div class="desk-feed">
+          <section class="panel">
+            <h2 class="h3">What happened</h2>
+            <ol class="feed" id="feed"></ol>
+          </section>
+          <section class="panel">
+            <h2 class="h3">Your companies in the news</h2>
+            <ul class="news-list" id="my-news"></ul>
+          </section>
+          <section class="panel" id="history-panel" hidden>
+            <h2 class="h3">Transfers</h2>
+            <ul class="history" id="history"></ul>
+          </section>
+        </div>
+      </div>
+
+      <!-- transfer mode -->
+      <div id="xfer" hidden>
+        <div class="xfer-head">
+          <div class="xfer-row">
+            <div>
+              <h2 class="xh-title" id="xh-title"></h2>
+              <p class="xh-sub" id="xh-sub"></p>
+            </div>
+            <button class="link" type="button" id="xh-cancel">Cancel</button>
+          </div>
+          <button class="btn btn-light xh-go" type="button" id="xh-go" hidden>Make transfer</button>
+          <p class="msg" id="xh-msg" role="status" aria-live="polite"></p>
+        </div>
+        <div class="pool-head">
+          <h2 id="xfer-title">Pick a replacement</h2>
+          <small id="xfer-count"></small>
+        </div>
+        <input class="in search" id="xfer-search" type="search" placeholder="Search companies or sectors" autocomplete="off" aria-label="Search replacement companies">
+        <ul class="pool" id="xfer-pool"></ul>
       </div>
     </section>
 
-    <!-- league -->
-    <section id="s-board" hidden>
+    <!-- ============ league ============ -->
+    <section id="s-league" hidden>
       <header class="fund-head">
-        <h1 class="h1">League table</h1>
+        <h1 class="h1" id="lg-title">League table</h1>
         <p class="sub" id="board-sub">Loading the table…</p>
       </header>
-      <ol class="league" id="board" style="margin-top:26px"></ol>
+      <div class="lg-bar">
+        <div class="chips" id="lg-chips" role="tablist" aria-label="Leagues"></div>
+        <div class="lg-actions">
+          <button class="btn btn-quiet btn-sm" type="button" id="b-lg-new">Create a league</button>
+          <button class="btn btn-quiet btn-sm" type="button" id="b-lg-join">Join with a code</button>
+        </div>
+      </div>
+      <form class="inline-form" id="f-lg-new" hidden>
+        <input class="in" id="lg-new-name" placeholder="League name, like Group Chat Capital" maxlength="40" aria-label="League name">
+        <button class="btn btn-primary btn-sm" type="submit">Create league</button>
+        <button class="link" type="button" data-close="f-lg-new">Cancel</button>
+      </form>
+      <form class="inline-form" id="f-lg-join" hidden>
+        <input class="in" id="lg-join-code" placeholder="FFL-7KQ2" maxlength="12" autocapitalize="characters" aria-label="League code">
+        <button class="btn btn-primary btn-sm" type="submit">Join league</button>
+        <button class="link" type="button" data-close="f-lg-join">Cancel</button>
+      </form>
+      <form class="inline-form" id="f-lg-rename" hidden>
+        <input class="in" id="lg-rename" maxlength="40" aria-label="New league name">
+        <button class="btn btn-primary btn-sm" type="submit">Save name</button>
+        <button class="link" type="button" data-close="f-lg-rename">Cancel</button>
+      </form>
+      <p class="msg" id="lg-msg" role="status" aria-live="polite"></p>
+      <div class="lg-info" id="lg-info" hidden></div>
+      <ol class="league" id="board"></ol>
+      <section class="lg-week">
+        <h2 class="h3" id="lg-week-title">What moved</h2>
+        <ol class="feed" id="lg-feed"></ol>
+      </section>
     </section>
 
-    <!-- how it works -->
+    <!-- ============ rules ============ -->
     <section id="s-how" hidden>
       <div id="how-app"></div>
+    </section>
+
+    <!-- ============ scoring desk (commissioner) ============ -->
+    <section id="s-admin" hidden>
+      <header class="fund-head">
+        <h1 class="h1">Scoring desk</h1>
+        <p class="sub">Scores update every fund the moment you log them. Players read your note in their feed.</p>
+      </header>
+      <div class="admin-grid">
+        <section class="panel">
+          <div class="panel-head">
+            <h2 class="h3">News inbox</h2>
+            <button class="btn btn-quiet btn-sm" type="button" id="b-fetch">Check for news</button>
+          </div>
+          <p class="sub" id="inbox-sub" style="margin:0 0 6px;font-size:14px"></p>
+          <ul class="inbox" id="inbox"></ul>
+        </section>
+        <div>
+          <section class="panel">
+            <h2 class="h3">Log a score</h2>
+            <form class="form-grid" id="f-score" novalidate>
+              <label class="field"><span>Company</span><select class="in in-sm" id="sc-startup"></select></label>
+              <div class="form-2">
+                <label class="field"><span>Gameweek</span><select class="in in-sm" id="sc-gw"></select></label>
+                <label class="field"><span>Event</span><select class="in in-sm" id="sc-event"></select></label>
+              </div>
+              <label class="field"><span>Note for players</span><input class="in in-sm" id="sc-note" maxlength="200" placeholder="Raised $500M at $20B, led by Sequoia"></label>
+              <button class="btn btn-primary" type="submit">Log score</button>
+              <p class="msg" id="sc-msg" role="status" aria-live="polite"></p>
+            </form>
+          </section>
+          <section class="panel">
+            <h2 class="h3">Recent scores</h2>
+            <ul class="scores" id="recent"></ul>
+          </section>
+        </div>
+      </div>
     </section>
   </main>
 
@@ -591,67 +856,149 @@ a{color:inherit}
     <div class="dock-info"><b id="dock-dry">$100M</b><small id="dock-sub">0 of 5 slots filled</small></div>
     <button class="btn btn-light js-sign" type="button" disabled>Fill all five slots</button>
   </div>
+
+  <dialog class="sheet" id="pos-dialog" aria-labelledby="pd-name">
+    <div class="sheet-in">
+      <p class="sheet-k" id="pd-slot"></p>
+      <h2 class="h2" id="pd-name"></h2>
+      <p class="sub" id="pd-meta"></p>
+      <div class="sheet-actions">
+        <button class="btn btn-primary btn-block" type="button" id="pd-lead">Make lead investor</button>
+        <button class="btn btn-quiet btn-block" type="button" id="pd-sell">Transfer out</button>
+        <button class="btn btn-quiet btn-block" type="button" id="pd-close">Close</button>
+      </div>
+      <p class="msg" id="pd-msg" role="status" aria-live="polite"></p>
+    </div>
+  </dialog>
 </div>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
 (function(){
 "use strict";
 
-/* ---------------- config ---------------- */
+/* ================= config ================= */
 const SB_URL = "https://jkbqpjqehzcjcsjnoobi.supabase.co";
 const SB_KEY = "sb_publishable_Pn-9srwR262fL859vOOtsA_UEsnNT3f";
+// Public anon JWT, used only to call the news function (edge functions need a JWT).
+const ANON_JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImprYnFwanFlaHpjamNzam5vb2JpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5MjIzMjcsImV4cCI6MjEwNTQ5ODMyN30.E9yEVD6jDLJD87IgsoIUtfyDEfB39fEm0thlv-FR6g8";
+const FN_NEWS = SB_URL + "/functions/v1/news-ingest";
+const SHARE_URL = "https://ffl.zadok.dev";
 const db = window.supabase.createClient(SB_URL, SB_KEY);
 
 const BUDGET = 100;
-const SHARE_URL = "https://ffl.zadok.dev";
 const SLOTS = [
-  {n:1, tier:1,    name:"Anchor",   hint:"Decacorn, $10B+",   verb:"Pick your anchor"},
-  {n:2, tier:2,    name:"Growth",   hint:"$1B to $10B",       verb:"Pick a growth company"},
-  {n:3, tier:3,    name:"Series B", hint:"$100M to $1B",      verb:"Pick a Series B"},
-  {n:4, tier:4,    name:"Early",    hint:"Seed or Series A",  verb:"Pick an early bet"},
-  {n:5, tier:null, name:"Wildcard", hint:"Any stage",         verb:"Pick a wildcard"}
+  {n:1, tier:1,    name:"Anchor",   hint:"Decacorn, $10B+",  verb:"Pick your anchor"},
+  {n:2, tier:2,    name:"Growth",   hint:"$1B to $10B",      verb:"Pick a growth company"},
+  {n:3, tier:3,    name:"Series B", hint:"$100M to $1B",     verb:"Pick a Series B"},
+  {n:4, tier:4,    name:"Early",    hint:"Seed or Series A", verb:"Pick an early bet"},
+  {n:5, tier:null, name:"Wildcard", hint:"Any stage",        verb:"Pick a wildcard"}
 ];
+const EVENTS = [
+  {k:"exit",       label:"Goes public or gets acquired", short:"IPO or acquisition", pts:50},
+  {k:"up_round",   label:"Raises at a higher valuation", short:"Up-round",           pts:15},
+  {k:"round",      label:"Raises a round",               short:"Funding round",      pts:10},
+  {k:"launch",     label:"Big launch or a viral moment", short:"Launch",             pts:10},
+  {k:"down_round", label:"Raises at a lower valuation",  short:"Down-round",         pts:-15},
+  {k:"layoffs",    label:"Lays people off",              short:"Layoffs",            pts:-10},
+  {k:"departure",  label:"A founder or exec walks",      short:"Exec departure",     pts:-10},
+  {k:"shutdown",   label:"Shuts down",                   short:"Shutdown",           pts:-30}
+];
+const EV = Object.fromEntries(EVENTS.map(e => [e.k, e]));
 const SAMPLE = ["Perplexity","ElevenLabs","Harvey AI","Speak","Evervault"];
 const LABEL = {ok:"Draft", swap:"Swap in", here:"Drafted", held:"In your fund", over:"Over cap", tight:"Too tight"};
 const WHY = {
   ok:"Draft into this slot", swap:"Replace your current pick", here:"Already in this slot",
-  held:"Already in another slot", over:"Would push the fund past $100M",
-  tight:"Would leave too little for your open slots"
+  held:"Already in another slot", over:"Would push the fund past $100M", tight:"Would leave too little for your open slots"
 };
+const XLABEL = {ok:"Buy", picked:"Selected", selling:"Selling", held:"In your fund", over:"Over cap"};
 
-/* ---------------- state ---------------- */
-let me = null;
+/* ================= state ================= */
+let session = null;      // {token, id, fund_name, display_name, is_admin}
+let fund = null;         // my_fund payload
 let startups = [];
-let picks = {};
-let active = 1;
-let query = "";
-let screen = "draft";
+let gameweeks = [];
+let news = [];           // approved headlines
+let leagues = [];
+let leagueSel = "global";
+let screen = "fund";
 let phase = "loading";
 let mode = "signin";
+let picks = {}, active = 1, query = "";
 let confirming = false, confirmTimer = null, locking = false;
+let xfer = null;         // {slot, out, pick, query, confirming, busy}
+let posSel = null;
+let deadlineReloaded = false;
 const reduceMotion = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+const behavior = reduceMotion ? "auto" : "smooth";
 
-/* ---------------- helpers ---------------- */
+/* ================= helpers ================= */
 const $ = id => document.getElementById(id);
 const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const money = m => (m < 0 ? "\u2212$" + Math.abs(m) : "$" + m) + "M";
 const pts = p => p > 0 ? "+" + p : p < 0 ? "\u2212" + Math.abs(p) : "0";
 const pcls = p => p > 0 ? "pos" : p < 0 ? "neg" : "";
 const plural = (n, one, many) => n + " " + (n === 1 ? one : many);
-const behavior = reduceMotion ? "auto" : "smooth";
 function store(k, v){ try{ v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); }catch(e){} }
 function recall(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
-function say(id, text, kind){ const n = $(id); n.textContent = text || ""; n.className = "msg" + (kind ? " " + kind : ""); }
+function say(id, text, kind){ const n = $(id); if(!n) return; n.textContent = text || ""; n.className = "msg" + (kind ? " " + kind : ""); }
 function fmtDate(d){ try{ return new Date(d).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}); }catch(e){ return ""; } }
+function fmtShort(d){ try{ return new Date(d).toLocaleDateString("en-US",{month:"short",day:"numeric"}); }catch(e){ return ""; } }
+function fmtDeadline(d){
+  try{ return new Date(d).toLocaleString("en-US",{timeZone:"America/New_York",weekday:"short",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}) + " ET"; }
+  catch(e){ return ""; }
+}
+function countdown(d){
+  const ms = new Date(d).getTime() - Date.now();
+  if(ms <= 0) return "now";
+  const m = Math.floor(ms / 60000), h = Math.floor(m / 60), days = Math.floor(h / 24);
+  if(days >= 1) return days + "d " + (h % 24) + "h";
+  if(h >= 1) return h + "h " + (m % 60) + "m";
+  return m >= 1 ? m + "m" : "under a minute";
+}
 function serial(id){ return "FFL-" + String(id).padStart(6, "0"); }
 function valText(n){
   n = String(n || "").replace(/\s*\((?:verify[^)]*|may be[^)]*)\)/gi, "").trim();
   if(!n) return "";
   return (/^~?\$/.test(n) && !/raised|round/i.test(n)) ? "Valued " + n : n;
 }
+let toastTimer = null;
+function toast(text){
+  const t = $("toast"); t.textContent = text; t.hidden = false;
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.hidden = true; }, 3200);
+}
+async function call(fn, args){
+  const r = await db.rpc(fn, args);
+  if(r.error){
+    const msg = r.error.message || "Something went wrong. Try again.";
+    if(/session expired|sign in to continue/i.test(msg)) expire();
+    throw new Error(msg);
+  }
+  return r.data;
+}
+const T = () => ({p_token: session.token});
 
-/* ---------------- guilloché ---------------- */
+/* ================= season ================= */
+function season(){
+  const now = Date.now();
+  const next = gameweeks.find(g => new Date(g.deadline).getTime() > now) || null;
+  const cur = gameweeks.find(g => new Date(g.deadline).getTime() <= now && new Date(g.ends_at).getTime() > now) || null;
+  return {next, cur, first:gameweeks[0] || null, total:gameweeks.length};
+}
+function fetchGameweeks(){
+  return db.from("gameweeks").select("*").order("id").then(r => { if(!r.error) gameweeks = r.data || []; });
+}
+function seasonLine(){
+  const s = season();
+  if(!s.first) return "";
+  if(!s.cur && s.next && s.next.id === 1) return "Season 1 starts " + fmtDeadline(s.first.deadline) + ".";
+  if(s.cur) return "Gameweek " + s.cur.id + " of " + s.total + " is live.";
+  return "Season 1 is over. Season 2 opens soon.";
+}
+
+/* ================= guilloché ================= */
 function rosette(size, rings, sw){
   const c = size / 2;
   let paths = "";
@@ -670,23 +1017,10 @@ function rosette(size, rings, sw){
   });
   return '<svg viewBox="0 0 ' + size + ' ' + size + '" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="' + sw + '">' + paths + '</g></svg>';
 }
-const SEAL = rosette(120, [
-  {R:.86, A:.07, lobes:26, count:6, steps:260},
-  {R:.66, A:.08, lobes:18, count:6, steps:220}
-], .5);
+const SEAL = rosette(120, [{R:.86, A:.07, lobes:26, count:6, steps:260}, {R:.66, A:.08, lobes:18, count:6, steps:220}], .5);
 const MARK = rosette(40, [{R:.66, A:.26, lobes:9, count:4, steps:160}], 1.1);
 
-/* ---------------- how it works (shared) ---------------- */
-const SCORING = [
-  ["Goes public or gets acquired", 50],
-  ["Raises at a higher valuation", 15],
-  ["Raises a round", 10],
-  ["Big launch or a viral moment", 10],
-  ["Raises at a lower valuation", -15],
-  ["Lays people off", -10],
-  ["A founder or exec walks", -10],
-  ["Shuts down", -30]
-];
+/* ================= rules (shared) ================= */
 const HOW =
   '<div class="sec-head"><div><h2 class="h2">How it works</h2>' +
   '<p class="sub">Fantasy football rules. Venture capital problems.</p></div></div>' +
@@ -696,32 +1030,49 @@ const HOW =
       '<li><b>Raise a fund</b><span>Pick a fund name and a PIN. That\'s the whole account.</span></li>' +
       '<li><b>Fill five slots</b><span>An anchor decacorn, a growth company, a Series B, an early bet, and a wildcard from any stage.</span></li>' +
       '<li><b>Stay under $100M</b><span>Every company has a price. An anchor eats nearly half the fund, so conviction at the top means scrappiness below.</span></li>' +
-      '<li><b>Sign the term sheet</b><span>Your five positions lock for the season. No transfers, no take-backs.</span></li>' +
-    '</ol></div><div>' +
+      '<li><b>Sign the term sheet</b><span>Your fund starts scoring from the next gameweek.</span></li>' +
+    '</ol>' +
+    '<h3 class="h3" style="margin-top:30px">Every week</h3>' +
+    '<div class="extras" style="margin-top:8px">' +
+      '<p><b>Pick a lead investor.</b> One of your five scores double that week, and that includes lost points. It starts as your anchor.</p>' +
+      '<p><b>Make one free transfer.</b> Swap a company for another at the same stage, as long as the fund stays under $100M. Unused transfers don\'t carry over.</p>' +
+      '<p><b>Beat the deadline.</b> Picks and transfers lock every Monday at 12:00 PM ET. Season 1 runs 12 gameweeks.</p>' +
+    '</div>' +
+  '</div><div>' +
     '<h3 class="h3">Score points</h3>' +
-    '<p class="how-p">Each week the commissioner logs what actually happened. Points land on every fund holding that company.</p>' +
+    '<p class="how-p">Each week the commissioner logs what actually happened. Points land on every fund holding that company that week.</p>' +
     '<table class="score"><tbody>' +
-      SCORING.map(r => '<tr><td>' + r[0] + '</td><td class="' + pcls(r[1]) + '">' + pts(r[1]) + '</td></tr>').join("") +
+      EVENTS.map(e => '<tr><td>' + e.label + '</td><td class="' + pcls(e.pts) + '">' + pts(e.pts) + '</td></tr>').join("") +
     '</tbody></table>' +
-    '<p class="how-p win">Your fund scores the combined points of all five positions. Top of the league table wins.</p>' +
+    '<p class="how-p win">Your fund keeps every point its companies earned while you held them, even after you sell. Points a company earned before you bought it don\'t count.</p>' +
+    '<div class="extras">' +
+      '<p><b>Beat the house.</b> The Index buys the biggest names, The Long Shot buys the cheapest, and Chaos Monkey drafts at random. They sit on every league table.</p>' +
+      '<p><b>Start a private league.</b> Share a code and get a table of just your group.</p>' +
+    '</div>' +
   '</div></div>' +
   '<p class="fine">Prices come from recent reported valuations and are approximate. Scores are logged by hand from public news, so they\'re a judgment call rather than a data feed.</p>';
 
-/* ---------------- certificate ---------------- */
+/* ================= certificate ================= */
 function certHTML(o){
   const deployed = o.positions.reduce((a, p) => a + p.cost, 0);
-  const total = o.positions.reduce((a, p) => a + p.points, 0);
+  const total = o.total != null ? o.total : o.positions.reduce((a, p) => a + p.points, 0);
+  const row = p => {
+    const inner =
+      '<span class="cp-n">' + p.slot + '</span>' +
+      '<span class="cp-name"><b>' + esc(p.name) + '</b><small>' + esc(p.slotName) +
+        (p.lead ? '<em class="lead-tag">Lead \u00D72</em>' : '') + '</small></span>' +
+      '<span class="cp-cost">' + money(p.cost) + '</span>' +
+      '<span class="cp-pts ' + pcls(p.points) + '">' + pts(p.points) + '</span>';
+    return '<li>' + (o.interactive
+      ? '<button class="cp-row" type="button" data-pos="' + p.slot + '" aria-label="' + esc(p.name) + ', options">' + inner + '</button>'
+      : '<span class="cp-row">' + inner + '</span>') + '</li>';
+  };
   return '<article class="cert' + (o.issued ? ' issued' : '') + '" aria-label="Fund certificate for ' + esc(o.fund) + '">' +
     '<div class="cert-in">' +
-      '<div class="cert-top"><span>No. ' + esc(o.serial) + '</span><span>Fund I</span></div>' +
+      '<div class="cert-top"><span>No. ' + esc(o.serial) + '</span><span>' + esc(o.corner || "Fund I") + '</span></div>' +
       '<h3 class="cert-name">' + esc(o.fund) + '</h3>' +
       '<p class="cert-clause">This certifies that <b>' + esc(o.gp) + '</b> is general partner of a fantasy venture fund of $100,000,000, committed as follows.</p>' +
-      '<ol class="cert-pos">' + o.positions.map(p =>
-        '<li><span class="cp-n">' + p.slot + '</span>' +
-        '<span class="cp-name"><b>' + esc(p.name) + '</b><small>' + esc(p.slotName) + '</small></span>' +
-        '<span class="cp-cost">' + money(p.cost) + '</span>' +
-        '<span class="cp-pts ' + pcls(p.points) + '">' + pts(p.points) + '</span></li>'
-      ).join("") + '</ol>' +
+      '<ol class="cert-pos">' + o.positions.map(row).join("") + '</ol>' +
       '<dl class="cert-sum">' +
         '<div><dt>Deployed</dt><dd>' + money(deployed) + '</dd></div>' +
         '<div><dt>Dry powder</dt><dd>' + money(BUDGET - deployed) + '</dd></div>' +
@@ -732,79 +1083,71 @@ function certHTML(o){
         '<div class="seal">' + SEAL + '<span class="seal-in"><b class="' + pcls(total) + '">' + pts(total) + '</b><small>points</small></span></div>' +
       '</div>' +
       '<p class="cert-fine">' + esc(o.fine) + '</p>' +
+      (o.hint ? '<p class="cert-hint">' + esc(o.hint) + '</p>' : '') +
     '</div></article>';
 }
 
-/* ---------------- data ---------------- */
+/* ================= shared data ================= */
 function fetchPool(){
   return db.from("startups").select("*").order("tier").order("cost_millions", {ascending:false})
     .then(r => { if(r.error) throw r.error; startups = r.data || []; return startups; });
 }
-
+function fetchNews(){
+  return db.from("news").select("id,title,url,source,published_at,startup_id,startups(name)")
+    .order("published_at", {ascending:false}).limit(40)
+    .then(r => { news = r.error ? [] : (r.data || []); return news; });
+}
+async function fetchBoard(){
+  const r = await db.from("leaderboard").select("*");
+  if(r.error) throw r.error;
+  return (r.data || []).map(x => Object.assign({}, x, {
+    total_points:Number(x.total_points) || 0, week_points:Number(x.week_points) || 0, slots_filled:Number(x.slots_filled) || 0
+  }));
+}
 function rankBy(rows, key, out){
   const sorted = rows.slice().sort((a, b) => b[key] - a[key]);
   let rank = 0, last = null;
   sorted.forEach((r, i) => { if(r[key] !== last){ rank = i + 1; last = r[key]; } r[out] = rank; });
 }
-
-async function loadLeague(){
-  const [lb, ro, ws] = await Promise.all([
-    db.from("leaderboard").select("*"),
-    db.from("rosters").select("manager_id,startup_id"),
-    db.from("weekly_scores").select("startup_id,points,week_start")
-  ]);
-  if(lb.error) throw lb.error;
-  const rows = (lb.data || []).map(r => Object.assign({}, r, {
-    total_points: Number(r.total_points) || 0,
-    slots_filled: Number(r.slots_filled) || 0
-  }));
-  const weekly = {};
-  let latest = null;
-  if(!ws.error && ws.data && ws.data.length){
-    latest = ws.data.reduce((m, x) => x.week_start > m ? x.week_start : m, ws.data[0].week_start);
-    ws.data.forEach(x => { if(x.week_start === latest) weekly[x.startup_id] = (weekly[x.startup_id] || 0) + x.points; });
-  }
-  const delta = {};
-  if(!ro.error && ro.data) ro.data.forEach(r => { delta[r.manager_id] = (delta[r.manager_id] || 0) + (weekly[r.startup_id] || 0); });
-  rows.forEach(r => { r.week = delta[r.manager_id] || 0; r.prev = r.total_points - r.week; });
+function rankRows(rows){
+  rows = rows.map(r => Object.assign({}, r, {prev:r.total_points - r.week_points}));
+  const latest = rows.reduce((m, r) => r.last_gw != null ? r.last_gw : m, null);
   rankBy(rows, "total_points", "rank");
   rankBy(rows, "prev", "prevRank");
   const counts = {};
   rows.forEach(r => { r.move = latest ? r.prevRank - r.rank : 0; counts[r.rank] = (counts[r.rank] || 0) + 1; });
   rows.forEach(r => { r.tied = counts[r.rank] > 1; });
-  rows.sort((a, b) => b.total_points - a.total_points || String(a.fund_name).localeCompare(String(b.fund_name)));
+  rows.sort((a, b) => b.total_points - a.total_points || (a.is_house - b.is_house) || String(a.fund_name).localeCompare(String(b.fund_name)));
   return {rows, latest};
 }
-
 function leagueRow(r, latest){
-  const you = me && r.manager_id === me.id;
+  const you = session && r.manager_id === session.id;
   const mv = !latest ? '' :
     r.move > 0 ? '<span class="mv up" aria-label="Up ' + r.move + '">\u25B2' + r.move + '</span>' :
     r.move < 0 ? '<span class="mv dn" aria-label="Down ' + (-r.move) + '">\u25BC' + (-r.move) + '</span>' :
     '<span class="mv flat" aria-label="No change">\u2013</span>';
-  const drafting = r.slots_filled < 5 ? '<span class="tag">Drafting</span>' : '';
-  const yours = you ? '<span class="tag">You</span>' : '';
-  const week = latest && r.week ? '<small class="' + pcls(r.week) + '">' + pts(r.week) + ' this week</small>' : '';
+  const tags = (r.is_house ? '<span class="tag house">House</span>' : '') +
+               (you ? '<span class="tag">You</span>' : '') +
+               (!r.is_house && r.slots_filled === 0 ? '<span class="tag">Drafting</span>' : '');
+  const who = r.is_house ? 'Fund to beat' : 'GP ' + esc(r.display_name);
+  const week = latest && r.week_points ? '<small class="' + pcls(r.week_points) + '">' + pts(r.week_points) + ' in GW' + latest + '</small>' : '';
   return '<li class="lr' + (you ? ' you' : '') + '">' +
     '<span class="lr-rank">' + (r.tied ? 'T' : '') + r.rank + mv + '</span>' +
-    '<span class="lr-fund"><b>' + esc(r.fund_name) + '</b><small>GP ' + esc(r.display_name) + '</small>' + yours + drafting + '</span>' +
+    '<span class="lr-fund"><b>' + esc(r.fund_name) + '</b><small>' + who + '</small>' + tags + '</span>' +
     '<span class="lr-pts"><b class="' + pcls(r.total_points) + '">' + pts(r.total_points) + '</b>' + week + '</span>' +
   '</li>';
 }
 
-/* ---------------- landing ---------------- */
+/* ================= landing ================= */
 function cheapest(fits, used){
   let best = null;
   startups.forEach(s => { if(used.has(s.id) || !fits(s)) return; if(!best || s.cost_millions < best.cost_millions) best = s; });
   return best;
 }
-
 function samplePositions(){
   let chosen = SAMPLE.map(n => startups.find(s => s.name === n));
-  const ok = chosen.every(Boolean) &&
-    chosen.slice(0, 4).every((s, i) => s.tier === i + 1) &&
-    new Set(chosen.map(s => s.id)).size === 5 &&
-    chosen.reduce((a, s) => a + s.cost_millions, 0) <= BUDGET;
+  const ok = chosen.every(Boolean) && chosen.slice(0, 4).every((s, i) => s.tier === i + 1) &&
+    new Set(chosen.map(s => s.id)).size === 5 && chosen.reduce((a, s) => a + s.cost_millions, 0) <= BUDGET;
   if(!ok){
     const used = new Set();
     chosen = SLOTS.map(sl => { const c = cheapest(s => !sl.tier || s.tier === sl.tier, used); if(c) used.add(c.id); return c; });
@@ -812,7 +1155,6 @@ function samplePositions(){
   }
   return chosen.map((s, i) => ({slot:i + 1, name:s.name, slotName:SLOTS[i].name, cost:s.cost_millions, points:Number(s.total_points) || 0}));
 }
-
 function renderTicker(){
   if(!startups.length) return;
   const items = startups.slice().sort((a, b) => b.cost_millions - a.cost_millions).map(s => {
@@ -822,168 +1164,216 @@ function renderTicker(){
   }).join("");
   $("ticker").innerHTML = items + '<span aria-hidden="true" style="display:inline-flex">' + items + '</span>';
 }
-
 function renderSample(){
   const positions = samplePositions();
-  if(!positions){ $("hero-cert").innerHTML = ''; return; }
-  $("hero-cert").innerHTML = certHTML({
-    fund:"Hypothetical Capital", gp:"you", sig:"Your name", serial:"FFL-SAMPLE",
-    positions, fine:"Sample fund at today's prices. Yours could be better. Probably."
-  });
+  $("hero-cert").innerHTML = positions ? certHTML({
+    fund:"Hypothetical Capital", gp:"you", sig:"Your name", serial:"FFL-SAMPLE", positions,
+    fine:"Sample fund at today's prices. Yours could be better. Probably."
+  }) : "";
 }
-
 async function loadLanding(){
+  $("season-line").textContent = seasonLine();
   fetchPool().then(() => { renderTicker(); renderSample(); }).catch(() => {
     $("ticker").innerHTML = '<span class="ticker-wait">Live prices are unavailable right now.</span>';
-    $("hero-cert").innerHTML = '';
+    $("hero-cert").innerHTML = "";
   });
   try{
-    const {rows, latest} = await loadLeague();
-    $("lp-count").textContent = rows.length
-      ? plural(rows.length, "fund", "funds") + " raised so far. Here's the top of the table."
-      : "No funds yet. The first one in takes the top line.";
-    $("lp-league").innerHTML = rows.length
-      ? rows.slice(0, 5).map(r => leagueRow(r, latest)).join("")
-      : '<li class="empty-li">An empty table and $100M burning a hole in your pocket.</li>';
+    const {rows, latest} = rankRows(await fetchBoard());
+    const humans = rows.filter(r => !r.is_house).length;
+    $("lp-count").textContent = humans
+      ? plural(humans, "fund", "funds") + " raised so far, plus three house funds to beat."
+      : "Three house funds and nobody else yet. The first GP in has a shot at the top line.";
+    $("lp-league").innerHTML = rows.slice(0, 6).map(r => leagueRow(r, latest)).join("");
   }catch(e){
     $("lp-count").textContent = "The league table didn't load. Refresh to try again.";
     $("lp-league").innerHTML = "";
   }
 }
-
 function openJoin(m){
   setMode(m);
   $("join").scrollIntoView({behavior, block:"start"});
   setTimeout(() => $("f-fund").focus({preventScroll:true}), reduceMotion ? 0 : 450);
 }
 
-/* ---------------- auth ---------------- */
+/* ================= invites ================= */
+function readInvite(){
+  try{
+    const u = new URL(location.href);
+    const code = u.searchParams.get("join");
+    if(code){
+      store("ffl_join", code.trim());
+      u.searchParams.delete("join");
+      history.replaceState(null, "", u.pathname + (u.search || "") + u.hash);
+    }
+  }catch(e){}
+  return recall("ffl_join");
+}
+async function showInvite(code){
+  try{
+    const p = await call("league_preview", {p_code:code});
+    if(!p){ store("ffl_join", null); return; }
+    $("invite-text").textContent = "You're invited to " + p.name + " (" + plural(Number(p.members) || 0, "fund", "funds") + ").";
+    $("invite").hidden = false;
+  }catch(e){}
+}
+async function joinPending(){
+  const code = recall("ffl_join");
+  if(!code || !session) return;
+  store("ffl_join", null);
+  try{
+    leagues = await call("league_join", Object.assign(T(), {p_code:code})) || [];
+    const l = leagues.find(x => x.code === code.toUpperCase() || x.code === "FFL-" + code.toUpperCase());
+    if(l){ leagueSel = l.id; toast("You joined " + l.name + "."); }
+  }catch(e){ toast(e.message); }
+}
+
+/* ================= auth ================= */
 function setMode(next){
   mode = next;
   const creating = mode === "create";
   $("wrap-gp").hidden = !creating;
   $("join-title").textContent = creating ? "Raise your fund" : "Welcome back";
-  $("join-note").textContent = creating
-    ? "A fund name, your name and a PIN. That's the whole account."
-    : "Your fund name and PIN. That's it.";
+  $("join-note").textContent = creating ? "A fund name, your name and a PIN. That's the whole account." : "Your fund name and PIN. That's it.";
   $("b-go").textContent = creating ? "Raise fund" : "Sign in";
   $("alt-q").textContent = creating ? "Already have a fund?" : "New here?";
   $("b-mode").textContent = creating ? "Sign in instead" : "Raise a fund instead";
   $("f-pin").setAttribute("autocomplete", creating ? "new-password" : "current-password");
   say("gate-msg", "");
 }
-
-function signIn(fund, pin, quiet){
-  return db.rpc("verify_manager", {p_fund_name:fund, p_pin:pin}).then(r => {
-    if(r.error){ say("gate-msg", "Couldn't sign in: " + r.error.message, "bad"); return false; }
-    if(!r.data){ if(!quiet) say("gate-msg", "No fund matches that name and PIN.", "bad"); return false; }
-    return db.from("managers_public").select("id,fund_name,display_name").eq("id", r.data).single().then(m => {
-      if(m.error || !m.data){ say("gate-msg", "Signed in, but the fund didn't load. Try again.", "bad"); return false; }
-      signedIn(m.data);
-      return true;
-    });
-  });
+async function signIn(fund, pin, quiet){
+  const rows = await call("auth_sign_in", {p_fund_name:fund, p_pin:pin});
+  const s = Array.isArray(rows) ? rows[0] : rows;
+  if(!s || !s.token){ if(!quiet) say("gate-msg", "No fund matches that name and PIN.", "bad"); return false; }
+  signedIn(s); return true;
 }
-
-function submitJoin(e){
+async function submitJoin(e){
   if(e) e.preventDefault();
-  const fund = $("f-fund").value.trim();
-  const gp = $("f-gp").value.trim();
-  const pin = $("f-pin").value.trim();
-  const btn = $("b-go");
-
-  if(mode === "signin"){
-    if(!fund || !pin) return say("gate-msg", "Enter your fund name and PIN.", "bad");
-    btn.disabled = true; say("gate-msg", "Checking…");
-    return signIn(fund, pin, false).finally(() => { btn.disabled = false; });
-  }
-
-  if(!fund || !gp || pin.length < 4) return say("gate-msg", "Add a fund name, your name and a PIN of at least 4 digits.", "bad");
-  btn.disabled = true; say("gate-msg", "Raising the fund…");
-  db.rpc("create_manager", {p_fund_name:fund, p_display_name:gp, p_pin:pin}).then(r => {
-    if(!r.error){
-      const m = Array.isArray(r.data) ? r.data[0] : r.data;
-      if(m && m.id) return signedIn(m);
-      return say("gate-msg", "The fund didn't save. Try again.", "bad");
+  const f = $("f-fund").value.trim(), gp = $("f-gp").value.trim(), pin = $("f-pin").value.trim(), btn = $("b-go");
+  btn.disabled = true;
+  try{
+    if(mode === "signin"){
+      if(!f || !pin){ say("gate-msg", "Enter your fund name and PIN.", "bad"); return; }
+      say("gate-msg", "Checking…");
+      await signIn(f, pin, false);
+      return;
     }
-    if(/taken/i.test(r.error.message || "")){
-      say("gate-msg", "That fund already exists. Signing you in…");
-      return signIn(fund, pin, true).then(ok => { if(!ok) say("gate-msg", "That fund name is taken, and the PIN doesn't match it.", "bad"); });
+    if(!f || !gp || pin.length < 4){ say("gate-msg", "Add a fund name, your name and a PIN of at least 4 digits.", "bad"); return; }
+    say("gate-msg", "Raising the fund…");
+    try{
+      const rows = await call("auth_register", {p_fund_name:f, p_display_name:gp, p_pin:pin});
+      const s = Array.isArray(rows) ? rows[0] : rows;
+      if(s && s.token) signedIn(s); else say("gate-msg", "The fund didn't save. Try again.", "bad");
+    }catch(err){
+      if(/taken/i.test(err.message)){
+        say("gate-msg", "That fund already exists. Signing you in…");
+        if(!(await signIn(f, pin, true))) say("gate-msg", "That fund name is taken, and the PIN doesn't match it.", "bad");
+      }else say("gate-msg", err.message, "bad");
     }
-    say("gate-msg", r.error.message || "The fund didn't save. Try again.", "bad");
-  }).finally(() => { btn.disabled = false; });
+  }catch(err){ say("gate-msg", err.message, "bad"); }
+  finally{ btn.disabled = false; }
 }
-
-function signedIn(m){
-  me = m;
-  store("ffl_me", JSON.stringify(m));
+function signedIn(s){
+  session = {token:s.token, id:s.id, fund_name:s.fund_name, display_name:s.display_name, is_admin:!!s.is_admin};
+  store("ffl_session", JSON.stringify(session));
   say("gate-msg", "");
   enterApp();
 }
-
+function resetLocal(){
+  session = null; fund = null; picks = {}; active = 1; query = ""; xfer = null; leagues = []; leagueSel = "global";
+  confirming = false; locking = false; clearTimeout(confirmTimer);
+  store("ffl_session", null);
+}
 function signOut(){
-  me = null; picks = {}; active = 1; query = ""; confirming = false; locking = false;
-  clearTimeout(confirmTimer);
-  store("ffl_me", null);
+  const tok = session && session.token;
+  resetLocal();
+  if(tok) db.rpc("auth_sign_out", {p_token:tok}).then(() => {}, () => {});
   $("f-fund").value = ""; $("f-gp").value = ""; $("f-pin").value = "";
-  setMode("signin");
-  show();
-  window.scrollTo(0, 0);
-  loadLanding();
+  setMode("signin"); show(); window.scrollTo(0, 0); loadLanding();
+}
+function expire(){
+  if(!session) return;
+  resetLocal(); setMode("signin"); show(); loadLanding();
+  say("gate-msg", "Your session expired. Sign in again.", "bad");
 }
 
-/* ---------------- views ---------------- */
+/* ================= views ================= */
 function show(next){
   if(next) screen = next;
-  const authed = !!me;
+  const authed = !!session;
   $("v-landing").hidden = authed;
   $("v-app").hidden = !authed;
   document.documentElement.classList.toggle("is-landing", !authed);
   if(authed){
-    ["draft", "board", "how"].forEach(s => { $("s-" + s).hidden = s !== screen; });
+    if(screen === "admin" && !session.is_admin) screen = "fund";
+    $("tab-admin").hidden = !session.is_admin;
+    ["fund", "league", "how", "admin"].forEach(s => { $("s-" + s).hidden = s !== screen; });
     document.querySelectorAll(".tabs [data-screen]").forEach(b => {
       if(b.dataset.screen === screen) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
     });
-    if(screen === "board") renderBoard();
+    if(screen === "league") renderLeague();
+    if(screen === "admin") renderAdmin();
   }
   renderSign();
 }
-
 function setPhase(p, errText){
   phase = p;
-  $("draft-loading").hidden = p !== "loading";
+  $("fund-loading").hidden = p !== "loading";
   $("draft-live").hidden = p !== "drafting";
-  $("draft-locked").hidden = p !== "locked";
-  $("draft-error").hidden = p !== "error";
-  if(errText) $("draft-err-text").textContent = errText;
+  $("desk").hidden = p !== "desk" || !!xfer;
+  $("xfer").hidden = p !== "desk" || !xfer;
+  $("fund-error").hidden = p !== "error";
+  $("fund-closed").hidden = p !== "closed";
+  if(errText) $("fund-err-text").textContent = errText;
   renderSign();
 }
-
+async function loadFund(){
+  fund = await call("my_fund", T());
+  session.is_admin = !!fund.manager.is_admin;
+  session.fund_name = fund.manager.fund_name;
+  store("ffl_session", JSON.stringify(session));
+  $("tab-admin").hidden = !session.is_admin;
+  return fund;
+}
 async function enterApp(){
-  show("draft");
+  show("fund");
   window.scrollTo(0, 0);
-  $("fund-name").textContent = me.fund_name;
-  $("fund-sub").textContent = "GP " + me.display_name;
-  setPhase("loading");
+  $("fund-name").textContent = session.fund_name;
+  $("fund-sub").textContent = "GP " + session.display_name;
+  xfer = null; setPhase("loading");
   try{
-    if(!startups.length) await fetchPool();
-    const r = await db.from("rosters").select("slot,created_at,startups(*)").eq("manager_id", me.id).order("slot");
-    if(r.error) throw r.error;
-    if(r.data && r.data.length){ renderLocked(r.data, false); return; }
-    picks = {}; active = 1; query = ""; $("search").value = "";
-    $("fund-sub").textContent = "GP " + me.display_name + ". Five checks, $100M, one shot.";
-    setPhase("drafting");
-    renderDraft();
+    await Promise.all([loadFund(), startups.length ? null : fetchPool(), gameweeks.length ? null : fetchGameweeks()]);
+    deadlineReloaded = false;
+    if(fund.lineup.length) renderDesk(false);
+    else if(!fund.season.next_gw) setPhase("closed");
+    else startDraft();
   }catch(e){
-    setPhase("error", "Your fund didn't load: " + (e.message || "network error") + ".");
+    if(session) setPhase("error", "Your fund didn't load: " + e.message);
+    return;
   }
+  fetchNews().then(renderWire).then(() => { if(phase === "desk") renderMyNews(); });
+  joinPending();
 }
 
-/* ---------------- draft ---------------- */
+/* ================= wire ================= */
+function renderWire(){
+  if(!news.length){ $("wire").hidden = true; return; }
+  const items = news.map(n =>
+    '<a class="wr" href="' + esc(n.url) + '" target="_blank" rel="noopener"><b>' + esc(n.startups ? n.startups.name : "") + '</b><span>' + esc(n.title) + '</span></a>'
+  ).join("");
+  $("wire-track").innerHTML = items + '<span aria-hidden="true" style="display:inline-flex">' + items.replace(/<a /g, '<a tabindex="-1" ') + '</span>';
+  $("wire").hidden = false;
+}
+
+/* ================= draft ================= */
+function startDraft(){
+  picks = {}; active = 1; query = ""; $("search").value = "";
+  const g = fund.season.next_gw;
+  $("fund-sub").textContent = "GP " + session.display_name + ". Five checks, $100M, one shot. Your fund starts scoring in GW" + g + ".";
+  setPhase("drafting");
+  renderDraft();
+}
 function spent(){ return SLOTS.reduce((a, sl) => a + (picks[sl.n] ? picks[sl.n].cost_millions : 0), 0); }
 function filled(){ return SLOTS.filter(sl => picks[sl.n]).length; }
-
-// Cheapest way to fill every open slot except `skip`, given an extra company already taken.
 function reserveFor(skip, extraId){
   const used = new Set();
   SLOTS.forEach(sl => { if(picks[sl.n] && sl.n !== skip) used.add(picks[sl.n].id); });
@@ -996,7 +1386,6 @@ function reserveFor(skip, extraId){
   });
   return {sum, count};
 }
-
 function candidate(s){
   const cur = picks[active];
   if(cur && cur.id === s.id) return "here";
@@ -1006,13 +1395,11 @@ function candidate(s){
   if(after + reserveFor(active, s.id).sum > BUDGET) return "tight";
   return cur ? "swap" : "ok";
 }
-
 let dryShown = BUDGET, dryToken = 0;
 function setDry(v){
   const paint = x => { $("dry-num").textContent = money(x); $("dock-dry").textContent = money(x); };
-  const over = v < 0;
-  $("dry-num").classList.toggle("over", over);
-  $("dock-dry").classList.toggle("over", over);
+  $("dry-num").classList.toggle("over", v < 0);
+  $("dock-dry").classList.toggle("over", v < 0);
   const from = dryShown; dryShown = v;
   if(reduceMotion || from === v){ paint(v); return; }
   const token = ++dryToken, t0 = performance.now(), dur = 280;
@@ -1024,7 +1411,6 @@ function setDry(v){
   };
   requestAnimationFrame(step);
 }
-
 function renderBudget(){
   const used = spent(), left = BUDGET - used, res = reserveFor(null, null);
   setDry(left);
@@ -1039,7 +1425,6 @@ function renderBudget(){
   else if(left === 0) note.textContent = "Fully deployed. Every dollar at work.";
   else note.textContent = "All five checks written, " + money(left) + " left in reserve.";
 }
-
 function renderSlots(){
   $("slots").innerHTML = SLOTS.map(sl => {
     const p = picks[sl.n], on = sl.n === active;
@@ -1053,30 +1438,31 @@ function renderSlots(){
     '</li>';
   }).join("");
 }
-
+function poolRow(s, st, label, why, live){
+  return '<li><button class="co" type="button" data-id="' + s.id + '" data-s="' + st + '"' + (live ? '' : ' aria-disabled="true"') +
+    ' aria-label="' + esc(s.name) + ', ' + money(s.cost_millions) + '. ' + esc(why) + '">' +
+    '<span><span class="co-name">' + esc(s.name) + '</span>' +
+    '<span class="co-meta">' + esc(s.sector || "") + '</span>' +
+    '<span class="co-val">' + esc(valText(s.valuation_note)) + '</span></span>' +
+    '<span class="co-r"><span class="co-price">' + money(s.cost_millions) + '</span><span class="co-act">' + label + '</span></span>' +
+  '</button></li>';
+}
+function filterPool(tier, q){
+  q = (q || "").trim().toLowerCase();
+  return startups.filter(s => (!tier || s.tier === tier) &&
+    (!q || s.name.toLowerCase().includes(q) || String(s.sector || "").toLowerCase().includes(q)));
+}
 function renderPool(){
   const sl = SLOTS[active - 1];
   $("pool-title").textContent = sl.verb;
-  const q = query.trim().toLowerCase();
-  const list = startups.filter(s => (!sl.tier || s.tier === sl.tier) &&
-    (!q || s.name.toLowerCase().includes(q) || String(s.sector || "").toLowerCase().includes(q)));
+  const list = filterPool(sl.tier, query);
   $("pool-count").textContent = plural(list.length, "company", "companies") + (sl.tier ? " at this stage" : " across every stage");
   if(!list.length){
-    $("pool").innerHTML = '<li class="empty-li">' + (q ? 'Nothing matches \u201C' + esc(query.trim()) + '\u201D. Try a sector like \u201Cfintech\u201D.' : 'No companies at this stage yet.') + '</li>';
+    $("pool").innerHTML = '<li class="empty-li">' + (query.trim() ? 'Nothing matches \u201C' + esc(query.trim()) + '\u201D. Try a sector like \u201Cfintech\u201D.' : 'No companies at this stage yet.') + '</li>';
     return;
   }
-  $("pool").innerHTML = list.map(s => {
-    const st = candidate(s), live = st === "ok" || st === "swap";
-    return '<li><button class="co" type="button" data-id="' + s.id + '" data-s="' + st + '"' + (live ? '' : ' aria-disabled="true"') +
-      ' aria-label="' + esc(s.name) + ', ' + money(s.cost_millions) + '. ' + WHY[st] + '">' +
-      '<span><span class="co-name">' + esc(s.name) + '</span>' +
-      '<span class="co-meta">' + esc(s.sector || "") + '</span>' +
-      '<span class="co-val">' + esc(valText(s.valuation_note)) + '</span></span>' +
-      '<span class="co-r"><span class="co-price">' + money(s.cost_millions) + '</span><span class="co-act">' + LABEL[st] + '</span></span>' +
-    '</button></li>';
-  }).join("");
+  $("pool").innerHTML = list.map(s => { const st = candidate(s); return poolRow(s, st, LABEL[st], WHY[st], st === "ok" || st === "swap"); }).join("");
 }
-
 function signState(){
   if(locking) return {label:"Signing…", dis:true};
   if(spent() > BUDGET) return {label:"Over the cap", dis:true};
@@ -1084,29 +1470,22 @@ function signState(){
   if(confirming) return {label:"Confirm: this is final", dis:false, confirm:true};
   return {label:"Sign the term sheet", dis:false};
 }
-
 function renderSign(){
   const st = signState();
-  document.querySelectorAll(".js-sign").forEach(b => {
-    b.textContent = st.label; b.disabled = st.dis; b.classList.toggle("is-confirm", !!st.confirm);
-  });
+  document.querySelectorAll(".js-sign").forEach(b => { b.textContent = st.label; b.disabled = st.dis; b.classList.toggle("is-confirm", !!st.confirm); });
   $("dock-sub").textContent = filled() + " of 5 slots filled";
-  const dockOn = !!me && screen === "draft" && phase === "drafting";
+  const dockOn = !!session && screen === "fund" && phase === "drafting";
   $("dock").hidden = !dockOn;
   document.body.classList.toggle("has-dock", dockOn);
 }
-
 function renderDraft(){ renderBudget(); renderSlots(); renderPool(); renderSign(); }
-
 function cancelConfirm(){ confirming = false; clearTimeout(confirmTimer); }
-
 function focusSlot(){
   const row = $("slots"), el = row.querySelector(".slot.on");
-  if(el && row.scrollWidth > row.clientWidth) row.scrollTo({left: el.offsetLeft - 20, behavior});
+  if(el && row.scrollWidth > row.clientWidth) row.scrollTo({left:el.offsetLeft - 20, behavior});
   const head = $("pool-head");
   if(head.getBoundingClientRect().top < 90) head.scrollIntoView({behavior, block:"start"});
 }
-
 function draft(s){
   picks[active] = s;
   cancelConfirm(); say("draft-msg", "");
@@ -1118,61 +1497,115 @@ function draft(s){
   renderDraft();
   if(moved) focusSlot();
 }
-
 async function sign(){
-  if(signState().dis || !me) return;
+  if(signState().dis || !session) return;
   if(!confirming){
     confirming = true; renderSign();
     confirmTimer = setTimeout(() => { confirming = false; renderSign(); }, 4000);
     return;
   }
   cancelConfirm(); locking = true; renderSign(); say("draft-msg", "");
-  const rows = SLOTS.map(sl => ({manager_id:me.id, startup_id:picks[sl.n].id, slot:sl.n}));
-  const r = await db.from("rosters").insert(rows);
-  locking = false;
-  if(r.error){
-    const dup = /duplicate|unique/i.test(r.error.message || "");
-    say("draft-msg", dup ? "This fund already signed a term sheet." : "The term sheet didn't save: " + r.error.message, "bad");
+  try{
+    await call("sign_term_sheet", Object.assign(T(), {p_ids:SLOTS.map(sl => picks[sl.n].id)}));
+    await loadFund();
+    locking = false;
+    window.scrollTo({top:0, behavior});
+    renderDesk(true);
+  }catch(e){
+    locking = false;
+    say("draft-msg", e.message, "bad");
     renderSign();
-    if(dup) enterApp();
-    return;
+    if(/already signed/i.test(e.message)) enterApp();
   }
-  const back = await db.from("rosters").select("slot,created_at,startups(*)").eq("manager_id", me.id).order("slot");
-  if(back.error || !back.data || !back.data.length){ enterApp(); return; }
-  window.scrollTo({top:0, behavior});
-  renderLocked(back.data, true);
 }
 
-/* ---------------- locked portfolio ---------------- */
-function renderLocked(rows, justSigned){
-  rows = rows.slice().sort((a, b) => a.slot - b.slot);
-  const date = fmtDate(rows[0].created_at);
-  const positions = rows.map(r => ({
-    slot:r.slot, name:r.startups.name, slotName:(SLOTS[r.slot - 1] || {}).name || "",
-    cost:r.startups.cost_millions, points:Number(r.startups.total_points) || 0
+/* ================= desk ================= */
+function positions(){
+  return fund.lineup.map(p => ({
+    slot:p.slot, id:p.id, name:p.name, slotName:SLOTS[p.slot - 1].name, cost:p.cost_millions,
+    points:Number(p.fund_points) || 0, lead:p.id === fund.lead_startup_id
   }));
-  $("fund-sub").textContent = "GP " + me.display_name + ". Term sheet signed " + date + ".";
+}
+function leadName(){ const l = fund.lineup.find(p => p.id === fund.lead_startup_id); return l ? l.name : null; }
+function renderDesk(justSigned){
+  const f = fund, s = f.season;
+  $("fund-name").textContent = f.manager.fund_name;
+  $("fund-sub").textContent = "GP " + f.manager.display_name + ". " + pts(Number(f.total_points) || 0) + " points this season.";
+  const date = fmtDate(f.signed_at);
   $("cert-slot").innerHTML = certHTML({
-    fund:me.fund_name, gp:me.display_name, sig:me.display_name, serial:serial(me.id),
-    positions, issued:justSigned && !reduceMotion,
-    fine:"Executed " + date + ". Not a security. Barely a fund."
+    fund:f.manager.fund_name, gp:f.manager.display_name, sig:f.manager.display_name, serial:serial(f.manager.id),
+    corner:s.next_gw ? "Lineup for GW" + s.next_gw : "Final lineup",
+    positions:positions(), total:Number(f.total_points) || 0,
+    interactive:!!s.next_gw, issued:justSigned && !reduceMotion,
+    fine:"Executed " + date + ". Not a security. Barely a fund.",
+    hint:s.next_gw ? "Tap a position to make it your lead or transfer it out." : ""
   });
-  const names = positions.map(p => p.name);
-  const text = "I just raised " + me.fund_name + " on Fantasy Founders League. $100M, five checks: " + names.join(", ") + ".";
+  const names = f.lineup.map(p => p.name);
+  const text = "I'm running " + f.manager.fund_name + " on Fantasy Founders League. $100M, five checks: " + names.join(", ") + ".";
   $("share-x").href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(text) + "&url=" + encodeURIComponent(SHARE_URL);
   const copyBtn = $("share-copy");
   copyBtn.textContent = navigator.share ? "Share" : "Copy link";
-  copyBtn.onclick = () => shareOrCopy(text, copyBtn);
-  setPhase("locked");
+  copyBtn.onclick = () => shareOrCopy(text, SHARE_URL, copyBtn, "Copy link");
+  renderWeek(); renderFeed(); renderMyNews(); renderHistory();
+  setPhase("desk");
 }
-
-function shareOrCopy(text, btn){
-  if(navigator.share){
-    navigator.share({title:"Fantasy Founders League", text, url:SHARE_URL}).catch(() => {});
+function renderWeek(){
+  const f = fund, s = f.season, el = $("week-card");
+  if(!s.next_gw){
+    el.innerHTML = '<h2 class="wk-h">Season 1 is over</h2><p class="wk-sub">Your fund finished on ' + pts(Number(f.total_points) || 0) + ' points. Final standings are on the league table.</p>';
     return;
   }
-  const full = text + " " + SHARE_URL;
-  const done = () => { btn.textContent = "Copied"; setTimeout(() => { btn.textContent = "Copy link"; }, 1800); };
+  const g = s.next_gw;
+  const live = s.current_gw ? "GW" + s.current_gw + " is live. " : "";
+  const used = f.transfer_used;
+  const lastX = (f.transfers || []).find(t => t.gw === g);
+  el.innerHTML =
+    '<h2 class="wk-h">GW' + g + ' locks in <span class="js-count" data-deadline="' + esc(s.next_deadline) + '">' + countdown(s.next_deadline) + '</span></h2>' +
+    '<p class="wk-sub">' + live + fmtDeadline(s.next_deadline) + '. Anything you change now counts from GW' + g + '.</p>' +
+    '<dl class="wk-list">' +
+      '<div><dt>Lead investor</dt><dd><b>' + esc(leadName() || "Your anchor") + '</b> scores double.' +
+        (f.lead_is_default ? '<small>Your anchor, by default.</small>' : '') + '</dd></div>' +
+      '<div><dt>Free transfer</dt><dd>' + (used && lastX
+          ? 'Used: ' + esc(lastX.out) + ' out, ' + esc(lastX.in) + ' in.<small>Your next one opens when GW' + g + ' locks.</small>'
+          : '1 available for GW' + g + '.<small>Doesn\'t carry over if unused.</small>') + '</dd></div>' +
+    '</dl>' +
+    '<div class="wk-actions">' +
+      (used ? '' : '<button class="btn btn-light btn-sm" type="button" id="b-xfer">Make a transfer</button>') +
+      '<span class="wk-hint">Tap a position on your certificate to change your lead.</span>' +
+    '</div>';
+  const b = $("b-xfer");
+  if(b) b.addEventListener("click", () => { toast("Pick the position you want to sell."); $("cert-slot").scrollIntoView({behavior, block:"start"}); });
+}
+function renderFeed(){
+  const items = fund.feed || [];
+  $("feed").innerHTML = items.length ? items.map(x => {
+    const ev = EV[x.event_type];
+    return '<li class="fd">' +
+      '<span class="fd-t"><small>GW' + x.gw + '</small>' + esc(x.name) + ', ' + esc(ev ? ev.short.toLowerCase() : x.event_type) + '</span>' +
+      '<span class="fd-p ' + pcls(x.points) + '">' + pts(x.points) + (x.is_lead ? '<small>Lead \u00D72</small>' : '') + '</span>' +
+      (x.note ? '<span class="fd-note">' + esc(x.note) + '</span>' : '') +
+    '</li>';
+  }).join("") : '<li class="empty-note">Nothing yet. When the commissioner scores news about your companies, it shows up here.</li>';
+}
+function renderMyNews(){
+  if(!fund) return;
+  const ids = new Set(fund.lineup.map(p => p.id));
+  const mine = news.filter(n => ids.has(n.startup_id)).slice(0, 8);
+  $("my-news").innerHTML = mine.length ? mine.map(n =>
+    '<li class="nw"><span class="co-tag">' + esc(n.startups ? n.startups.name : "") + '</span>' +
+    '<a href="' + esc(n.url) + '" target="_blank" rel="noopener">' + esc(n.title) + '</a>' +
+    '<small>' + esc(n.source || "") + ', ' + fmtShort(n.published_at) + '</small></li>'
+  ).join("") : '<li class="empty-note">No approved headlines about your five yet.</li>';
+}
+function renderHistory(){
+  const t = fund.transfers || [];
+  $("history-panel").hidden = !t.length;
+  $("history").innerHTML = t.map(x => '<li>GW' + x.gw + ': ' + esc(x.out) + ' out, ' + esc(x.in) + ' in</li>').join("");
+}
+function shareOrCopy(text, url, btn, idle){
+  if(navigator.share){ navigator.share({title:"Fantasy Founders League", text, url}).catch(() => {}); return; }
+  const full = text ? text + " " + url : url;
+  const done = () => { btn.textContent = "Copied"; setTimeout(() => { btn.textContent = idle; }, 1800); };
   const fallback = () => {
     const ta = document.createElement("textarea");
     ta.value = full; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
@@ -1186,26 +1619,313 @@ function shareOrCopy(text, btn){
   }catch(e){ fallback(); }
 }
 
-/* ---------------- league screen ---------------- */
-async function renderBoard(){
-  $("board-sub").textContent = "Loading the table…";
-  $("board").innerHTML = '<li class="empty-li" style="border:0;padding:0"><span class="sk sk-row"></span><span class="sk sk-row"></span><span class="sk sk-row"></span></li>';
+/* ---- position sheet ---- */
+function openPos(slot){
+  const p = fund.lineup.find(x => x.slot === slot);
+  if(!p) return;
+  posSel = p;
+  const g = fund.season.next_gw, isLead = p.id === fund.lead_startup_id;
+  $("pd-slot").textContent = "Slot " + slot + ", " + SLOTS[slot - 1].name;
+  $("pd-name").textContent = p.name;
+  $("pd-meta").textContent = money(p.cost_millions) + ". " + pts(Number(p.fund_points) || 0) + " points for your fund so far.";
+  const lb = $("pd-lead"), sb = $("pd-sell");
+  lb.disabled = isLead; lb.textContent = isLead ? "Lead investor for GW" + g : "Make lead investor for GW" + g;
+  sb.disabled = !!fund.transfer_used; sb.textContent = fund.transfer_used ? "Transfer used for GW" + g : "Transfer out";
+  say("pd-msg", "");
+  const d = $("pos-dialog");
+  if(d.showModal) d.showModal(); else d.setAttribute("open", "");
+}
+function closePos(){ const d = $("pos-dialog"); if(d.close) d.close(); else d.removeAttribute("open"); }
+async function makeLead(){
+  if(!posSel) return;
+  const btn = $("pd-lead"); btn.disabled = true; say("pd-msg", "Saving…");
   try{
-    const {rows, latest} = await loadLeague();
-    $("board-sub").textContent = rows.length
-      ? plural(rows.length, "fund", "funds") + ", ranked by total points. " +
-        (latest ? "Arrows show movement since the last scoring week." : "Scoring starts once the first week of news is logged.")
-      : "No funds yet.";
-    $("board").innerHTML = rows.length
-      ? rows.map(r => leagueRow(r, latest)).join("")
-      : '<li class="empty-li">Nobody else is here yet. Send the link to the group chat.</li>';
+    await call("set_lead", Object.assign(T(), {p_startup_id:posSel.id}));
+    await loadFund();
+    closePos(); renderDesk(false);
+    toast(posSel.name + " is your lead investor for GW" + fund.season.next_gw + ".");
+  }catch(e){ say("pd-msg", e.message, "bad"); btn.disabled = false; }
+}
+
+/* ---- transfer mode ---- */
+function startTransfer(slot){
+  const out = fund.lineup.find(p => p.slot === slot);
+  if(!out) return;
+  closePos();
+  xfer = {slot, out, pick:null, query:"", confirming:false, busy:false, timer:null};
+  $("xfer-search").value = "";
+  setPhase("desk"); renderXfer(); window.scrollTo({top:0, behavior});
+}
+function stage(sl){
+  const w = sl.name === "Series B" ? "Series B" : sl.name.toLowerCase();
+  return (/^[aeiou]/i.test(w) ? "an " : "a ") + w;
+}
+function xferLimit(){ return BUDGET - fund.lineup.filter(p => p.slot !== xfer.slot).reduce((a, p) => a + p.cost_millions, 0); }
+function xferState(s){
+  if(s.id === xfer.out.id) return "selling";
+  if(fund.lineup.some(p => p.id === s.id)) return "held";
+  if(s.cost_millions > xferLimit()) return "over";
+  if(xfer.pick && xfer.pick.id === s.id) return "picked";
+  return "ok";
+}
+function renderXfer(){
+  const sl = SLOTS[xfer.slot - 1], limit = xferLimit(), g = fund.season.next_gw;
+  if(!xfer.pick){
+    $("xh-title").textContent = "Sell " + xfer.out.name + " (" + money(xfer.out.cost_millions) + ")";
+    $("xh-sub").textContent = (sl.tier ? "Pick " + stage(sl) + " replacement" : "Pick a replacement from any stage") + ". You can spend up to " + money(limit) + ".";
+  }else{
+    $("xh-title").textContent = xfer.out.name + " out, " + xfer.pick.name + " in";
+    $("xh-sub").textContent = "Leaves " + money(limit - xfer.pick.cost_millions) + " of dry powder. Counts from GW" + g + ", and uses this week's free transfer.";
+  }
+  const go = $("xh-go");
+  go.hidden = !xfer.pick;
+  go.disabled = xfer.busy;
+  go.textContent = xfer.busy ? "Making transfer…" : xfer.confirming ? "Confirm: this uses your GW" + g + " transfer" : "Make transfer";
+  go.classList.toggle("is-confirm", xfer.confirming);
+  $("xfer-title").textContent = sl.tier ? "Pick " + stage(sl) + " replacement" : "Pick a wildcard replacement";
+  const list = filterPool(sl.tier, xfer.query);
+  $("xfer-count").textContent = plural(list.length, "company", "companies");
+  $("xfer-pool").innerHTML = list.length ? list.map(s => {
+    const st = xferState(s);
+    const why = {ok:"Select as the replacement", picked:"Selected", selling:"The company you're selling", held:"Already in your fund", over:"Would push the fund past $100M"}[st];
+    return poolRow(s, st, XLABEL[st], why, st === "ok" || st === "picked");
+  }).join("") : '<li class="empty-li">Nothing matches that search.</li>';
+}
+function cancelTransfer(){ if(xfer) clearTimeout(xfer.timer); xfer = null; renderDesk(false); }
+async function confirmTransfer(){
+  if(!xfer || !xfer.pick || xfer.busy) return;
+  if(!xfer.confirming){
+    xfer.confirming = true; renderXfer();
+    xfer.timer = setTimeout(() => { if(xfer){ xfer.confirming = false; renderXfer(); } }, 4000);
+    return;
+  }
+  clearTimeout(xfer.timer);
+  xfer.busy = true; xfer.confirming = false; renderXfer(); say("xh-msg", "");
+  const done = {out:xfer.out.name, inn:xfer.pick.name};
+  try{
+    fund = await call("make_transfer", Object.assign(T(), {p_slot:xfer.slot, p_in:xfer.pick.id}));
+    xfer = null;
+    renderDesk(false);
+    window.scrollTo({top:0, behavior});
+    toast(done.out + " out, " + done.inn + " in. Counts from GW" + fund.season.next_gw + ".");
   }catch(e){
-    $("board-sub").textContent = "The league table didn't load.";
-    $("board").innerHTML = '<li class="empty-li">' + esc(e.message || "Network error") + '. Try again in a moment.</li>';
+    if(xfer){ xfer.busy = false; renderXfer(); }
+    say("xh-msg", e.message, "bad");
   }
 }
 
-/* ---------------- wiring ---------------- */
+/* ================= league screen ================= */
+async function renderLeague(){
+  $("board-sub").textContent = "Loading the table…";
+  $("board").innerHTML = '<li class="empty-li" style="border:0;padding:0"><span class="sk sk-row"></span><span class="sk sk-row"></span></li>';
+  let rows;
+  try{
+    const res = await Promise.all([fetchBoard(), call("my_leagues", T())]);
+    rows = res[0]; leagues = res[1] || [];
+  }catch(e){
+    $("board-sub").textContent = "The league table didn't load.";
+    $("board").innerHTML = '<li class="empty-li">' + esc(e.message) + '. Try again in a moment.</li>';
+    return;
+  }
+  if(leagueSel !== "global" && !leagues.some(l => l.id === leagueSel)) leagueSel = "global";
+  const l = leagues.find(x => x.id === leagueSel) || null;
+  $("lg-chips").innerHTML =
+    '<button class="chip" type="button" role="tab" data-lg="global" aria-selected="' + (!l) + '">Everyone</button>' +
+    leagues.map(x => '<button class="chip" type="button" role="tab" data-lg="' + x.id + '" aria-selected="' + (l && l.id === x.id) + '">' + esc(x.name) + '</button>').join("");
+  $("lg-title").textContent = l ? l.name : "League table";
+  if(l){
+    const members = new Set(l.member_ids || []);
+    rows = rows.filter(r => members.has(r.manager_id) || r.is_house);
+    $("lg-info").hidden = false;
+    $("lg-info").innerHTML =
+      '<span>Invite code <span class="lg-code">' + esc(l.code) + '</span></span><span class="sp"></span>' +
+      '<button class="btn btn-primary btn-sm" type="button" id="lg-invite">Copy invite link</button>' +
+      (l.is_owner ? '<button class="btn btn-quiet btn-sm" type="button" id="lg-rename-btn">Rename</button><button class="btn btn-quiet btn-sm" type="button" id="lg-code-btn">New code</button>' : '') +
+      '<button class="link" type="button" id="lg-leave">Leave league</button>';
+    const inv = $("lg-invite");
+    inv.onclick = () => shareOrCopy("Join my league on Fantasy Founders League:", SHARE_URL + "/?join=" + encodeURIComponent(l.code), inv, "Copy invite link");
+    if(l.is_owner){
+      $("lg-rename-btn").onclick = () => { $("lg-rename").value = l.name; toggleForm("f-lg-rename"); };
+      $("lg-code-btn").onclick = () => leagueAction("league_new_code", {p_league_id:l.id}, "New code ready. The old one no longer works.");
+    }
+    const leave = $("lg-leave");
+    leave.onclick = () => {
+      if(leave.dataset.armed){ leagueSel = "global"; leagueAction("league_leave", {p_league_id:l.id}, "You left " + l.name + "."); }
+      else{ leave.dataset.armed = "1"; leave.textContent = "Tap again to leave"; setTimeout(() => { leave.textContent = "Leave league"; delete leave.dataset.armed; }, 4000); }
+    };
+  }else $("lg-info").hidden = true;
+
+  const ranked = rankRows(rows);
+  const humans = ranked.rows.filter(r => !r.is_house).length;
+  $("board-sub").textContent = plural(humans, "fund", "funds") + (l ? " in this league" : "") + ", plus three house funds, ranked by total points." +
+    (ranked.latest ? " Arrows show movement in GW" + ranked.latest + "." : " Scoring starts once GW1 news is logged.");
+  $("board").innerHTML = ranked.rows.map(r => leagueRow(r, ranked.latest)).join("");
+  renderLeagueWeek(ranked.latest);
+}
+async function renderLeagueWeek(latest){
+  const title = $("lg-week-title"), list = $("lg-feed");
+  if(!latest){ title.textContent = "What moved"; list.innerHTML = '<li class="empty-note">Scored news shows up here each gameweek.</li>'; return; }
+  title.textContent = "What moved in GW" + latest;
+  const r = await db.from("weekly_scores").select("id,gw,event_type,points,note,startups(name)").eq("gw", latest).order("id", {ascending:false}).limit(30);
+  const items = r.error ? [] : (r.data || []);
+  list.innerHTML = items.length ? items.map(x => {
+    const ev = EV[x.event_type];
+    return '<li class="fd"><span class="fd-t">' + esc(x.startups ? x.startups.name : "") + ', ' + esc(ev ? ev.short.toLowerCase() : x.event_type) + '</span>' +
+      '<span class="fd-p ' + pcls(x.points) + '">' + pts(x.points) + '</span>' +
+      (x.note ? '<span class="fd-note">' + esc(x.note) + '</span>' : '') + '</li>';
+  }).join("") : '<li class="empty-note">Nothing scored this gameweek yet.</li>';
+}
+function toggleForm(id){
+  ["f-lg-new", "f-lg-join", "f-lg-rename"].forEach(f => { $(f).hidden = f !== id ? true : !$(f).hidden; });
+  say("lg-msg", "");
+  const f = $(id);
+  if(!f.hidden){ const i = f.querySelector("input"); if(i) i.focus(); }
+}
+async function leagueAction(fn, args, okText){
+  say("lg-msg", "Saving…");
+  try{
+    leagues = await call(fn, Object.assign(T(), args)) || [];
+    ["f-lg-new", "f-lg-join", "f-lg-rename"].forEach(f => { $(f).hidden = true; });
+    say("lg-msg", "");
+    if(okText) toast(okText);
+    return leagues;
+  }catch(e){ say("lg-msg", e.message, "bad"); return null; }
+  finally{ if(screen === "league") renderLeague(); }
+}
+
+/* ================= scoring desk ================= */
+let optsHTML = "";
+function companyOptions(){
+  if(optsHTML) return optsHTML;
+  optsHTML = [1, 2, 3, 4].map(t =>
+    '<optgroup label="' + SLOTS[t - 1].name + '">' +
+    startups.filter(s => s.tier === t).slice().sort((a, b) => a.name.localeCompare(b.name))
+      .map(s => '<option value="' + s.id + '">' + esc(s.name) + '</option>').join("") +
+    '</optgroup>').join("");
+  return optsHTML;
+}
+function eventOptions(blank){
+  return (blank ? '<option value="">Pick an event</option>' : '') +
+    EVENTS.map(e => '<option value="' + e.k + '">' + esc(e.short) + ' (' + pts(e.pts) + ')</option>').join("");
+}
+function maxScoreGw(){
+  const s = season();
+  if(s.cur) return s.cur.id;
+  if(s.next) return s.next.id === 1 ? 1 : s.next.id - 1;
+  return gameweeks.length;
+}
+async function renderAdmin(){
+  if(!startups.length) await fetchPool();
+  if(!gameweeks.length) await fetchGameweeks();
+  $("sc-startup").innerHTML = companyOptions();
+  $("sc-event").innerHTML = eventOptions(true);
+  const mg = maxScoreGw();
+  $("sc-gw").innerHTML = Array.from({length:mg}, (_, i) => mg - i).map(g => '<option value="' + g + '">GW' + g + '</option>').join("");
+  loadInbox(); loadRecent();
+}
+async function loadInbox(){
+  $("inbox-sub").textContent = "Loading…";
+  try{
+    const items = await call("admin_news", T()) || [];
+    $("inbox-sub").textContent = items.length
+      ? plural(items.length, "headline", "headlines") + " matched a pool company. Score it, send it to the wire without points, or dismiss it."
+      : "Inbox zero. New headlines arrive every 30 minutes.";
+    $("inbox").innerHTML = items.map(n =>
+      '<li class="ib" data-news="' + n.id + '">' +
+        '<a class="ib-title" href="' + esc(n.url) + '" target="_blank" rel="noopener">' + esc(n.title) + '</a>' +
+        '<p class="ib-meta">' + esc(n.source || "") + ', ' + fmtShort(n.published_at) + '. Matched ' + esc(n.startup_name || "?") + ' on \u201C' + esc(n.matched_term || "") + '\u201D.</p>' +
+        '<div class="ib-ctl">' +
+          '<select class="in in-sm" data-f="startup" aria-label="Company">' + companyOptions() + '</select>' +
+          '<select class="in in-sm" data-f="event" aria-label="Scoring event">' + eventOptions(true) + '</select>' +
+        '</div>' +
+        '<input class="in in-sm" data-f="note" maxlength="200" aria-label="Note for players" value="' + esc(n.title) + '">' +
+        '<div class="ib-actions">' +
+          '<button class="btn btn-primary btn-sm" type="button" data-act="score">Score</button>' +
+          '<button class="btn btn-quiet btn-sm" type="button" data-act="wire">Wire only</button>' +
+          '<button class="link" type="button" data-act="dismiss">Dismiss</button>' +
+          '<span class="msg" data-f="msg" style="margin:0"></span>' +
+        '</div>' +
+      '</li>').join("");
+    items.forEach(n => { const el = $("inbox").querySelector('[data-news="' + n.id + '"] [data-f="startup"]'); if(el && n.startup_id) el.value = n.startup_id; });
+  }catch(e){ $("inbox-sub").textContent = e.message; }
+}
+async function loadRecent(){
+  const r = await db.from("weekly_scores").select("id,gw,event_type,points,note,startups(name)").order("id", {ascending:false}).limit(25);
+  const items = r.error ? [] : (r.data || []);
+  $("recent").innerHTML = items.length ? items.map(x => {
+    const ev = EV[x.event_type];
+    return '<li class="sc"><span><b>' + esc(x.startups ? x.startups.name : "") + '</b><small>GW' + x.gw + ', ' + esc(ev ? ev.short : x.event_type) + (x.note ? '. ' + esc(x.note) : '') + '</small></span>' +
+      '<span class="pts-cell ' + pcls(x.points) + '">' + pts(x.points) + '</span>' +
+      '<button class="link" type="button" data-undo="' + x.id + '">Undo</button></li>';
+  }).join("") : '<li class="empty-note">No scores yet this season.</li>';
+}
+async function logScore(e){
+  e.preventDefault();
+  const ev = $("sc-event").value;
+  if(!ev) return say("sc-msg", "Pick a scoring event.", "bad");
+  say("sc-msg", "Logging…");
+  try{
+    await call("admin_log_score", Object.assign(T(), {
+      p_startup_id:Number($("sc-startup").value), p_gw:Number($("sc-gw").value), p_event:ev, p_note:$("sc-note").value, p_news_id:null
+    }));
+    say("sc-msg", "Logged. Every fund holding it just moved.", "ok");
+    $("sc-note").value = ""; $("sc-event").value = "";
+    loadRecent(); refreshAfterScore();
+  }catch(err){ say("sc-msg", err.message, "bad"); }
+}
+function refreshAfterScore(){ startups = []; optsHTML = ""; fetchPool().then(() => { optsHTML = ""; }); }
+async function inboxAct(li, act){
+  const id = Number(li.dataset.news), msg = li.querySelector('[data-f="msg"]');
+  const sid = Number(li.querySelector('[data-f="startup"]').value);
+  const setMsg = (t, bad) => { msg.textContent = t; msg.className = "msg" + (bad ? " bad" : ""); };
+  li.querySelectorAll("button").forEach(b => { b.disabled = true; });
+  try{
+    if(act === "score"){
+      const ev = li.querySelector('[data-f="event"]').value;
+      if(!ev){ setMsg("Pick an event first.", true); li.querySelectorAll("button").forEach(b => { b.disabled = false; }); return; }
+      await call("admin_log_score", Object.assign(T(), {p_startup_id:sid, p_gw:maxScoreGw(), p_event:ev, p_note:li.querySelector('[data-f="note"]').value, p_news_id:id}));
+      toast("Scored. It's on the wire and in every holder's feed.");
+      loadRecent(); refreshAfterScore();
+    }else{
+      await call("admin_news_update", Object.assign(T(), {p_news_id:id, p_status:act === "wire" ? "confirmed" : "dismissed", p_startup_id:sid}));
+      toast(act === "wire" ? "Added to the wire." : "Dismissed.");
+    }
+    li.remove();
+    const left = $("inbox").children.length;
+    $("inbox-sub").textContent = left ? plural(left, "headline", "headlines") + " left to review." : "Inbox zero. New headlines arrive every 30 minutes.";
+    fetchNews().then(renderWire);
+  }catch(e){
+    setMsg(e.message, true);
+    li.querySelectorAll("button").forEach(b => { b.disabled = false; });
+  }
+}
+async function fetchNewsNow(){
+  const b = $("b-fetch"); b.disabled = true; b.textContent = "Checking…";
+  try{
+    const r = await fetch(FN_NEWS, {method:"POST", headers:{"Authorization":"Bearer " + ANON_JWT, "Content-Type":"application/json"}, body:"{}"});
+    const j = await r.json().catch(() => ({}));
+    if(j.skipped) toast("Checked less than two minutes ago. Try again shortly.");
+    else if(r.ok) toast(j.inserted ? plural(j.inserted, "new headline", "new headlines") + " in the inbox." : "No new headlines about pool companies.");
+    else toast("The news check failed. Try again in a minute.");
+    loadInbox();
+  }catch(e){ toast("The news check failed. Try again in a minute."); }
+  finally{ b.disabled = false; b.textContent = "Check for news"; }
+}
+
+/* ================= countdown ticker ================= */
+function tickCountdowns(){
+  document.querySelectorAll(".js-count[data-deadline]").forEach(el => {
+    el.textContent = countdown(el.dataset.deadline);
+    if(new Date(el.dataset.deadline).getTime() <= Date.now() && !deadlineReloaded && session && screen === "fund"){
+      deadlineReloaded = true;
+      toast("The deadline just passed. Refreshing your fund.");
+      enterApp();
+    }
+  });
+  if(!session) $("season-line").textContent = seasonLine();
+}
+
+/* ================= wiring ================= */
 document.querySelectorAll(".js-mark").forEach(el => { el.outerHTML = MARK; });
 $("hero-art").innerHTML = rosette(1000, [
   {R:.86, A:.045, lobes:54, count:22, steps:540},
@@ -1220,8 +1940,12 @@ $("b-mode").addEventListener("click", () => { setMode(mode === "create" ? "signi
 $("join-form").addEventListener("submit", submitJoin);
 $("b-signout").addEventListener("click", signOut);
 $("b-retry").addEventListener("click", enterApp);
-document.querySelectorAll("#v-app [data-screen]").forEach(b => b.addEventListener("click", () => { show(b.dataset.screen); window.scrollTo(0, 0); }));
+document.querySelectorAll("#v-app [data-screen]").forEach(b => b.addEventListener("click", () => {
+  if(xfer && b.dataset.screen !== "fund") cancelTransfer();
+  show(b.dataset.screen); window.scrollTo(0, 0);
+}));
 
+// draft
 $("slots").addEventListener("click", e => {
   const drop = e.target.closest("[data-drop]");
   if(drop){ const n = +drop.dataset.drop; delete picks[n]; active = n; cancelConfirm(); renderDraft(); return; }
@@ -1237,16 +1961,114 @@ $("pool").addEventListener("click", e => {
 $("search").addEventListener("input", e => { query = e.target.value; renderPool(); });
 document.querySelectorAll(".js-sign").forEach(b => b.addEventListener("click", sign));
 
-/* ---------------- boot ---------------- */
-try{
-  const saved = JSON.parse(recall("ffl_me") || "null");
-  me = saved && saved.id ? saved : null;
-}catch(e){ me = null; }
-if(!me) store("ffl_me", null);
+// desk
+$("cert-slot").addEventListener("click", e => {
+  const b = e.target.closest("[data-pos]");
+  if(b) openPos(Number(b.dataset.pos));
+});
+$("pd-lead").addEventListener("click", makeLead);
+$("pd-sell").addEventListener("click", () => { if(posSel) startTransfer(posSel.slot); });
+$("pd-close").addEventListener("click", closePos);
+$("pos-dialog").addEventListener("click", e => { if(e.target === $("pos-dialog")) closePos(); });
 
-setMode("signin");
-if(me) enterApp();
-else { show(); loadLanding(); }
+// transfer
+$("xh-cancel").addEventListener("click", cancelTransfer);
+$("xh-go").addEventListener("click", confirmTransfer);
+$("xfer-search").addEventListener("input", e => { if(xfer){ xfer.query = e.target.value; renderXfer(); } });
+$("xfer-pool").addEventListener("click", e => {
+  const b = e.target.closest(".co");
+  if(!b || !xfer || b.getAttribute("aria-disabled") === "true") return;
+  const s = startups.find(x => String(x.id) === b.dataset.id);
+  if(!s) return;
+  clearTimeout(xfer.timer); xfer.confirming = false; say("xh-msg", "");
+  xfer.pick = s; renderXfer();
+});
+
+// league
+$("lg-chips").addEventListener("click", e => {
+  const c = e.target.closest("[data-lg]");
+  if(!c) return;
+  leagueSel = c.dataset.lg === "global" ? "global" : Number(c.dataset.lg);
+  renderLeague();
+});
+$("b-lg-new").addEventListener("click", () => toggleForm("f-lg-new"));
+$("b-lg-join").addEventListener("click", () => toggleForm("f-lg-join"));
+document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => { $(b.dataset.close).hidden = true; say("lg-msg", ""); }));
+$("f-lg-new").addEventListener("submit", async e => {
+  e.preventDefault();
+  const name = $("lg-new-name").value.trim();
+  if(!name) return say("lg-msg", "Give the league a name.", "bad");
+  const before = new Set(leagues.map(l => l.id));
+  const res = await leagueAction("league_create", {p_name:name}, null);
+  if(res){
+    const made = res.find(l => !before.has(l.id));
+    if(made){ leagueSel = made.id; toast(made.name + " is live. Share the invite link."); renderLeague(); }
+    $("lg-new-name").value = "";
+  }
+});
+$("f-lg-join").addEventListener("submit", async e => {
+  e.preventDefault();
+  const code = $("lg-join-code").value.trim();
+  if(!code) return say("lg-msg", "Enter the league code.", "bad");
+  const before = new Set(leagues.map(l => l.id));
+  const res = await leagueAction("league_join", {p_code:code}, null);
+  if(res){
+    const joined = res.find(l => !before.has(l.id));
+    if(joined){ leagueSel = joined.id; toast("You joined " + joined.name + "."); renderLeague(); }
+    else toast("You're already in that league.");
+    $("lg-join-code").value = "";
+  }
+});
+$("f-lg-rename").addEventListener("submit", e => {
+  e.preventDefault();
+  if(leagueSel === "global") return;
+  leagueAction("league_rename", {p_league_id:leagueSel, p_name:$("lg-rename").value}, "League renamed.");
+});
+
+// scoring desk
+$("f-score").addEventListener("submit", logScore);
+$("b-fetch").addEventListener("click", fetchNewsNow);
+$("inbox").addEventListener("click", e => {
+  const b = e.target.closest("[data-act]");
+  if(b) inboxAct(b.closest(".ib"), b.dataset.act);
+});
+$("recent").addEventListener("click", async e => {
+  const b = e.target.closest("[data-undo]");
+  if(!b) return;
+  if(!b.dataset.armed){
+    b.dataset.armed = "1"; b.textContent = "Tap again to undo";
+    setTimeout(() => { if(b.isConnected){ b.textContent = "Undo"; delete b.dataset.armed; } }, 4000);
+    return;
+  }
+  b.disabled = true;
+  try{ await call("admin_delete_score", Object.assign(T(), {p_score_id:Number(b.dataset.undo)})); toast("Score removed."); loadRecent(); refreshAfterScore(); }
+  catch(err){ toast(err.message); b.disabled = false; }
+});
+
+setInterval(tickCountdowns, 30000);
+
+/* ================= boot ================= */
+(async function boot(){
+  const code = readInvite();
+  try{ const s = JSON.parse(recall("ffl_session") || "null"); session = s && s.token ? s : null; }catch(e){ session = null; }
+  store("ffl_me", null); // v1 leftovers
+  setMode(code ? "create" : "signin");
+  await fetchGameweeks();
+  if(session){
+    try{
+      const rows = await call("auth_me", T());
+      const me = Array.isArray(rows) ? rows[0] : rows;
+      if(!me) throw new Error("gone");
+      Object.assign(session, {fund_name:me.fund_name, display_name:me.display_name, is_admin:!!me.is_admin});
+      store("ffl_session", JSON.stringify(session));
+      enterApp();
+      return;
+    }catch(e){ resetLocal(); }
+  }
+  show();
+  loadLanding();
+  if(code) showInvite(code);
+})();
 })();
 </script>
 </body>
