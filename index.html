@@ -584,6 +584,92 @@ body.has-dock .toast{bottom:calc(98px + env(safe-area-inset-bottom,0px))}
 .switch[aria-checked="true"] .switch-knob{transform:translateX(16px)}
 .switch:focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:6px}
 @media (prefers-reduced-motion:reduce){.switch-track,.switch-knob{transition:none}}
+
+/* ---- company info button on pool rows ---- */
+.pool li.co-li{display:flex;align-items:stretch;margin:0 -10px;border-bottom:1px solid var(--line)}
+.pool li.co-li .co{width:auto;flex:1 1 auto;min-width:0;margin:0;border-bottom:0}
+.co-info{flex:none;width:46px;border:0;background:none;cursor:pointer;display:grid;place-items:center;color:var(--ink-3);transition:background-color .12s,color .12s}
+.co-info:hover{color:var(--ink);background:var(--tint)}
+.co-info span{width:24px;height:24px;border-radius:50%;box-shadow:inset 0 0 0 1.5px currentColor;display:grid;place-items:center;font:italic 700 14px/1 Georgia,"Times New Roman",serif}
+.co-info:focus-visible{outline:2px solid var(--ink);outline-offset:-4px}
+
+/* ---- company sheet ---- */
+dialog.sheet{max-height:min(88vh,780px);overflow:auto}
+.cd-price{font-size:14.5px;color:var(--ink-2);margin-top:4px}
+.cd-desc{font-size:16.5px;line-height:1.5;margin-top:14px;max-width:52ch}
+.cd-facts{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;margin:16px 0 0;font-size:15px}
+.cd-facts dt{color:var(--ink-3)}
+.cd-facts dd{margin:0}
+.cd-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.cd-links a{font-size:14px;font-weight:600;text-decoration:none;padding:6px 12px;border-radius:999px;box-shadow:inset 0 0 0 1px var(--line-2);color:var(--ink)}
+.cd-links a:hover{background:var(--tint)}
+.cd-h{margin:20px 0 4px}
+.pd-about{margin-top:2px}
+
+/* ---- admin sub-nav ---- */
+.adm-nav{margin:18px 0 18px}
+.chip-n{display:inline-block;min-width:20px;margin-left:7px;padding:1px 6px;border-radius:999px;background:var(--loss);color:#fff;font-size:12px;font-weight:700;line-height:1.5}
+.adm-note{font-size:14px;color:var(--ink-2);margin:0 0 12px}
+
+/* funds list */
+.flist{list-style:none;margin:0;padding:0}
+.fl{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;width:100%;padding:13px 10px;margin:0 -10px;width:calc(100% + 20px);border:0;border-bottom:1px solid var(--line);background:none;text-align:left;cursor:pointer;font:inherit;color:inherit}
+.fl:hover{background:var(--tint)}
+.fl b{font-weight:680;font-size:16.5px}
+.fl small{display:block;font-size:13.5px;color:var(--ink-2)}
+.fl .fl-meta{color:var(--ink-3);font-size:13px;margin-top:2px}
+.fl-pts{font-stretch:116%;font-weight:800;font-size:20px}
+.fl .tag{margin-left:6px}
+
+/* fund detail */
+.fd-top{margin-bottom:16px}
+.fd-top .h2{margin-top:8px}
+.alineup{list-style:none;margin:0;padding:0}
+.al{padding:10px 0;border-top:1px solid var(--line)}
+.al:first-child{border-top:0}
+.al-row{display:grid;grid-template-columns:22px minmax(0,1fr) auto 48px;gap:10px;align-items:baseline}
+.al-row small{display:block;color:var(--ink-3);font-size:13px}
+.al-n{color:var(--ink-3);font-size:13px}
+.al-cost{font-weight:700}
+.al-pts{text-align:right;font-weight:800;font-stretch:112%}
+.al-edit{display:flex;gap:8px;margin:8px 0 0 32px}
+.al-edit .in{flex:1;min-width:0}
+.fd-grid{display:grid;gap:16px}
+@media (min-width:960px){.fd-grid{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);align-items:start}}
+.manage-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
+.manage-row .in{flex:1 1 160px;width:auto}
+.danger{color:var(--loss);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--loss) 45%,transparent)}
+
+/* raw news */
+.rawlist{list-style:none;margin:0;padding:0}
+.rw{padding:12px 0;border-top:1px solid var(--line)}
+.rw:first-child{border-top:0}
+.rw-act{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px}
+.rw-act .in{flex:1 1 200px;width:auto}
+.st{display:inline-block;font-size:12px;font-weight:700;padding:1px 7px;border-radius:6px;background:var(--tint);color:var(--ink-2);margin-left:4px}
+
+/* review queue */
+.rvlist{list-style:none;margin:0;padding:0}
+.rv{padding:16px 0;border-top:1px solid var(--line)}
+.rv:first-child{border-top:0}
+.rv-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+.rv-head b{font-size:18px;font-weight:720}
+.rv-head small{color:var(--ink-3);font-size:13.5px}
+.rv-note{margin:8px 0 10px;padding:10px 12px;border-radius:10px;background:color-mix(in srgb,var(--loss) 9%,transparent);color:var(--ink);font-size:14.5px;line-height:1.45}
+.rv-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px}
+.rv-grid .field{margin:0}
+textarea.in{resize:vertical;min-height:84px;font:inherit;font-size:15px;line-height:1.45}
+.rv-actions{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin-top:12px}
+#rv-edit:not(:empty){margin-bottom:18px;padding:0 16px;border-radius:14px;box-shadow:inset 0 0 0 1px var(--line-2)}
+@media (max-width:600px){.rv-grid,.form-2,.ib-ctl{grid-template-columns:1fr}}
+.history{list-style:none;padding:0;margin:0}
+
+/* retired companies */
+.exit-tag{font-style:normal;display:inline-block;background:var(--tint);color:var(--ink-2);border-radius:999px;padding:0 7px;font-size:11px;font-weight:700;margin-left:6px;vertical-align:1px;box-shadow:inset 0 0 0 1px var(--line-2)}
+.cd-retired{margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--tint);font-size:14.5px}
+.rv-retire{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin-top:10px}
+.rv-retire label{display:flex;gap:8px;align-items:center;font-weight:600;font-size:14.5px}
+.rv-retire .in{flex:1 1 220px;width:auto}
 </style>
 </head>
 <body>
@@ -675,7 +761,7 @@ body.has-dock .toast{bottom:calc(98px + env(safe-area-inset-bottom,0px))}
         <button type="button" data-screen="fund">Your fund</button>
         <button type="button" data-screen="league">League</button>
         <button type="button" data-screen="how">Rules</button>
-        <button type="button" data-screen="admin" id="tab-admin" hidden>Scoring</button>
+        <button type="button" data-screen="admin" id="tab-admin" hidden>Admin</button>
       </nav>
       <button class="signout" type="button" id="b-signout">Sign out</button>
     </div>
@@ -829,9 +915,18 @@ body.has-dock .toast{bottom:calc(98px + env(safe-area-inset-bottom,0px))}
     <!-- ============ scoring desk (commissioner) ============ -->
     <section id="s-admin" hidden>
       <header class="fund-head">
-        <h1 class="h1">Scoring desk</h1>
-        <p class="sub">Scores update every fund the moment you log them. Players read your note in their feed.</p>
+        <h1 class="h1">Admin</h1>
+        <p class="sub">Score news, check on funds, and keep company profiles accurate.</p>
       </header>
+      <div class="chips adm-nav" id="adm-nav" role="tablist" aria-label="Admin sections">
+        <button class="chip" type="button" role="tab" data-adm="scoring" aria-selected="true">Scoring</button>
+        <button class="chip" type="button" role="tab" data-adm="funds" aria-selected="false">Funds</button>
+        <button class="chip" type="button" role="tab" data-adm="news" aria-selected="false">News</button>
+        <button class="chip" type="button" role="tab" data-adm="review" aria-selected="false">Review<span class="chip-n" id="review-n" hidden></span></button>
+      </div>
+
+      <div id="adm-scoring">
+      <p class="adm-note">Scores update every fund the moment you log them. Players read your note in their feed.</p>
       <div class="admin-grid">
         <section class="panel">
           <div class="panel-head">
@@ -861,6 +956,29 @@ body.has-dock .toast{bottom:calc(98px + env(safe-area-inset-bottom,0px))}
           </section>
         </div>
       </div>
+      </div>
+
+      <div id="adm-funds" hidden>
+        <div id="fund-list-wrap">
+          <p class="adm-note" id="funds-sub"></p>
+          <ul class="flist" id="flist"></ul>
+        </div>
+        <div id="fund-detail" hidden></div>
+      </div>
+
+      <div id="adm-news" hidden>
+        <p class="adm-note">Every headline the news job pulled in the last 14 days, matched to a company or not. Anything the matcher missed can go to the inbox by hand.</p>
+        <input class="in search" id="raw-q" type="search" placeholder="Search headlines, like a company name or &ldquo;Series B&rdquo;" autocomplete="off" aria-label="Search headlines">
+        <p class="adm-note" id="raw-sub"></p>
+        <ul class="rawlist" id="rawlist"></ul>
+      </div>
+
+      <div id="adm-review" hidden>
+        <p class="adm-note" id="review-sub"></p>
+        <label class="field"><span>Edit any company</span><select class="in in-sm" id="rv-any"></select></label>
+        <div id="rv-edit"></div>
+        <ul class="rvlist" id="rvlist"></ul>
+      </div>
     </section>
   </main>
 
@@ -876,6 +994,7 @@ body.has-dock .toast{bottom:calc(98px + env(safe-area-inset-bottom,0px))}
       <p class="sub" id="pd-meta"></p>
       <div class="sheet-actions">
         <button class="btn btn-primary btn-block" type="button" id="pd-lead">Make lead investor</button>
+        <button class="btn btn-quiet btn-block" type="button" id="pd-about">About the company</button>
         <button class="btn btn-quiet btn-block" type="button" id="pd-sell">Transfer out</button>
         <button class="btn btn-quiet btn-block" type="button" id="pd-close">Close</button>
       </div>
@@ -883,6 +1002,38 @@ body.has-dock .toast{bottom:calc(98px + env(safe-area-inset-bottom,0px))}
     </div>
   </dialog>
 </div>
+
+<dialog class="sheet" id="ret-dialog" aria-labelledby="rt-title">
+  <div class="sheet-in">
+    <p class="sheet-k" id="rt-k">One of your companies left the draft</p>
+    <h2 class="h2" id="rt-title"></h2>
+    <p class="cd-desc" id="rt-body"></p>
+    <div class="sheet-actions">
+      <button class="btn btn-primary btn-block" type="button" id="rt-swap">Swap it out for free</button>
+      <button class="btn btn-quiet btn-block" type="button" id="rt-keep">Keep it</button>
+    </div>
+    <p class="msg" id="rt-msg" role="status" aria-live="polite"></p>
+  </div>
+</dialog>
+
+<dialog class="sheet" id="co-dialog" aria-labelledby="cd-name">
+  <div class="sheet-in">
+    <p class="sheet-k" id="cd-k"></p>
+    <h2 class="h2" id="cd-name"></h2>
+    <p class="cd-price" id="cd-price"></p>
+    <p class="cd-desc" id="cd-desc"></p>
+    <dl class="cd-facts" id="cd-facts"></dl>
+    <p class="cd-links" id="cd-links"></p>
+    <div id="cd-news-wrap" hidden>
+      <h3 class="h3 cd-h">In the news</h3>
+      <ul class="news-list" id="cd-news"></ul>
+    </div>
+    <div class="sheet-actions">
+      <button class="btn btn-primary btn-block" type="button" id="cd-act" hidden></button>
+      <button class="btn btn-quiet btn-block" type="button" id="cd-close">Close</button>
+    </div>
+  </div>
+</dialog>
 
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
@@ -1072,7 +1223,7 @@ function certHTML(o){
     const inner =
       '<span class="cp-n">' + p.slot + '</span>' +
       '<span class="cp-name"><b>' + esc(p.name) + '</b><small>' + esc(p.slotName) +
-        (p.lead ? '<em class="lead-tag">Lead \u00D72</em>' : '') + '</small></span>' +
+        (p.lead ? '<em class="lead-tag">Lead \u00D72</em>' : '') + (p.retired ? '<em class="exit-tag">Left the draft</em>' : '') + '</small></span>' +
       '<span class="cp-cost">' + money(p.cost) + '</span>' +
       '<span class="cp-pts ' + pcls(p.points) + '">' + pts(p.points) + '</span>';
     return '<li>' + (o.interactive
@@ -1153,7 +1304,7 @@ function leagueRow(r, latest){
 /* ================= landing ================= */
 function cheapest(fits, used){
   let best = null;
-  startups.forEach(s => { if(used.has(s.id) || !fits(s)) return; if(!best || s.cost_millions < best.cost_millions) best = s; });
+  startups.forEach(s => { if(s.retired || used.has(s.id) || !fits(s)) return; if(!best || s.cost_millions < best.cost_millions) best = s; });
   return best;
 }
 function samplePositions(){
@@ -1169,7 +1320,7 @@ function samplePositions(){
 }
 function renderTicker(){
   if(!startups.length) return;
-  const items = startups.slice().sort((a, b) => b.cost_millions - a.cost_millions).map(s => {
+  const items = startups.filter(s => !s.retired).sort((a, b) => b.cost_millions - a.cost_millions).map(s => {
     const p = Number(s.total_points) || 0;
     const mv = p > 0 ? '<span class="up">\u25B2' + p + '</span>' : p < 0 ? '<span class="dn">\u25BC' + Math.abs(p) + '</span>' : '';
     return '<span class="tk"><b>' + esc(s.name) + '</b><span class="p">' + money(s.cost_millions) + '</span>' + mv + '</span>';
@@ -1355,7 +1506,7 @@ async function enterApp(){
   try{
     await Promise.all([loadFund(), startups.length ? null : fetchPool(), gameweeks.length ? null : fetchGameweeks()]);
     deadlineReloaded = false;
-    if(fund.lineup.length) renderDesk(false);
+    if(fund.lineup.length){ renderDesk(false); setTimeout(promptRetired, 500); }
     else if(!fund.season.next_gw) setPhase("closed");
     else startDraft();
   }catch(e){
@@ -1451,17 +1602,17 @@ function renderSlots(){
   }).join("");
 }
 function poolRow(s, st, label, why, live){
-  return '<li><button class="co" type="button" data-id="' + s.id + '" data-s="' + st + '"' + (live ? '' : ' aria-disabled="true"') +
+  return '<li class="co-li"><button class="co" type="button" data-id="' + s.id + '" data-s="' + st + '"' + (live ? '' : ' aria-disabled="true"') +
     ' aria-label="' + esc(s.name) + ', ' + money(s.cost_millions) + '. ' + esc(why) + '">' +
     '<span><span class="co-name">' + esc(s.name) + '</span>' +
     '<span class="co-meta">' + esc(s.sector || "") + '</span>' +
     '<span class="co-val">' + esc(valText(s.valuation_note)) + '</span></span>' +
     '<span class="co-r"><span class="co-price">' + money(s.cost_millions) + '</span><span class="co-act">' + label + '</span></span>' +
-  '</button></li>';
+  '</button><button class="co-info" type="button" data-info="' + s.id + '" aria-label="About ' + esc(s.name) + '"><span aria-hidden="true">i</span></button></li>';
 }
 function filterPool(tier, q){
   q = (q || "").trim().toLowerCase();
-  return startups.filter(s => (!tier || s.tier === tier) &&
+  return startups.filter(s => !s.retired && (!tier || s.tier === tier) &&
     (!q || s.name.toLowerCase().includes(q) || String(s.sector || "").toLowerCase().includes(q)));
 }
 function renderPool(){
@@ -1535,7 +1686,7 @@ async function sign(){
 function positions(){
   return fund.lineup.map(p => ({
     slot:p.slot, id:p.id, name:p.name, slotName:SLOTS[p.slot - 1].name, cost:p.cost_millions,
-    points:Number(p.fund_points) || 0, lead:p.id === fund.lead_startup_id
+    points:Number(p.fund_points) || 0, lead:p.id === fund.lead_startup_id, retired:!!p.retired
   }));
 }
 function leadName(){ const l = fund.lineup.find(p => p.id === fund.lead_startup_id); return l ? l.name : null; }
@@ -1570,13 +1721,14 @@ function renderWeek(){
   const g = s.next_gw;
   const live = s.current_gw ? "GW" + s.current_gw + " is live. " : "";
   const used = f.transfer_used;
-  const lastX = (f.transfers || []).find(t => t.gw === g);
+  const lastX = (f.transfers || []).find(t => t.gw === g && !t.free);
   el.innerHTML =
     '<h2 class="wk-h">GW' + g + ' locks in <span class="js-count" data-deadline="' + esc(s.next_deadline) + '">' + countdown(s.next_deadline) + '</span></h2>' +
     '<p class="wk-sub">' + live + fmtDeadline(s.next_deadline) + '. Anything you change now counts from GW' + g + '.</p>' +
     '<dl class="wk-list">' +
       '<div><dt>Lead investor</dt><dd><b>' + esc(leadName() || "Your anchor") + '</b> scores double.' +
         (f.lead_is_default ? '<small>Your anchor, by default.</small>' : '') + '</dd></div>' +
+      retiredRows() +
       '<div><dt>Free transfer</dt><dd>' + (used && lastX
           ? 'Used: ' + esc(lastX.out) + ' out, ' + esc(lastX.in) + ' in.<small>Your next one opens when GW' + g + ' locks.</small>'
           : '1 available for GW' + g + '.<small>Doesn\'t carry over if unused.</small>') + '</dd></div>' +
@@ -1588,6 +1740,46 @@ function renderWeek(){
   const b = $("b-xfer");
   if(b) b.addEventListener("click", () => { toast("Pick the position you want to sell."); $("cert-slot").scrollIntoView({behavior, block:"start"}); });
 }
+function retiredRows(){
+  return (fund.retired || []).map(r =>
+    '<div><dt>Free swap</dt><dd><b>' + esc(r.name) + '</b> left the draft.<small>' + esc(r.note || "") +
+    ' Swap it out free any time before the season ends. <button class="link" type="button" data-free-slot="' + r.slot + '" style="color:inherit">Swap it now</button></small></dd></div>'
+  ).join("");
+}
+/* retired prompt: once per company until they choose */
+let retQueue = [], retCur = null;
+function promptRetired(){
+  if(!fund || phase !== "desk" || xfer) return;
+  retQueue = (fund.retired || []).filter(r => !r.kept);
+  nextRetired();
+}
+function nextRetired(){
+  retCur = retQueue.shift() || null;
+  const d = $("ret-dialog");
+  if(!retCur){ if(d.open && d.close) d.close(); return; }
+  $("rt-title").textContent = retCur.name;
+  $("rt-body").textContent = (retCur.note ? retCur.note + " " : "") + "It's no longer in the draft. You can keep it, and it keeps scoring for your fund, or swap it out for free. A free swap doesn't use your weekly transfer and follows the usual rules: same stage, under $100M. If you keep it, the free swap stays available until the season ends.";
+  $("rt-swap").textContent = "Swap " + retCur.name + " out for free";
+  $("rt-keep").disabled = false; say("rt-msg", "");
+  if(d.showModal){ if(!d.open) d.showModal(); } else d.setAttribute("open", "");
+}
+async function keepRetired(){
+  if(!retCur) return;
+  const r = retCur; $("rt-keep").disabled = true;
+  try{
+    fund = await call("keep_retired", Object.assign(T(), {p_startup_id:r.id}));
+    renderDesk(false);
+    toast("You're keeping " + r.name + ". The free swap stays open until the season ends.");
+    nextRetired();
+  }catch(e){ say("rt-msg", e.message, "bad"); $("rt-keep").disabled = false; }
+}
+function swapRetiredNow(){
+  if(!retCur) return;
+  const slot = retCur.slot; retQueue = []; retCur = null;
+  const d = $("ret-dialog"); if(d.close) d.close(); else d.removeAttribute("open");
+  startTransfer(slot, true);
+}
+
 function renderFeed(){
   const items = fund.feed || [];
   $("feed").innerHTML = items.length ? items.map(x => {
@@ -1612,7 +1804,7 @@ function renderMyNews(){
 function renderHistory(){
   const t = fund.transfers || [];
   $("history-panel").hidden = !t.length;
-  $("history").innerHTML = t.map(x => '<li>GW' + x.gw + ': ' + esc(x.out) + ' out, ' + esc(x.in) + ' in</li>').join("");
+  $("history").innerHTML = t.map(x => '<li>GW' + x.gw + ': ' + esc(x.out) + ' out, ' + esc(x.in) + ' in' + (x.free ? ' (free swap)' : '') + '</li>').join("");
 }
 function shareOrCopy(text, url, btn, idle){
   if(navigator.share){ navigator.share({title:"Fantasy Founders League", text, url}).catch(() => {}); return; }
@@ -1642,7 +1834,8 @@ function openPos(slot){
   $("pd-meta").textContent = money(p.cost_millions) + ". " + pts(Number(p.fund_points) || 0) + " points for your fund so far.";
   const lb = $("pd-lead"), sb = $("pd-sell");
   lb.disabled = isLead; lb.textContent = isLead ? "Lead investor for GW" + g : "Make lead investor for GW" + g;
-  sb.disabled = !!fund.transfer_used; sb.textContent = fund.transfer_used ? "Transfer used for GW" + g : "Transfer out";
+  if(p.retired){ sb.disabled = false; sb.textContent = "Swap out for free"; }
+  else{ sb.disabled = !!fund.transfer_used; sb.textContent = fund.transfer_used ? "Transfer used for GW" + g : "Transfer out"; }
   say("pd-msg", "");
   const d = $("pos-dialog");
   if(d.showModal) d.showModal(); else d.setAttribute("open", "");
@@ -1660,11 +1853,11 @@ async function makeLead(){
 }
 
 /* ---- transfer mode ---- */
-function startTransfer(slot){
+function startTransfer(slot, free){
   const out = fund.lineup.find(p => p.slot === slot);
   if(!out) return;
   closePos();
-  xfer = {slot, out, pick:null, query:"", confirming:false, busy:false, timer:null};
+  xfer = {slot, out, pick:null, query:"", confirming:false, busy:false, timer:null, free:!!(free && out.retired)};
   $("xfer-search").value = "";
   setPhase("desk"); renderXfer(); window.scrollTo({top:0, behavior});
 }
@@ -1683,16 +1876,19 @@ function xferState(s){
 function renderXfer(){
   const sl = SLOTS[xfer.slot - 1], limit = xferLimit(), g = fund.season.next_gw;
   if(!xfer.pick){
-    $("xh-title").textContent = "Sell " + xfer.out.name + " (" + money(xfer.out.cost_millions) + ")";
+    $("xh-title").textContent = (xfer.free ? "Free swap: " : "Sell ") + xfer.out.name + " (" + money(xfer.out.cost_millions) + ")";
     $("xh-sub").textContent = (sl.tier ? "Pick " + stage(sl) + " replacement" : "Pick a replacement from any stage") + ". You can spend up to " + money(limit) + ".";
   }else{
     $("xh-title").textContent = xfer.out.name + " out, " + xfer.pick.name + " in";
-    $("xh-sub").textContent = "Leaves " + money(limit - xfer.pick.cost_millions) + " of dry powder. Counts from GW" + g + ", and uses this week's free transfer.";
+    $("xh-sub").textContent = "Leaves " + money(limit - xfer.pick.cost_millions) + " of dry powder. Counts from GW" + g +
+      (xfer.free ? ". This swap is free and doesn't use your weekly transfer." : ", and uses this week's free transfer.");
   }
   const go = $("xh-go");
   go.hidden = !xfer.pick;
   go.disabled = xfer.busy;
-  go.textContent = xfer.busy ? "Making transfer…" : xfer.confirming ? "Confirm: this uses your GW" + g + " transfer" : "Make transfer";
+  go.textContent = xfer.busy ? (xfer.free ? "Swapping…" : "Making transfer…")
+    : xfer.confirming ? (xfer.free ? "Confirm free swap" : "Confirm: this uses your GW" + g + " transfer")
+    : (xfer.free ? "Make free swap" : "Make transfer");
   go.classList.toggle("is-confirm", xfer.confirming);
   $("xfer-title").textContent = sl.tier ? "Pick " + stage(sl) + " replacement" : "Pick a wildcard replacement";
   const list = filterPool(sl.tier, xfer.query);
@@ -1713,17 +1909,75 @@ async function confirmTransfer(){
   }
   clearTimeout(xfer.timer);
   xfer.busy = true; xfer.confirming = false; renderXfer(); say("xh-msg", "");
-  const done = {out:xfer.out.name, inn:xfer.pick.name};
+  const done = {out:xfer.out.name, inn:xfer.pick.name, free:xfer.free};
   try{
-    fund = await call("make_transfer", Object.assign(T(), {p_slot:xfer.slot, p_in:xfer.pick.id}));
+    fund = await call(done.free ? "swap_retired" : "make_transfer", Object.assign(T(), {p_slot:xfer.slot, p_in:xfer.pick.id}));
     xfer = null;
     renderDesk(false);
     window.scrollTo({top:0, behavior});
-    toast(done.out + " out, " + done.inn + " in. Counts from GW" + fund.season.next_gw + ".");
+    toast((done.free ? "Free swap done. " : "") + done.out + " out, " + done.inn + " in. Counts from GW" + fund.season.next_gw + ".");
+    if(done.free) setTimeout(promptRetired, 400);
   }catch(e){
     if(xfer){ xfer.busy = false; renderXfer(); }
     say("xh-msg", e.message, "bad");
   }
+}
+
+/* ================= company sheet ================= */
+let coCtx = null;
+function hostOf(u){ try{ return new URL(u).hostname.replace(/^www\./, ""); }catch(e){ return u; } }
+async function openCompany(id, mode){
+  const s = startups.find(x => x.id === Number(id));
+  if(!s) return;
+  coCtx = {s, mode};
+  const sl = SLOTS[s.tier - 1];
+  $("cd-k").textContent = (sl ? sl.name + " stage" : "") + (s.sector ? ", " + s.sector : "");
+  $("cd-name").textContent = s.name;
+  const val = valText(s.valuation_note), sp = Number(s.total_points) || 0;
+  $("cd-price").textContent = money(s.cost_millions) + " in the draft." + (val ? " " + val + "." : "") + " " + pts(sp) + " points this season.";
+  $("cd-desc").textContent = s.description || "No profile yet. We're still writing this one up.";
+  const facts = [["CEO", s.ceo], ["Founded", s.founded], ["HQ", s.hq]].filter(f => f[1]);
+  $("cd-facts").innerHTML = facts.map(f => "<dt>" + f[0] + "</dt><dd>" + esc(f[1]) + "</dd>").join("");
+  $("cd-facts").hidden = !facts.length;
+  const links = [];
+  if(s.website) links.push('<a href="' + esc(s.website) + '" target="_blank" rel="noopener">' + esc(hostOf(s.website)) + '</a>');
+  if(s.x_handle) links.push('<a href="https://x.com/' + esc(s.x_handle) + '" target="_blank" rel="noopener">@' + esc(s.x_handle) + '</a>');
+  $("cd-links").innerHTML = links.join("");
+  $("cd-links").hidden = !links.length;
+
+  const act = $("cd-act");
+  act.hidden = true;
+  const old = document.querySelector("#co-dialog .cd-retired"); if(old) old.remove();
+  if(s.retired){
+    $("cd-price").insertAdjacentHTML("afterend", '<p class="cd-retired">No longer in the draft. ' + esc(s.retired_note || "") + '</p>');
+  }else if(mode === "draft" && phase === "drafting"){
+    const st = candidate(s);
+    if(st === "ok" || st === "swap"){ act.hidden = false; act.textContent = (st === "swap" ? "Swap into slot " : "Draft into slot ") + active + ", " + SLOTS[active - 1].name; }
+  }else if(mode === "xfer" && xfer){
+    const st = xferState(s);
+    if(st === "ok"){ act.hidden = false; act.textContent = "Pick as the replacement"; }
+  }
+
+  $("cd-news-wrap").hidden = true;
+  const d = $("co-dialog");
+  if(d.showModal){ if(!d.open) d.showModal(); } else d.setAttribute("open", "");
+  d.scrollTop = 0;
+
+  const r = await db.from("news").select("id,title,url,source,published_at,startup_id").eq("startup_id", s.id).order("published_at", {ascending:false}).limit(4);
+  const items = r.error ? [] : (r.data || []);
+  if(coCtx && coCtx.s.id === s.id && items.length){
+    $("cd-news").innerHTML = items.map(n =>
+      '<li class="nw"><a href="' + esc(n.url) + '" target="_blank" rel="noopener">' + esc(n.title) + '</a><small>' + esc(n.source || "") + ', ' + fmtShort(n.published_at) + '</small></li>').join("");
+    $("cd-news-wrap").hidden = false;
+  }
+}
+function closeCo(){ const d = $("co-dialog"); if(d.close) d.close(); else d.removeAttribute("open"); }
+function coAction(){
+  if(!coCtx) return;
+  const s = coCtx.s, mode = coCtx.mode;
+  closeCo();
+  if(mode === "draft" && phase === "drafting") draft(s);
+  else if(mode === "xfer" && xfer){ clearTimeout(xfer.timer); xfer.confirming = false; say("xh-msg", ""); xfer.pick = s; renderXfer(); }
 }
 
 /* ================= league screen ================= */
@@ -1837,7 +2091,247 @@ async function renderAdmin(){
   $("sc-event").innerHTML = eventOptions(true);
   const mg = maxScoreGw();
   $("sc-gw").innerHTML = Array.from({length:mg}, (_, i) => mg - i).map(g => '<option value="' + g + '">GW' + g + '</option>').join("");
-  loadInbox(); loadRecent();
+  showAdm(admTab);
+  if(admTab !== "review") loadReviewCount();
+}
+
+/* ---- admin sections ---- */
+let admTab = "scoring";
+function showAdm(tab){
+  admTab = tab;
+  ["scoring", "funds", "news", "review"].forEach(t => { $("adm-" + t).hidden = t !== tab; });
+  document.querySelectorAll("#adm-nav [data-adm]").forEach(c => c.setAttribute("aria-selected", String(c.dataset.adm === tab)));
+  if(tab === "scoring"){ loadInbox(); loadRecent(); }
+  if(tab === "funds") loadFunds();
+  if(tab === "news") loadRaw();
+  if(tab === "review") loadReview();
+}
+function ago(d){
+  if(!d) return "never";
+  const m = Math.floor((Date.now() - new Date(d).getTime()) / 60000);
+  if(m < 2) return "just now";
+  if(m < 60) return m + " min ago";
+  const h = Math.floor(m / 60);
+  if(h < 24) return plural(h, "hour", "hours") + " ago";
+  return plural(Math.floor(h / 24), "day", "days") + " ago";
+}
+function stageName(t){ const sl = SLOTS[t - 1]; return sl ? sl.name : ""; }
+
+/* funds */
+let admFunds = [], admFund = null;
+async function loadFunds(){
+  $("fund-detail").hidden = true; $("fund-list-wrap").hidden = false;
+  $("funds-sub").textContent = "Loading funds…";
+  try{ admFunds = await call("admin_funds", T()) || []; }
+  catch(e){ $("funds-sub").textContent = e.message; return; }
+  const players = admFunds.filter(f => !f.is_house);
+  const signed = players.filter(f => f.slots_filled > 0).length;
+  const active = players.filter(f => f.last_seen && Date.now() - new Date(f.last_seen).getTime() < 7 * 864e5).length;
+  $("funds-sub").textContent = plural(players.length, "fund", "funds") + ", " + signed + " signed, " + active + " active in the last 7 days. Tap one to see its picks.";
+  $("flist").innerHTML = admFunds.map(f => {
+    const meta = [
+      f.slots_filled ? "Lead: " + (f.lead_name || "none") : "Hasn't signed yet",
+      f.is_house ? null : (f.transfer_used ? "Transfer used" : "Transfer open"),
+      f.is_house ? null : "Seen " + ago(f.last_seen),
+      f.leagues ? plural(Number(f.leagues), "league", "leagues") : null,
+      f.retired_held ? "Holds retired: " + f.retired_held : null
+    ].filter(Boolean).join(". ") + ".";
+    const tags = (f.is_house ? '<span class="tag house">House</span>' : '') + (session && f.id === session.id ? '<span class="tag">You</span>' : '');
+    return '<li><button class="fl" type="button" data-fund="' + f.id + '">' +
+      '<span><b>' + esc(f.fund_name) + '</b>' + tags + '<small>' + (f.is_house ? "Fund to beat" : "GP " + esc(f.display_name)) + '</small>' +
+      '<small class="fl-meta">' + esc(meta) + '</small></span>' +
+      '<span class="fl-pts ' + pcls(Number(f.total_points)) + '">' + pts(Number(f.total_points) || 0) + '</span></button></li>';
+  }).join("");
+}
+async function openFund(id){
+  $("fund-list-wrap").hidden = true;
+  const el = $("fund-detail"); el.hidden = false; el.innerHTML = '<p class="adm-note">Loading…</p>';
+  try{ admFund = await call("admin_fund", Object.assign(T(), {p_manager_id:Number(id)})); }
+  catch(e){ el.innerHTML = '<button class="link" type="button" data-fd="back">All funds</button><p class="msg bad">' + esc(e.message) + '</p>'; return; }
+  renderFundDetail();
+  window.scrollTo({top:0, behavior});
+}
+function houseOptions(p){
+  const lineup = admFund.lineup, others = lineup.filter(x => x.slot !== p.slot).reduce((a, x) => a + x.cost_millions, 0);
+  const held = new Set(lineup.map(x => x.id));
+  return startups.filter(s => (p.slot === 5 || s.tier === p.slot) && !held.has(s.id) && others + s.cost_millions <= BUDGET)
+    .sort((a, b) => b.cost_millions - a.cost_millions)
+    .map(s => '<option value="' + s.id + '">' + esc(s.name) + ' (' + money(s.cost_millions) + ')</option>').join("");
+}
+function renderFundDetail(){
+  const f = admFund, m = f.manager, house = !!m.is_house, g = f.season.next_gw;
+  const deployed = f.lineup.reduce((a, p) => a + p.cost_millions, 0);
+  const rows = f.lineup.map(p => {
+    const lead = p.id === f.lead_startup_id;
+    const edit = house && g ? '<div class="al-edit"><select class="in in-sm" data-house-slot="' + p.slot + '" aria-label="Replacement for ' + esc(p.name) + '"><option value="">Swap for…</option>' + houseOptions(p) + '</select>' +
+      '<button class="btn btn-quiet btn-sm" type="button" data-fd="swap" data-slot="' + p.slot + '">Swap</button></div>' : '';
+    return '<li class="al"><div class="al-row"><span class="al-n">' + p.slot + '</span>' +
+      '<span><b>' + esc(p.name) + '</b><small>' + esc(stageName(p.slot === 5 ? 0 : p.slot) || "Wildcard") + (lead ? '<em class="lead-tag">Lead \u00D72</em>' : '') + '</small></span>' +
+      '<span class="al-cost">' + money(p.cost_millions) + '</span><span class="al-pts ' + pcls(Number(p.fund_points)) + '">' + pts(Number(p.fund_points) || 0) + '</span></div>' + edit + '</li>';
+  }).join("") || '<li class="empty-note">Hasn\'t signed a term sheet yet.</li>';
+  const transfers = (f.transfers || []).map(t => '<li>GW' + t.gw + ': ' + esc(t.out) + ' out, ' + esc(t.in) + ' in</li>').join("") || '<li class="empty-note">No transfers yet.</li>';
+  const feed = (f.feed || []).slice(0, 10).map(x => {
+    const ev = EV[x.event_type];
+    return '<li class="fd"><span class="fd-t"><small>GW' + x.gw + '</small>' + esc(x.name) + ', ' + esc(ev ? ev.short.toLowerCase() : x.event_type) + '</span>' +
+      '<span class="fd-p ' + pcls(x.points) + '">' + pts(x.points) + (x.is_lead ? '<small>Lead \u00D72</small>' : '') + '</span></li>';
+  }).join("") || '<li class="empty-note">No scored events yet.</li>';
+  const self = session && m.id === session.id;
+  const manage = house || self ? '' :
+    '<section class="panel"><h3 class="h3">Manage this fund</h3>' +
+      '<p class="adm-note" style="margin:0">Reset the PIN if they\'re locked out. It signs them out everywhere; send them the new PIN yourself.</p>' +
+      '<div class="manage-row"><input class="in in-sm" id="fd-pin" inputmode="numeric" maxlength="12" placeholder="New PIN, 4+ digits" aria-label="New PIN">' +
+      '<button class="btn btn-quiet btn-sm" type="button" data-fd="pin">Reset PIN</button></div>' +
+      '<div class="manage-row" style="margin-top:16px"><button class="btn btn-quiet btn-sm danger" type="button" data-fd="delete">Delete fund</button>' +
+      '<span class="adm-note" style="margin:0">For test and spam funds. Can\'t be undone.</span></div></section>';
+  $("fund-detail").innerHTML =
+    '<div class="fd-top"><button class="link" type="button" data-fd="back">All funds</button>' +
+      '<h2 class="h2">' + esc(m.fund_name) + (house ? ' <span class="tag house">House</span>' : '') + '</h2>' +
+      '<p class="sub">' + (house ? "Fund to beat" : "GP " + esc(m.display_name)) + '. ' + pts(Number(f.total_points) || 0) + ' points. ' +
+      money(deployed) + ' deployed.' + (house ? '' : ' Raised ' + fmtDate(f.created_at) + ', last seen ' + ago(f.last_seen) + '.') + '</p></div>' +
+    '<div class="fd-grid"><div>' +
+      '<section class="panel"><h3 class="h3">' + (g ? "Lineup for GW" + g : "Final lineup") + '</h3>' +
+        (house && g ? '<p class="adm-note" style="margin:0 0 4px">House swaps follow the normal rules (same stage, under $100M) and count from GW' + g + '. They don\'t use a weekly transfer.</p>' : '') +
+        '<ul class="alineup">' + rows + '</ul><p class="msg" id="fd-msg" role="status" aria-live="polite"></p></section>' +
+      manage +
+    '</div><div>' +
+      '<section class="panel"><h3 class="h3">Transfers</h3><ul class="history">' + transfers + '</ul></section>' +
+      '<section class="panel"><h3 class="h3">Scored events</h3><ol class="feed">' + feed + '</ol></section>' +
+    '</div></div>';
+}
+async function fundAction(btn){
+  const act = btn.dataset.fd, f = admFund;
+  if(act === "back"){ loadFunds(); return; }
+  if(act === "swap"){
+    const sel = $("fund-detail").querySelector('[data-house-slot="' + btn.dataset.slot + '"]');
+    if(!sel || !sel.value){ say("fd-msg", "Pick a replacement first.", "bad"); return; }
+    btn.disabled = true;
+    try{
+      admFund = await call("admin_house_transfer", Object.assign(T(), {p_manager_id:f.manager.id, p_slot:Number(btn.dataset.slot), p_in:Number(sel.value)}));
+      renderFundDetail(); toast("House fund updated.");
+    }catch(e){ say("fd-msg", e.message, "bad"); btn.disabled = false; }
+  }
+  if(act === "pin"){
+    const pin = $("fd-pin").value.trim();
+    if(pin.length < 4){ toast("The new PIN needs at least 4 digits."); return; }
+    btn.disabled = true;
+    try{ await call("admin_reset_pin", Object.assign(T(), {p_manager_id:f.manager.id, p_pin:pin})); $("fd-pin").value = ""; toast("PIN reset. Send it to " + f.manager.display_name + "."); }
+    catch(e){ toast(e.message); }
+    finally{ btn.disabled = false; }
+  }
+  if(act === "delete"){
+    if(!btn.dataset.armed){
+      btn.dataset.armed = "1"; btn.textContent = "Tap again to delete " + f.manager.fund_name;
+      setTimeout(() => { if(btn.isConnected){ btn.textContent = "Delete fund"; delete btn.dataset.armed; } }, 4000);
+      return;
+    }
+    btn.disabled = true;
+    try{ await call("admin_delete_fund", Object.assign(T(), {p_manager_id:f.manager.id})); toast(f.manager.fund_name + " deleted."); loadFunds(); }
+    catch(e){ toast(e.message); btn.disabled = false; }
+  }
+}
+
+/* raw news */
+let rawTimer = null;
+const STATUS_LABEL = {pending:"In the inbox", confirmed:"On the wire", scored:"Scored", dismissed:"Dismissed"};
+async function loadRaw(){
+  const q = $("raw-q").value.trim();
+  $("raw-sub").textContent = "Loading…";
+  let items;
+  try{ items = await call("admin_raw_news", Object.assign(T(), {p_query:q || null, p_limit:80})) || []; }
+  catch(e){ $("raw-sub").textContent = e.message; return; }
+  $("raw-sub").textContent = items.length
+    ? plural(items.length, "headline", "headlines") + (q ? " matching \u201C" + q + "\u201D." : " from the last 14 days, newest first.")
+    : (q ? "Nothing matches that search." : "No headlines yet. The news job runs every 30 minutes.");
+  $("rawlist").innerHTML = items.map(n => {
+    const st = n.news_status ? '<span class="st">' + STATUS_LABEL[n.news_status] + (n.startup_name ? ": " + esc(n.startup_name) : "") + '</span>' : '';
+    const canAdd = !n.news_status || n.news_status === "dismissed";
+    return '<li class="rw" data-url="' + esc(n.url) + '"><a class="ib-title" href="' + esc(n.url) + '" target="_blank" rel="noopener">' + esc(n.title) + '</a>' +
+      '<p class="ib-meta">' + esc(n.source || "") + ', ' + fmtShort(n.published_at) + '. ' + st + '</p>' +
+      (canAdd ? '<div class="rw-act"><button class="btn btn-quiet btn-sm" type="button" data-rw="pick">Add to inbox</button></div>' : '') + '</li>';
+  }).join("");
+}
+async function rawAction(btn){
+  const li = btn.closest(".rw"), box = li.querySelector(".rw-act");
+  if(btn.dataset.rw === "pick"){
+    box.innerHTML = '<select class="in in-sm" aria-label="Company"><option value="">Which company?</option>' + companyOptions() + '</select>' +
+      '<button class="btn btn-primary btn-sm" type="button" data-rw="add">Add</button><button class="link" type="button" data-rw="cancel">Cancel</button>';
+    return;
+  }
+  if(btn.dataset.rw === "cancel"){ box.innerHTML = '<button class="btn btn-quiet btn-sm" type="button" data-rw="pick">Add to inbox</button>'; return; }
+  const sid = Number(box.querySelector("select").value);
+  if(!sid){ toast("Pick the company this headline is about."); return; }
+  btn.disabled = true;
+  try{
+    await call("admin_news_add", Object.assign(T(), {p_url:li.dataset.url, p_startup_id:sid}));
+    const name = (startups.find(x => x.id === sid) || {}).name || "";
+    box.remove();
+    li.querySelector(".ib-meta").insertAdjacentHTML("beforeend", '<span class="st">In the inbox: ' + esc(name) + '</span>');
+    toast("Added to the inbox. Score it from the Scoring tab.");
+  }catch(e){ toast(e.message); btn.disabled = false; }
+}
+
+/* review queue */
+let admCos = [];
+function setReviewBadge(n){ const b = $("review-n"); b.hidden = !n; b.textContent = n || ""; }
+async function loadReviewCount(){
+  try{ admCos = await call("admin_companies", T()) || []; setReviewBadge(admCos.filter(c => c.flagged).length); }catch(e){}
+}
+function rvForm(c, flagged){
+  const v = x => esc(x == null ? "" : x);
+  return '<li class="rv" data-co="' + c.id + '">' +
+    '<div class="rv-head"><b>' + esc(c.name) + '</b><small>' + esc(stageName(c.tier)) + ' stage' + (c.sector ? ", " + esc(c.sector) : "") + '</small></div>' +
+    (flagged && c.note ? '<p class="rv-note">' + esc(c.note) + '</p>' : '') +
+    '<label class="field"><span>What they do</span><textarea class="in" data-k="description" maxlength="600">' + v(c.description) + '</textarea></label>' +
+    '<div class="rv-grid">' +
+      '<label class="field"><span>CEO</span><input class="in in-sm" data-k="ceo" maxlength="120" value="' + v(c.ceo) + '"></label>' +
+      '<label class="field"><span>Founded</span><input class="in in-sm" data-k="founded" inputmode="numeric" maxlength="4" value="' + v(c.founded) + '"></label>' +
+      '<label class="field"><span>HQ</span><input class="in in-sm" data-k="hq" maxlength="80" value="' + v(c.hq) + '"></label>' +
+      '<label class="field"><span>Website</span><input class="in in-sm" data-k="website" maxlength="200" value="' + v(c.website) + '"></label>' +
+      '<label class="field"><span>X handle</span><input class="in in-sm" data-k="x_handle" maxlength="16" value="' + v(c.x_handle) + '"></label>' +
+    '</div>' +
+    '<div class="rv-retire"><label><input type="checkbox" data-r="retired"' + (c.retired ? ' checked' : '') + '> Left the draft</label>' +
+      '<input class="in in-sm" data-r="note" maxlength="200" placeholder="Why, shown to players (e.g. Acquired by X in May 2026.)" value="' + v(c.retired_note) + '"></div>' +
+    '<div class="rv-actions"><button class="btn btn-primary btn-sm" type="button" data-rv="save">' + (flagged ? "Save and mark reviewed" : "Save") + '</button>' +
+      (flagged ? '<button class="btn btn-quiet btn-sm" type="button" data-rv="ok">Looks right</button>' : '<button class="link" type="button" data-rv="close">Close</button>') +
+    '</div></li>';
+}
+async function loadReview(){
+  $("review-sub").textContent = "Loading…";
+  try{ admCos = await call("admin_companies", T()) || []; }
+  catch(e){ $("review-sub").textContent = e.message; return; }
+  const flagged = admCos.filter(c => c.flagged);
+  setReviewBadge(flagged.length);
+  $("review-sub").textContent = flagged.length
+    ? plural(flagged.length, "company needs", "companies need") + " a look. These notes are only visible here; players see the saved profile."
+    : "Nothing flagged. Every company profile has been reviewed.";
+  $("rv-any").innerHTML = '<option value="">Pick a company…</option>' +
+    admCos.slice().sort((a, b) => a.name.localeCompare(b.name)).map(c => '<option value="' + c.id + '">' + esc(c.name) + '</option>').join("");
+  $("rv-edit").innerHTML = "";
+  $("rvlist").innerHTML = flagged.map(c => rvForm(c, true)).join("");
+}
+async function reviewAction(btn){
+  const li = btn.closest(".rv"), id = Number(li.dataset.co), act = btn.dataset.rv;
+  if(act === "close"){ $("rv-edit").innerHTML = ""; $("rv-any").value = ""; return; }
+  btn.disabled = true;
+  try{
+    if(act === "ok"){
+      await call("admin_flag_company", Object.assign(T(), {p_startup_id:id, p_flagged:false, p_note:null}));
+      toast("Marked as reviewed.");
+    }else{
+      const data = {};
+      li.querySelectorAll("[data-k]").forEach(el => { data[el.dataset.k] = el.value; });
+      await call("admin_update_company", Object.assign(T(), {p_startup_id:id, p:data, p_resolve:true}));
+      const c = admCos.find(x => x.id === id) || {};
+      const ret = li.querySelector('[data-r="retired"]').checked, note = li.querySelector('[data-r="note"]').value.trim();
+      if(ret !== !!c.retired || (ret && note !== (c.retired_note || ""))){
+        if(ret && !note){ toast("Add a short reason players will see."); btn.disabled = false; return; }
+        await call("admin_set_retired", Object.assign(T(), {p_startup_id:id, p_retired:ret, p_note:note}));
+      }
+      toast(ret && !c.retired ? "Saved and retired from the draft. Holders get a free swap." : "Profile saved. Players see it now.");
+    }
+    await fetchPool();
+    loadReview();
+  }catch(e){ toast(e.message); btn.disabled = false; }
 }
 async function loadInbox(){
   $("inbox-sub").textContent = "Loading…";
@@ -1969,6 +2463,8 @@ $("slots").addEventListener("click", e => {
   if(b){ active = +b.dataset.slot; query = ""; $("search").value = ""; renderDraft(); focusSlot(); }
 });
 $("pool").addEventListener("click", e => {
+  const info = e.target.closest("[data-info]");
+  if(info){ openCompany(info.dataset.info, "draft"); return; }
   const b = e.target.closest(".co");
   if(!b || b.getAttribute("aria-disabled") === "true") return;
   const s = startups.find(x => String(x.id) === b.dataset.id);
@@ -1983,8 +2479,15 @@ $("cert-slot").addEventListener("click", e => {
   if(b) openPos(Number(b.dataset.pos));
 });
 $("pd-lead").addEventListener("click", makeLead);
-$("pd-sell").addEventListener("click", () => { if(posSel) startTransfer(posSel.slot); });
+$("pd-sell").addEventListener("click", () => { if(posSel) startTransfer(posSel.slot, !!posSel.retired); });
 $("pd-close").addEventListener("click", closePos);
+$("pd-about").addEventListener("click", () => { if(posSel){ const id = posSel.id; closePos(); openCompany(id, "view"); } });
+$("cd-close").addEventListener("click", closeCo);
+$("rt-keep").addEventListener("click", keepRetired);
+$("rt-swap").addEventListener("click", swapRetiredNow);
+$("week-card").addEventListener("click", e => { const b = e.target.closest("[data-free-slot]"); if(b) startTransfer(Number(b.dataset.freeSlot), true); });
+$("cd-act").addEventListener("click", coAction);
+$("co-dialog").addEventListener("click", e => { if(e.target === $("co-dialog")) closeCo(); });
 $("pos-dialog").addEventListener("click", e => { if(e.target === $("pos-dialog")) closePos(); });
 
 // transfer
@@ -1992,6 +2495,8 @@ $("xh-cancel").addEventListener("click", cancelTransfer);
 $("xh-go").addEventListener("click", confirmTransfer);
 $("xfer-search").addEventListener("input", e => { if(xfer){ xfer.query = e.target.value; renderXfer(); } });
 $("xfer-pool").addEventListener("click", e => {
+  const info = e.target.closest("[data-info]");
+  if(info){ openCompany(info.dataset.info, "xfer"); return; }
   const b = e.target.closest(".co");
   if(!b || !xfer || b.getAttribute("aria-disabled") === "true") return;
   const s = startups.find(x => String(x.id) === b.dataset.id);
@@ -2039,6 +2544,19 @@ $("f-lg-rename").addEventListener("submit", e => {
   e.preventDefault();
   if(leagueSel === "global") return;
   leagueAction("league_rename", {p_league_id:leagueSel, p_name:$("lg-rename").value}, "League renamed.");
+});
+
+// admin sections
+$("adm-nav").addEventListener("click", e => { const c = e.target.closest("[data-adm]"); if(c) showAdm(c.dataset.adm); });
+$("flist").addEventListener("click", e => { const b = e.target.closest("[data-fund]"); if(b) openFund(b.dataset.fund); });
+$("fund-detail").addEventListener("click", e => { const b = e.target.closest("[data-fd]"); if(b) fundAction(b); });
+$("raw-q").addEventListener("input", () => { clearTimeout(rawTimer); rawTimer = setTimeout(loadRaw, 300); });
+$("rawlist").addEventListener("click", e => { const b = e.target.closest("[data-rw]"); if(b) rawAction(b); });
+$("rvlist").addEventListener("click", e => { const b = e.target.closest("[data-rv]"); if(b) reviewAction(b); });
+$("rv-edit").addEventListener("click", e => { const b = e.target.closest("[data-rv]"); if(b) reviewAction(b); });
+$("rv-any").addEventListener("change", e => {
+  const c = admCos.find(x => x.id === Number(e.target.value));
+  $("rv-edit").innerHTML = c ? '<ul class="rvlist">' + rvForm(c, false) + '</ul>' : "";
 });
 
 // scoring desk
