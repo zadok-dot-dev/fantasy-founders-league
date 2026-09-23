@@ -577,6 +577,13 @@ body.has-dock .toast{bottom:calc(98px + env(safe-area-inset-bottom,0px))}
   .xh-sub{font-size:13.5px;margin-top:3px}
   .xh-go{margin-top:10px;padding:11px 16px;font-size:15px}
 }
+.switch{display:inline-flex;align-items:center;gap:9px;background:none;border:0;padding:6px 2px;font:inherit;font-weight:600;font-size:14px;color:var(--ink);cursor:pointer}
+.switch-track{position:relative;width:38px;height:22px;border-radius:999px;background:var(--line-2);transition:background-color .15s}
+.switch-knob{position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--paper-hi);box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
+.switch[aria-checked="true"] .switch-track{background:var(--note)}
+.switch[aria-checked="true"] .switch-knob{transform:translateX(16px)}
+.switch:focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:6px}
+@media (prefers-reduced-motion:reduce){.switch-track,.switch-knob{transition:none}}
 </style>
 </head>
 <body>
@@ -1051,7 +1058,7 @@ const HOW =
     '</tbody></table>' +
     '<p class="how-p win">Your fund keeps every point its companies earned while you held them, even after you sell. Points a company earned before you bought it don\'t count.</p>' +
     '<div class="extras">' +
-      '<p><b>Beat the house.</b> The Index buys the biggest names, The Long Shot buys the cheapest, and Chaos Monkey drafts at random. They sit on every league table.</p>' +
+      '<p><b>Beat the house.</b> The Index buys the biggest names, The Long Shot buys the cheapest, and Chaos Monkey drafts at random. They\'re on the main table, and league creators can add them to private leagues.</p>' +
       '<p><b>Start a private league.</b> Share a code and get a table of just your group.</p>' +
     '</div>' +
   '</div></div>' +
@@ -1740,17 +1747,20 @@ async function renderLeague(){
   $("lg-title").textContent = l ? l.name : "League table";
   if(l){
     const members = new Set(l.member_ids || []);
-    rows = rows.filter(r => members.has(r.manager_id) || r.is_house);
+    rows = rows.filter(r => members.has(r.manager_id) || (l.include_house && r.is_house));
     $("lg-info").hidden = false;
     $("lg-info").innerHTML =
       '<span>Invite code <span class="lg-code">' + esc(l.code) + '</span></span><span class="sp"></span>' +
       '<button class="btn btn-primary btn-sm" type="button" id="lg-invite">Copy invite link</button>' +
+      (l.is_owner ? '<button class="switch" type="button" role="switch" id="lg-house" aria-checked="' + !!l.include_house + '"><span class="switch-track" aria-hidden="true"><span class="switch-knob"></span></span>House funds</button>' : '') +
       (l.is_owner ? '<button class="btn btn-quiet btn-sm" type="button" id="lg-rename-btn">Rename</button><button class="btn btn-quiet btn-sm" type="button" id="lg-code-btn">New code</button>' : '') +
       '<button class="link" type="button" id="lg-leave">Leave league</button>';
     const inv = $("lg-invite");
     inv.onclick = () => shareOrCopy("Join my league on Fantasy Founders League:", SHARE_URL + "/?join=" + encodeURIComponent(l.code), inv, "Copy invite link");
     if(l.is_owner){
       $("lg-rename-btn").onclick = () => { $("lg-rename").value = l.name; toggleForm("f-lg-rename"); };
+      $("lg-house").onclick = () => leagueAction("league_set_house", {p_league_id:l.id, p_include:!l.include_house},
+        l.include_house ? "House funds removed from " + l.name + "." : "House funds added to " + l.name + ".");
       $("lg-code-btn").onclick = () => leagueAction("league_new_code", {p_league_id:l.id}, "New code ready. The old one no longer works.");
     }
     const leave = $("lg-leave");
@@ -1762,7 +1772,8 @@ async function renderLeague(){
 
   const ranked = rankRows(rows);
   const humans = ranked.rows.filter(r => !r.is_house).length;
-  $("board-sub").textContent = plural(humans, "fund", "funds") + (l ? " in this league" : "") + ", plus three house funds, ranked by total points." +
+  const withHouse = !l || l.include_house;
+  $("board-sub").textContent = plural(humans, "fund", "funds") + (l ? " in this league" : "") + (withHouse ? ", plus three house funds" : "") + ", ranked by total points." +
     (ranked.latest ? " Arrows show movement in GW" + ranked.latest + "." : " Scoring starts once GW1 news is logged.");
   $("board").innerHTML = ranked.rows.map(r => leagueRow(r, ranked.latest)).join("");
   renderLeagueWeek(ranked.latest);
