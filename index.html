@@ -3104,7 +3104,7 @@ function seg(name, opts, cur){
 }
 function renderEditor(){
   const p = soCur, f = p.fields, src = p.source || {}, ctx = soCtx(), news = p.kind === "news";
-  const flags = (p.flags || []);
+  const flags = Array.isArray(p.flags) ? p.flags : (p.flags ? [String(p.flags)] : []);
   const facts = (f.facts || []);
   const srcHTML = news
     ? '<section class="panel so-src"><h3 class="h3">Source</h3>' +
