@@ -670,6 +670,196 @@ textarea.in{resize:vertical;min-height:84px;font:inherit;font-size:15px;line-hei
 .rv-retire{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin-top:10px}
 .rv-retire label{display:flex;gap:8px;align-items:center;font-weight:600;font-size:14.5px}
 .rv-retire .in{flex:1 1 220px;width:auto}
+
+/* ============ social desk ============ */
+.sc{grid-template-columns:minmax(0,1fr) auto auto auto}
+.so-new{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 16px}
+.so-linkform{margin-bottom:18px}
+.so-linkform textarea{min-height:120px}
+.so-busy{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:12px;background:var(--tint);color:var(--ink);font-weight:600;font-size:15px;margin-bottom:16px}
+.so-busy::before{content:"";width:18px;height:18px;border-radius:50%;border:2px solid var(--line-2);border-top-color:var(--ink);animation:so-spin .8s linear infinite;flex:none}
+@keyframes so-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.so-busy::before{animation:none}}
+.so-filter{margin:0 0 6px}
+.tag.st-approved{background:color-mix(in srgb,var(--gain) 16%,transparent);color:var(--gain)}
+.tag.st-posted{background:var(--ink);color:var(--paper-hi)}
+.tag.warn{background:color-mix(in srgb,var(--gold) 22%,transparent);color:var(--ink)}
+textarea.in{resize:vertical;line-height:1.45;font-size:15px;min-height:0}
+.so-edit{display:grid;gap:20px;margin-top:6px}
+@media (min-width:1040px){
+  .so-edit{grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);align-items:start}
+  .so-side{position:sticky;top:112px}
+}
+.so-src a{font-weight:660;text-decoration:none}
+.so-src a:hover{text-decoration:underline}
+.so-facts{margin:10px 0 0;padding-left:18px;font-size:14.5px;color:var(--ink-2)}
+.so-facts li{margin-bottom:4px}
+.so-flags{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:6px}
+.so-flags li{padding:9px 12px;border-radius:10px;background:color-mix(in srgb,var(--gold) 16%,transparent);font-size:14px;line-height:1.4}
+.so-field{margin-bottom:16px}
+.so-fh{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:6px}
+.so-fh > span{font-size:14px;font-weight:600;color:var(--ink-2)}
+.so-fh-r{display:flex;align-items:baseline;gap:12px}
+.so-count{font-size:12.5px;color:var(--ink-3);white-space:nowrap}
+.so-count.over{color:var(--loss);font-weight:700}
+.so-issues{list-style:none;margin:6px 0 0;padding:0;font-size:13px;line-height:1.4;color:var(--loss)}
+.so-rw{display:flex;gap:8px;margin-top:8px}
+.so-rw .in{flex:1;min-width:0}
+.so-copy{font-size:13px}
+.so-row2{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin-bottom:14px}
+.so-row2 > span{font-size:14px;font-weight:600;color:var(--ink-2)}
+.so-seg{display:inline-flex;border:1px solid var(--line-2);border-radius:10px;overflow:hidden}
+.so-seg button{border:0;background:none;padding:8px 13px;font:inherit;font-size:14px;font-weight:600;color:var(--ink-2);cursor:pointer}
+.so-seg button + button{border-left:1px solid var(--line-2)}
+.so-seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper-hi)}
+.so-stat{display:grid;grid-template-columns:auto 76px minmax(0,1fr);gap:8px;align-items:center;margin-bottom:6px;font-size:14px}
+.so-stat input[type="checkbox"],.so-check input{width:18px;height:18px;accent-color:var(--ink)}
+.so-stat .v{font-weight:800;font-stretch:112%}
+.so-check{display:flex;gap:8px;align-items:center;font-size:14.5px;margin:4px 0}
+.so-imgrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.so-imgrow .adm-note{margin:0}
+.so-tabs{margin-bottom:10px}
+.so-frame{position:relative;overflow:hidden;border-radius:10px;box-shadow:var(--shadow);background:#0F3B2B}
+.so-frame > .sp{position:absolute;left:0;top:0;transform-origin:0 0}
+.so-frame .sp-img{cursor:crosshair}
+.so-frame .sp-top,.so-frame .sp-body,.so-frame .sp-foot{pointer-events:none}
+.so-dl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+.so-actions{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.so-saved{font-size:13px;color:var(--ink-3)}
+.so-posted{display:grid;gap:8px;margin-top:12px}
+#so-stage{position:fixed;left:-20000px;top:0;pointer-events:none}
+
+/* ============ social post canvases (always the dark brand, whatever the theme) ============ */
+.sp{
+  --g:#0F3B2B;--g2:#0C3124;--i:#EAF2E6;--i2:#A9C4B5;--au:#D6AE55;--up:#8BE0B0;--dn:#F5A69C;--ln:#3E7C61;
+  position:relative;overflow:hidden;isolation:isolate;display:flex;flex-direction:column;
+  background:var(--g);color:var(--i);text-align:left;
+  font-family:Archivo,"Helvetica Neue",Arial,sans-serif;font-weight:400;
+  font-variant-numeric:tabular-nums lining-nums;-webkit-font-smoothing:antialiased;
+}
+.sp *,.sp *::before,.sp *::after{box-sizing:border-box;margin:0}
+.sp.x{width:1600px;height:900px;padding:68px 84px 64px}
+.sp.ig{width:1080px;height:1350px;padding:76px 76px 72px}
+.sp-rings{position:absolute;z-index:-2;color:var(--ln);opacity:.55;pointer-events:none}
+.sp .sp-rings{display:block;max-width:none}
+.sp.x .sp-rings{width:1240px;height:1240px;right:-430px;top:-170px}
+.sp.ig .sp-rings{width:1320px;height:1320px;right:-600px;top:-360px}
+.sp-top{display:flex;align-items:center;justify-content:space-between;gap:24px;position:relative}
+.sp-brand{display:flex;align-items:center;gap:18px;font-stretch:112%;font-weight:790;letter-spacing:-.012em;font-size:33px;line-height:1;color:var(--i)}
+.sp-brand svg{width:58px;height:58px;color:var(--au);flex:none}
+.sp-url{font-stretch:108%;font-weight:720;font-size:30px;line-height:1;color:var(--au);white-space:nowrap}
+.sp-body{flex:1;display:flex;flex-direction:column;justify-content:center;min-height:0;position:relative}
+.sp-chip{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 18px;font-size:30px;line-height:1.2;margin-bottom:26px}
+.sp-chip b{font-stretch:110%;font-weight:760;color:var(--au)}
+.sp-chip span{color:var(--i2)}
+.sp-h{font-stretch:120%;font-weight:820;line-height:.97;letter-spacing:-.03em;text-wrap:balance;overflow-wrap:break-word}
+.sp.x .sp-h{font-size:92px;max-width:1180px}
+.sp.x.sz-s .sp-h{font-size:76px}
+.sp.x.sz-l .sp-h{font-size:108px}
+.sp.ig .sp-h{font-size:98px}
+.sp.ig.sz-s .sp-h{font-size:82px}
+.sp.ig.sz-l .sp-h{font-size:116px}
+.sp-dek{color:var(--i2);line-height:1.32;text-wrap:pretty;margin-top:30px}
+.sp.x .sp-dek{font-size:34px;max-width:1040px}
+.sp.ig .sp-dek{font-size:37px}
+.sp-foot{display:flex;align-items:flex-end;justify-content:space-between;gap:40px;padding-top:34px;border-top:2px solid rgba(62,124,97,.65);position:relative}
+.sp-stats{display:flex;gap:64px;min-width:0}
+.sp-stat b{display:block;font-stretch:118%;font-weight:810;font-size:74px;line-height:.95;letter-spacing:-.02em}
+.sp-stat span{display:block;font-size:25px;line-height:1.25;color:var(--i2);margin-top:10px;max-width:320px}
+.sp-stat.gain b{color:var(--up)}
+.sp-stat.loss b{color:var(--dn)}
+.sp.ig .sp-stats{gap:56px}
+.sp.ig .sp-foot{flex-direction:column;align-items:flex-start;gap:36px}
+
+/* image layouts */
+.sp-img{position:absolute;z-index:-1;background-size:cover;background-repeat:no-repeat;background-color:var(--g2)}
+.sp.x.lay-image .sp-img{top:0;right:0;bottom:0;width:38%}
+.sp.x.lay-image .sp-body,.sp.x.lay-image .sp-foot{max-width:57%}
+.sp.x.lay-image .sp-h{font-size:80px}
+.sp.x.lay-image.sz-s .sp-h{font-size:66px}
+.sp.x.lay-image.sz-l .sp-h{font-size:94px}
+.sp.x.lay-image .sp-dek{font-size:31px}
+.sp.x.lay-image .sp-top{max-width:57%}
+.sp.ig.lay-image .sp-img{left:0;right:0;top:0;height:560px}
+.sp.ig.lay-image .sp-img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(12,49,36,.78) 0%,rgba(12,49,36,0) 26%)}
+.sp.ig.lay-image .sp-body{justify-content:flex-start;padding-top:500px}
+.sp.ig.lay-image .sp-h{font-size:80px}
+.sp.ig.lay-image.sz-s .sp-h{font-size:68px}
+.sp.ig.lay-image.sz-l .sp-h{font-size:92px}
+.sp.ig.lay-image .sp-dek{font-size:33px;margin-top:24px}
+.sp.ig.lay-image .sp-chip{margin-bottom:20px}
+.sp.lay-full .sp-img{inset:0}
+.sp.lay-full .sp-img::after{content:"";position:absolute;inset:0}
+.sp.x.lay-full .sp-img::after{background:linear-gradient(90deg,var(--g) 30%,rgba(15,59,43,.82) 56%,rgba(15,59,43,.18) 100%)}
+.sp.ig.lay-full .sp-img::after{background:linear-gradient(0deg,var(--g) 36%,rgba(15,59,43,.8) 60%,rgba(15,59,43,.2) 100%)}
+.sp.x.lay-full .sp-body,.sp.x.lay-full .sp-foot{max-width:66%}
+.sp.ig.lay-full .sp-body{justify-content:flex-end;padding-bottom:40px}
+.sp.lay-image .sp-rings,.sp.lay-full .sp-rings{display:none}
+
+/* certificate slide */
+.sp-cert{position:relative;margin:auto 0;transform:rotate(-1.6deg);background-color:#F4F3E8;color:#113A2B;border-radius:10px;padding:16px;
+  box-shadow:0 30px 60px -20px rgba(0,0,0,.55);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='16' viewBox='0 0 120 16'%3E%3Cg fill='none' stroke='%232F6B53' stroke-opacity='.085' stroke-width='.7'%3E%3Cpath d='M0 8 Q15 0 30 8 T60 8 T90 8 T120 8'/%3E%3Cpath d='M0 8 Q15 16 30 8 T60 8 T90 8 T120 8'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:180px 24px}
+.sp-cert-in{border:5px double #2F6B53;border-radius:4px;padding:40px 44px 36px}
+.sp-cert-top{display:flex;justify-content:space-between;gap:20px;font-size:24px;color:#587566;font-stretch:96%}
+.sp-cert-name{font-stretch:125%;font-weight:830;font-size:84px;line-height:1;letter-spacing:-.024em;margin:26px 0 18px;text-wrap:balance}
+.sp-cert-clause{font-size:29px;line-height:1.42;max-width:28em}
+.sp-cert-clause b{font-weight:680}
+.sp-cert-rows{display:grid;grid-template-columns:1fr 1fr;gap:0 40px;margin:30px 0 0;border-top:1.5px solid rgba(47,107,83,.35)}
+.sp-cert-rows div{padding:18px 0;border-bottom:1.5px solid rgba(47,107,83,.35)}
+.sp-cert-rows dt{font-size:22px;color:#587566}
+.sp-cert-rows dd{margin:4px 0 0;font-stretch:118%;font-weight:800;font-size:44px;line-height:1.1}
+.sp-cert .gain{color:#0F7446}
+.sp-cert .loss{color:#A5302B}
+.sp-cert-foot{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-top:26px}
+.sp-sig{flex:1;font-family:"Mrs Saint Delafield",cursive;font-size:64px;line-height:1;color:#113A2B}
+.sp-sig small{display:block;font-family:Archivo,sans-serif;font-size:21px;color:#587566;border-top:1.5px solid #113A2B;padding-top:8px;margin-top:4px}
+.sp-seal{position:relative;width:196px;height:196px;flex:none;color:#2F6B53}
+.sp-seal svg{position:absolute;inset:0;width:100%;height:100%}
+.sp-seal-in{position:absolute;inset:44px;border-radius:50%;background:#F4F3E8;border:1.5px solid #2F6B53;display:grid;place-content:center;text-align:center}
+.sp-seal-in b{font-stretch:120%;font-weight:830;font-size:38px;line-height:1}
+.sp-seal-in small{font-size:18px;color:#587566;margin-top:4px}
+
+/* join slide */
+.sp-cta{font-stretch:118%;font-weight:820;font-size:132px;line-height:.94;letter-spacing:-.032em}
+.sp-cta span{display:block}
+.sp-cta-sub{font-size:42px;color:var(--i2);margin-top:44px}
+.sp-cta-url{font-stretch:108%;font-weight:760;font-size:48px;color:var(--au);margin-top:22px}
+
+/* weekly cards */
+.sp-wk{display:grid;gap:40px;flex:1;min-height:0;align-content:center;overflow:hidden}
+.sp.ig .sp-wk{align-content:start;padding-top:56px}
+.sp.x .sp-wk{grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);align-items:center;gap:72px}
+.sp.x .sp-wk .sp-h{font-size:76px}
+.sp.x.sz-s .sp-wk .sp-h{font-size:64px}
+.sp.x.sz-l .sp-wk .sp-h{font-size:88px}
+.sp.ig .sp-wk .sp-h{font-size:76px}
+.sp.ig.sz-s .sp-wk .sp-h{font-size:64px}
+.sp.ig.sz-l .sp-wk .sp-h{font-size:88px}
+.sp.x .sp-wk .sp-dek{font-size:30px}
+.sp.ig .sp-wk .sp-dek{font-size:33px;margin-top:24px}
+.sp-rows{list-style:none;padding:0;border-top:2px solid rgba(62,124,97,.65)}
+.sp-rows li{display:grid;grid-template-columns:62px minmax(0,1fr) auto;gap:18px;align-items:baseline;padding:16px 0;border-bottom:1.5px solid rgba(62,124,97,.45)}
+.sp.x .sp-rows li{padding:12px 0}
+.sp.ig .sp-rows li{padding:13px 0}
+.sp.ig .sp-rows .nm{font-size:31px}
+.sp.ig .sp-rows .v{font-size:36px}
+.sp.x .sp-wk{padding-top:24px}
+.sp-rows .n{font-stretch:112%;font-weight:760;font-size:28px;color:var(--i2)}
+.sp-rows .nm{font-stretch:108%;font-weight:720;font-size:34px;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sp-rows .nm small{display:block;font-family:inherit;font-stretch:100%;font-weight:400;font-size:22px;color:var(--i2);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp-rows .v{font-stretch:118%;font-weight:810;font-size:40px;text-align:right}
+.sp-rows .v small{display:block;font-size:21px;font-weight:600;color:var(--i2);margin-top:4px;font-stretch:100%}
+.sp-rows .v.gain{color:var(--up)}
+.sp-rows .v.loss{color:var(--dn)}
+.sp-rows .house{display:inline-block;vertical-align:4px;margin-left:12px;padding:3px 10px;border-radius:999px;background:var(--au);color:#1B1304;font-size:17px;font-weight:700;font-stretch:100%}
+.sp-rows-h{font-size:24px;font-weight:650;color:var(--i2);margin-bottom:12px}
+.sp.x .sp-rows.dense li{padding:9px 0}
+.sp.x .sp-rows.dense .nm{font-size:29px}
+.sp.x .sp-rows.dense .v{font-size:32px}
+.sp.x .sp-rows.dense .nm small{display:none}
+@media (max-width:1039px){.so-side{order:-1}}
 </style>
 </head>
 <body>
@@ -916,13 +1106,14 @@ textarea.in{resize:vertical;min-height:84px;font:inherit;font-size:15px;line-hei
     <section id="s-admin" hidden>
       <header class="fund-head">
         <h1 class="h1">Admin</h1>
-        <p class="sub">Score news, check on funds, and keep company profiles accurate.</p>
+        <p class="sub">Score news, check on funds, keep company profiles accurate, and draft social posts.</p>
       </header>
       <div class="chips adm-nav" id="adm-nav" role="tablist" aria-label="Admin sections">
         <button class="chip" type="button" role="tab" data-adm="scoring" aria-selected="true">Scoring</button>
         <button class="chip" type="button" role="tab" data-adm="funds" aria-selected="false">Funds</button>
         <button class="chip" type="button" role="tab" data-adm="news" aria-selected="false">News</button>
         <button class="chip" type="button" role="tab" data-adm="review" aria-selected="false">Review<span class="chip-n" id="review-n" hidden></span></button>
+        <button class="chip" type="button" role="tab" data-adm="social" aria-selected="false">Social</button>
       </div>
 
       <div id="adm-scoring">
@@ -979,8 +1170,38 @@ textarea.in{resize:vertical;min-height:84px;font:inherit;font-size:15px;line-hei
         <div id="rv-edit"></div>
         <ul class="rvlist" id="rvlist"></ul>
       </div>
+      <div id="adm-social" hidden>
+        <p class="adm-note">Drafts for X and Instagram in the house voice. Check every fact against the source, then approve. Replies always go out by hand.</p>
+        <div class="so-new" id="so-new">
+          <button class="btn btn-primary btn-sm" type="button" data-new="link">From a link</button>
+          <button class="btn btn-quiet btn-sm" type="button" data-new="deadline">Deadline post</button>
+          <button class="btn btn-quiet btn-sm" type="button" data-new="table">Table post</button>
+          <button class="btn btn-quiet btn-sm" type="button" data-new="movers">Movers post</button>
+        </div>
+        <form class="panel form-grid so-linkform" id="so-linkform" hidden novalidate>
+          <label class="field"><span>Link to the story</span><input class="in in-sm" id="so-l-url" type="url" inputmode="url" placeholder="https://" autocomplete="off"></label>
+          <label class="field"><span>Company</span><select class="in in-sm" id="so-l-co"></select></label>
+          <label class="field"><span>Headline, if the page won&rsquo;t load</span><input class="in in-sm" id="so-l-title" maxlength="200" autocomplete="off"></label>
+          <label class="field"><span>Article text, optional</span><textarea class="in in-sm" id="so-l-text" rows="5" placeholder="Paste the article if it&rsquo;s paywalled. Drafts only use facts from the source."></textarea></label>
+          <div><button class="btn btn-primary btn-sm" type="submit">Draft it</button></div>
+        </form>
+        <p class="so-busy" id="so-busy" role="status" aria-live="polite" hidden></p>
+        <div id="so-list-wrap">
+          <div class="chips so-filter" id="so-filter" role="tablist" aria-label="Post status">
+            <button class="chip" type="button" role="tab" data-sof="draft" aria-selected="true">Drafts</button>
+            <button class="chip" type="button" role="tab" data-sof="approved" aria-selected="false">Approved</button>
+            <button class="chip" type="button" role="tab" data-sof="posted" aria-selected="false">Posted</button>
+            <button class="chip" type="button" role="tab" data-sof="all" aria-selected="false">All</button>
+          </div>
+          <p class="adm-note" id="so-sub"></p>
+          <ul class="flist" id="so-list"></ul>
+        </div>
+        <div id="so-edit" hidden></div>
+      </div>
     </section>
   </main>
+
+  <div id="so-stage" aria-hidden="true"></div>
 
   <div class="dock" id="dock" hidden>
     <div class="dock-info"><b id="dock-dry">$100M</b><small id="dock-sub">0 of 5 slots filled</small></div>
@@ -2099,13 +2320,15 @@ async function renderAdmin(){
 /* ---- admin sections ---- */
 let admTab = "scoring";
 function showAdm(tab){
+  if(admTab === "social" && tab !== "social" && soCur) soSave();
   admTab = tab;
-  ["scoring", "funds", "news", "review"].forEach(t => { $("adm-" + t).hidden = t !== tab; });
+  ["scoring", "funds", "news", "review", "social"].forEach(t => { $("adm-" + t).hidden = t !== tab; });
   document.querySelectorAll("#adm-nav [data-adm]").forEach(c => c.setAttribute("aria-selected", String(c.dataset.adm === tab)));
   if(tab === "scoring"){ loadInbox(); loadRecent(); }
   if(tab === "funds") loadFunds();
   if(tab === "news") loadRaw();
   if(tab === "review") loadReview();
+  if(tab === "social") loadSocial();
 }
 function ago(d){
   if(!d) return "never";
@@ -2388,6 +2611,7 @@ async function loadRecent(){
     const ev = EV[x.event_type];
     return '<li class="sc"><span><b>' + esc(x.startups ? x.startups.name : "") + '</b><small>GW' + x.gw + ', ' + esc(ev ? ev.short : x.event_type) + (x.note ? '. ' + esc(x.note) : '') + '</small></span>' +
       '<span class="pts-cell ' + pcls(x.points) + '">' + pts(x.points) + '</span>' +
+      '<button class="link" type="button" data-post-score="' + x.id + '">Post</button>' +
       '<button class="link" type="button" data-undo="' + x.id + '">Undo</button></li>';
   }).join("") : '<li class="empty-note">No scores yet this season.</li>';
 }
@@ -2589,6 +2813,8 @@ $("inbox").addEventListener("click", e => {
   if(b) inboxAct(b.closest(".ib"), b.dataset.act);
 });
 $("recent").addEventListener("click", async e => {
+  const ps = e.target.closest("[data-post-score]");
+  if(ps){ soDraft({kind:"news", score_id:Number(ps.dataset.postScore)}); return; }
   const b = e.target.closest("[data-undo]");
   if(!b) return;
   if(!b.dataset.armed){
@@ -2600,6 +2826,572 @@ $("recent").addEventListener("click", async e => {
   try{ await call("admin_delete_score", Object.assign(T(), {p_score_id:Number(b.dataset.undo)})); toast("Score removed."); loadRecent(); refreshAfterScore(); }
   catch(err){ toast(err.message); b.disabled = false; }
 });
+
+
+/* ================= social desk ================= */
+const FN_SOCIAL = SB_URL + "/functions/v1/social-draft";
+const H2I_SRC = "https://cdn.jsdelivr.net/npm/html-to-image@1.11.13/dist/html-to-image.js";
+const SP_SIZE = {x:[1600, 900], ig:[1080, 1350]};
+// The hero rings as a cached image, so live previews don't re-parse 20k path points on every keystroke.
+const SP_RINGS = '<img class="sp-rings" alt="" src="data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
+  rosette(1000, [
+    {R:.86, A:.045, lobes:54, count:22, steps:540},
+    {R:.66, A:.055, lobes:38, count:18, steps:420},
+    {R:.44, A:.07,  lobes:24, count:14, steps:300}
+  ], .55).replace("<svg ", '<svg xmlns="http://www.w3.org/2000/svg" ').replace('stroke="currentColor"', 'stroke="#3E7C61"')) + '">';
+const SO_KIND = {news:"News", deadline:"Deadline", table:"Table", movers:"Movers"};
+const SO_STATUS = {draft:"Draft", approved:"Approved", posted:"Posted"};
+const SO_TEXT = [
+  {k:"headline",   label:"Headline",           rows:2, words:12, where:"On the graphic"},
+  {k:"subhead",    label:"Subhead",            rows:3, words:25, where:"On the graphic"},
+  {k:"x_post",     label:"X post",             rows:4, chars:280, soft:240},
+  {k:"x_reply",    label:"Reply to post by hand", rows:3, chars:200, news:true},
+  {k:"ig_caption", label:"Instagram caption",  rows:8, first:125}
+];
+let soFilter = "draft", soCur = null, soDirty = {}, soSaveTimer = null, soView = null, soFontCSS = {}, soBusy = false;
+
+/* ---- style check: mirrors supabase/functions/social-draft/voice.ts ---- */
+const SO_BANNED = [
+  [/game[- ]?changer/i, "game-changer"], [/revolutioni[sz]/i, "revolutionize"], [/groundbreaking/i, "groundbreaking"],
+  [/\bunleash/i, "unleash"], [/supercharg/i, "supercharge"], [/\bdelv(e|es|ing)\b/i, "delve"], [/\blandscape\b/i, "landscape"],
+  [/\becosystem/i, "ecosystem"], [/in a world where/i, "in a world where"], [/it['\u2019]s not just/i, "it's not just"],
+  [/here['\u2019]s why/i, "here's why"], [/buckle up/i, "buckle up"], [/let that sink in/i, "let that sink in"],
+  [/\bhuge\b/i, "huge"], [/\binsane(ly)?\b/i, "insane"], [/\bmassive(ly)?\b/i, "massive"], [/\bwild\b/i, "wild"],
+  [/\bstunning\b/i, "stunning"], [/the future of/i, "the future of"], [/\bparadigm/i, "paradigm"], [/\bseismic\b/i, "seismic"],
+  [/\bBREAKING\b/, "BREAKING"]
+];
+const soWords = s => (String(s || "").trim().match(/\S+/g) || []).length;
+function soCheck(k, v){
+  const out = [];
+  v = String(v || "");
+  if(!v.trim()) return out;
+  SO_BANNED.forEach(([re, name]) => { if(re.test(v)) out.push("Uses \u201C" + name + "\u201D."); });
+  if(/!/.test(v)) out.push("Has an exclamation mark.");
+  if(/\p{Extended_Pictographic}/u.test(v)) out.push("Has an emoji.");
+  if(/[\u2014\u2013]/.test(v)) out.push("Uses a dash. Use a full stop or a comma.");
+  if(k !== "ig_caption" && /\?/.test(v)) out.push("Asks a question.");
+  if(k !== "ig_caption" && /(^|\s)#\w/.test(v)) out.push("Has a hashtag.");
+  if(k === "headline"){
+    if(soWords(v) > 12) out.push("Keep it to 12 words.");
+    const ws = v.split(/\s+/).slice(1).filter(w => /^[A-Za-z]/.test(w) && w.length > 3);
+    if(ws.length >= 3 && ws.filter(w => /^[A-Z]/.test(w)).length / ws.length > .6) out.push("Looks like Title Case. Use sentence case.");
+  }
+  if(k === "subhead" && soWords(v) > 25) out.push("Keep it to 25 words.");
+  if(k === "x_post" && v.length > 280) out.push("X allows 280 characters.");
+  if(k === "x_reply" && v.length > 200) out.push("Keep replies to 200 characters.");
+  if(k === "ig_caption"){
+    if(v.split("\n")[0].length > 125) out.push("Instagram cuts the first line at 125 characters.");
+    const tags = v.match(/(^|\s)#\w+/g) || [];
+    if(tags.length > 3) out.push("Use 3 hashtags at most.");
+  }
+  return out;
+}
+function soCount(d, v){
+  v = String(v || "");
+  if(d.words){ const n = soWords(v); return {text:n + " of " + d.words + " words", over:n > d.words}; }
+  if(d.chars){ return {text:v.length + " of " + d.chars, over:v.length > d.chars, soft:d.soft && v.length > d.soft}; }
+  if(d.first){ const n = v.split("\n")[0].length; return {text:"First line " + n + " of " + d.first, over:n > d.first}; }
+  return {text:"", over:false};
+}
+
+/* ---- data helpers ---- */
+const soF = k => soCur && soCur.fields ? soCur.fields[k] : undefined;
+const soCtx = () => (soCur && soCur.context) || {};
+function soEtDeadline(iso){
+  try{
+    const d = new Date(iso);
+    const day = d.toLocaleDateString("en-US", {timeZone:"America/New_York", weekday:"long"});
+    const date = d.toLocaleDateString("en-US", {timeZone:"America/New_York", month:"short", day:"numeric"});
+    const time = d.toLocaleTimeString("en-US", {timeZone:"America/New_York", hour:"numeric", minute:"2-digit"});
+    return {day, date, time:time + " ET"};
+  }catch(e){ return {day:"", date:"", time:""}; }
+}
+
+/* ---- templates ---- */
+function spBrand(){ return '<div class="sp-brand">' + MARK + '<span>Fantasy Founders League</span></div>'; }
+function spShell(fmt, cls, inner){
+  return '<div class="sp ' + fmt + ' ' + cls + '">' + SP_RINGS + inner + '</div>';
+}
+function spNews(fmt){
+  const f = soCur.fields, ctx = soCtx();
+  const img = f.image || null;
+  const lay = img ? (f.layout || "text") : "text";
+  const foc = f.focal || {x:50, y:50};
+  const ev = ctx.score ? EV[ctx.score.event] : null;
+  const stats = (f.stats || []).filter(Boolean).map(s =>
+    '<div class="sp-stat ' + esc(s.tone || "") + '"><b>' + esc(s.value) + '</b><span>' + esc(s.label) + '</span></div>').join("");
+  return spShell(fmt, "news lay-" + lay + " sz-" + (f.size || "m").toLowerCase(),
+    (lay !== "text" ? '<div class="sp-img" data-sp-img style="background-image:url(\'' + img + '\');background-position:' + foc.x + '% ' + foc.y + '%"></div>' : '') +
+    '<header class="sp-top">' + spBrand() + '</header>' +
+    '<main class="sp-body">' +
+      (f.chip ? '<p class="sp-chip"><b>' + esc(f.chip) + '</b>' + (ev ? '<span>' + esc(ev.short) + '</span>' : '') + '</p>' : '') +
+      '<h1 class="sp-h">' + esc(f.headline || "") + '</h1>' +
+      (f.subhead ? '<p class="sp-dek">' + esc(f.subhead) + '</p>' : '') +
+    '</main>' +
+    '<footer class="sp-foot"><div class="sp-stats">' + stats + '</div><p class="sp-url">ffl.zadok.dev</p></footer>');
+}
+function spAngle(){
+  const ctx = soCtx(), s = ctx.startup || {}, sc = ctx.score, ex = ctx.exposure || {};
+  const ev = sc ? EV[sc.event] : null;
+  const tone = sc ? (sc.points > 0 ? "gain" : sc.points < 0 ? "loss" : "") : "";
+  const gw = sc ? sc.gw : ex.gw;
+  const clause = sc
+    ? 'Scored for <b>' + esc(ev ? ev.label.charAt(0).toLowerCase() + ev.label.slice(1) : sc.event) + '</b> in Gameweek ' + sc.gw + '. Funds that made ' + esc(s.name) + ' their lead score double.'
+    : 'Not scored for this story. ' + esc(s.name) + ' costs ' + money(s.cost_millions || 0) + ' of a fund\u2019s $100M.';
+  const rows = [];
+  if(sc){ rows.push(["Points", pts(sc.points), tone]); rows.push(["Lead funds", pts(sc.points * 2), tone]); }
+  if(ex.funds) rows.push(["Funds holding", ex.holders + " of " + ex.funds, ""]);
+  if(ex.funds) rows.push(["Held as lead", String(ex.leads), ""]);
+  rows.push(["Price", money(s.cost_millions || 0), ""]);
+  if(rows.length % 2) rows.push(["Stage", stageName(s.tier) || "", ""]);
+  return spShell("ig", "angle",
+    '<header class="sp-top">' + spBrand() + '</header>' +
+    '<div class="sp-cert"><div class="sp-cert-in">' +
+      '<div class="sp-cert-top"><span>No. ' + esc(serial(soCur.id)) + '</span><span>' + (gw ? "Gameweek " + gw : "") + '</span></div>' +
+      '<h2 class="sp-cert-name">' + esc(s.name || "") + '</h2>' +
+      '<p class="sp-cert-clause">' + clause + '</p>' +
+      '<dl class="sp-cert-rows">' + rows.map(r => '<div><dt>' + r[0] + '</dt><dd class="' + r[2] + '">' + esc(r[1]) + '</dd></div>').join("") + '</dl>' +
+      '<div class="sp-cert-foot"><p class="sp-sig">The Commissioner<small>Fantasy Founders League</small></p>' +
+        '<div class="sp-seal">' + SEAL + '<span class="sp-seal-in"><b class="' + tone + '">' + (sc ? pts(sc.points) : money(s.cost_millions || 0)) + '</b><small>' + (sc ? "points" : "price") + '</small></span></div></div>' +
+    '</div></div>' +
+    '<footer class="sp-foot" style="border:0;padding:0"><span></span><p class="sp-url">ffl.zadok.dev</p></footer>');
+}
+function spCta(){
+  return spShell("ig", "cta",
+    '<header class="sp-top">' + spBrand() + '</header>' +
+    '<main class="sp-body"><h1 class="sp-cta"><span>You get</span><span>$100M.</span><span>Write five</span><span>checks.</span></h1>' +
+    '<p class="sp-cta-sub">Fantasy football for startups. Free to play.</p><p class="sp-cta-url">ffl.zadok.dev</p></main>');
+}
+function spWeekly(fmt){
+  const f = soCur.fields, ctx = soCtx(), k = soCur.kind;
+  let chip = "", list = "";
+  if(k === "deadline"){
+    const d = soEtDeadline(ctx.next_deadline);
+    chip = '<b>Gameweek ' + ctx.next_gw + '</b><span>Locks ' + esc(d.day + " " + d.time) + '</span>';
+    const rows = (ctx.most_owned || []).slice(0, 5);
+    list = rows.length ? '<div><p class="sp-rows-h">Most owned</p><ol class="sp-rows">' + rows.map((m, i) =>
+      '<li><span class="n">' + (i + 1) + '</span><span class="nm">' + esc(m.name) + '<small>' + (m.leads ? plural(m.leads, "fund", "funds") + " with it as lead" : money(m.cost_millions)) + '</small></span>' +
+      '<span class="v">' + m.holders + '<small>of ' + ctx.funds + ' funds</small></span></li>').join("") + '</ol></div>' : '';
+  }else if(k === "table"){
+    chip = '<b>Gameweek ' + ctx.last_scored_gw + '</b><span>League table</span>';
+    const rows = (ctx.table || []).slice(0, fmt === "x" ? 6 : 8);
+    list = '<ol class="sp-rows' + (fmt === "x" ? " dense" : "") + '">' + rows.map(r =>
+      '<li><span class="n">' + r.rank + '</span><span class="nm">' + esc(r.fund_name) + (r.is_house ? '<span class="house">House</span>' : '') +
+      '<small>' + (r.is_house ? "Fund to beat" : "GP " + esc(r.display_name)) + '</small></span>' +
+      '<span class="v">' + r.total_points + '<small class="' + pcls(r.week_points) + '">' + pts(r.week_points) + ' this week</small></span></li>').join("") + '</ol>';
+  }else{
+    chip = '<b>Gameweek ' + ctx.last_scored_gw + '</b><span>Movers</span>';
+    const all = ctx.movers || [];
+    const up = all.filter(m => m.points > 0).slice(0, 3), down = all.filter(m => m.points < 0).slice(-3).reverse();
+    const row = m => {
+      const e = (m.events || [])[0] || {};
+      const why = e.note || (EV[e.event] ? EV[e.event].short : "");
+      return '<li><span class="n"></span><span class="nm">' + esc(m.name) + '<small>' + esc(why) + '</small></span>' +
+        '<span class="v ' + (m.points > 0 ? "gain" : "loss") + '">' + pts(m.points) + '</span></li>';
+    };
+    list = '<div>' + (up.length ? '<p class="sp-rows-h">Up</p><ol class="sp-rows">' + up.map(row).join("") + '</ol>' : '') +
+      (down.length ? '<p class="sp-rows-h" style="margin-top:28px">Down</p><ol class="sp-rows">' + down.map(row).join("") + '</ol>' : '') + '</div>';
+  }
+  return spShell(fmt, "weekly sz-" + (f.size || "m").toLowerCase(),
+    '<header class="sp-top">' + spBrand() + (fmt === "x" ? '<p class="sp-url">ffl.zadok.dev</p>' : '') + '</header>' +
+    '<div class="sp-wk"><div><p class="sp-chip">' + chip + '</p><h1 class="sp-h">' + esc(f.headline || "") + '</h1>' +
+      (f.subhead ? '<p class="sp-dek">' + esc(f.subhead) + '</p>' : '') + '</div>' + list + '</div>' +
+    (fmt === "ig" ? '<footer class="sp-foot" style="border:0;padding:0;flex-direction:row;justify-content:flex-end"><p class="sp-url">ffl.zadok.dev</p></footer>' : ''));
+}
+function soViews(){
+  if(!soCur) return [];
+  if(soCur.kind === "news"){
+    const c = soF("carousel") || {};
+    const v = [{key:"x", label:"X", fmt:"x", html:() => spNews("x")}, {key:"ig1", label:"IG 1", fmt:"ig", html:() => spNews("ig")}];
+    if(c.angle && soCtx().startup) v.push({key:"ig2", label:"IG " + (v.length), fmt:"ig", html:spAngle});
+    if(c.cta) v.push({key:"ig" + v.length, label:"IG " + v.length, fmt:"ig", html:spCta});
+    return v;
+  }
+  return [{key:"x", label:"X", fmt:"x", html:() => spWeekly("x")}, {key:"ig1", label:"Instagram", fmt:"ig", html:() => spWeekly("ig")}];
+}
+
+/* ---- network ---- */
+async function soFn(body){
+  const r = await fetch(FN_SOCIAL, {
+    method:"POST",
+    headers:{"Authorization":"Bearer " + ANON_JWT, "Content-Type":"application/json"},
+    body:JSON.stringify(Object.assign({token:session.token}, body))
+  });
+  const j = await r.json().catch(() => ({}));
+  if(!r.ok || j.error){
+    const msg = j.error || "The drafting service didn't answer. Try again in a minute.";
+    if(/session expired|sign in to continue/i.test(msg)) expire();
+    throw new Error(msg);
+  }
+  return j;
+}
+function soLoadScript(src){
+  return new Promise((ok, bad) => {
+    if(document.querySelector('script[src="' + src + '"]')) return ok();
+    const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = () => bad(new Error("Couldn't load the image exporter. Check your connection."));
+    document.head.appendChild(s);
+  });
+}
+
+/* ---- list ---- */
+function soShowList(){
+  soCur = null; clearTimeout(soSaveTimer);
+  $("so-edit").hidden = true; $("so-list-wrap").hidden = false;
+  loadPosts();
+}
+async function loadPosts(){
+  $("so-sub").textContent = "Loading…";
+  document.querySelectorAll("#so-filter [data-sof]").forEach(c => c.setAttribute("aria-selected", String(c.dataset.sof === soFilter)));
+  let items;
+  try{ items = await call("admin_posts", Object.assign(T(), {p_status:soFilter === "all" ? null : soFilter})) || []; }
+  catch(e){ $("so-sub").textContent = e.message; $("so-list").innerHTML = ""; return; }
+  $("so-sub").textContent = items.length ? plural(items.length, "post", "posts") + ". Tap one to edit it."
+    : soFilter === "draft" ? "No drafts. Make one from a scored story in Scoring, from a link, or from the weekly buttons above." : "Nothing here yet.";
+  $("so-list").innerHTML = items.map(p => {
+    const meta = [SO_KIND[p.kind], p.startup_name, p.gw ? "GW" + p.gw : null,
+      p.status === "posted" && p.posted_at ? "Posted " + ago(p.posted_at) : "Updated " + ago(p.updated_at)].filter(Boolean).join(". ") + ".";
+    return '<li><button class="fl" type="button" data-post="' + p.id + '"><span><b>' + esc(p.headline || p.source_title || "Untitled") + '</b>' +
+      (p.flag_count ? '<span class="tag warn">' + plural(p.flag_count, "flag", "flags") + '</span>' : '') +
+      '<small class="fl-meta">' + esc(meta) + '</small></span>' +
+      '<span class="tag' + (p.status !== "draft" ? " st-" + p.status : "") + '">' + SO_STATUS[p.status] + '</span></button></li>';
+  }).join("");
+}
+function soSetBusy(text){
+  soBusy = !!text;
+  const b = $("so-busy"); b.hidden = !text; b.textContent = text || "";
+  document.querySelectorAll("#so-new button, #so-linkform button").forEach(x => { x.disabled = !!text; });
+}
+async function soDraft(body, label){
+  if(soBusy) return;
+  showAdm("social");
+  soSetBusy(label || "Drafting in the house voice. This takes about 20 seconds.");
+  try{
+    const r = await soFn(Object.assign({action:"draft"}, body));
+    soSetBusy(null);
+    $("so-linkform").hidden = true;
+    await openPost(r.id);
+    toast("Draft ready. Check it against the source before approving.");
+  }catch(e){ soSetBusy(null); toast(e.message); }
+}
+
+/* ---- editor ---- */
+async function openPost(id){
+  $("so-list-wrap").hidden = true;
+  const el = $("so-edit"); el.hidden = false; el.innerHTML = '<p class="adm-note">Loading…</p>';
+  try{ soCur = await call("admin_post", Object.assign(T(), {p_id:Number(id)})); }
+  catch(e){ el.innerHTML = '<p class="adm-note">' + esc(e.message) + '</p>'; return; }
+  soCur.fields = soCur.fields || {};
+  soDirty = {}; soView = null;
+  renderEditor();
+  window.scrollTo(0, 0);
+}
+function soFieldHTML(d){
+  const v = soF(d.k) || "", c = soCount(d, v), issues = soCheck(d.k, v);
+  const copy = /x_|ig_/.test(d.k) ? '<button class="link so-copy" type="button" data-so="copy" data-k="' + d.k + '">Copy</button>' : '';
+  return '<div class="so-field" data-field="' + d.k + '">' +
+    '<div class="so-fh"><span>' + d.label + (d.where ? ' <small class="so-count">' + d.where + '</small>' : '') + '</span>' +
+      '<span class="so-fh-r"><span class="so-count' + (c.over ? " over" : "") + '" data-count>' + c.text + '</span>' + copy +
+      '<button class="link so-copy" type="button" data-so="rw-open" data-k="' + d.k + '">Rewrite</button></span></div>' +
+    '<textarea class="in in-sm" rows="' + d.rows + '" data-f="' + d.k + '">' + esc(v) + '</textarea>' +
+    '<ul class="so-issues" data-issues>' + issues.map(i => '<li>' + esc(i) + '</li>').join("") + '</ul>' +
+    '<div class="so-rw" data-rw hidden><input class="in in-sm" maxlength="300" placeholder="What should change? Optional, like \u201Cshorter\u201D or \u201Clead with the valuation\u201D">' +
+      '<button class="btn btn-quiet btn-sm" type="button" data-so="rw-go" data-k="' + d.k + '">Rewrite</button></div>' +
+  '</div>';
+}
+function seg(name, opts, cur){
+  return '<div class="so-seg" role="group">' + opts.map(o =>
+    '<button type="button" data-seg="' + name + '" data-v="' + o[0] + '" aria-pressed="' + (o[0] === cur) + '">' + o[1] + '</button>').join("") + '</div>';
+}
+function renderEditor(){
+  const p = soCur, f = p.fields, src = p.source || {}, ctx = soCtx(), news = p.kind === "news";
+  const flags = (p.flags || []);
+  const facts = (f.facts || []);
+  const srcHTML = news
+    ? '<section class="panel so-src"><h3 class="h3">Source</h3>' +
+        (src.url ? '<a href="' + esc(src.url) + '" target="_blank" rel="noopener">' + esc(src.title || src.url) + '</a>' : '<b>' + esc(src.title || "") + '</b>') +
+        '<p class="ib-meta">' + esc([src.outlet, src.published_at ? fmtShort(src.published_at) : null,
+          src.level === "article" ? "Drafted from the article text" : src.level === "pasted" ? "Drafted from text you pasted" : "Drafted from the headline only"].filter(Boolean).join(". ")) + '.</p>' +
+        (facts.length ? '<p class="adm-note" style="margin:10px 0 0">Facts the draft relies on. Check each one against the source.</p><ul class="so-facts">' + facts.map(x => '<li>' + esc(x) + '</li>').join("") + '</ul>' : '') +
+        (flags.length ? '<ul class="so-flags">' + flags.map(x => '<li>' + esc(x) + '</li>').join("") + '</ul>' : '') +
+        (f.image_idea ? '<p class="adm-note" style="margin:12px 0 0">Image idea: ' + esc(f.image_idea) + '</p>' : '') +
+      '</section>'
+    : '<section class="panel so-src"><h3 class="h3">' + SO_KIND[p.kind] + ' post</h3><p class="adm-note" style="margin:0">Numbers on the graphic come straight from the league. Captions were drafted from the same numbers.</p>' +
+        (flags.length ? '<ul class="so-flags">' + flags.map(x => '<li>' + esc(x) + '</li>').join("") + '</ul>' : '') + '</section>';
+
+  const opts = ctx.stat_options || [];
+  const chosen = (f.stats || []).filter(Boolean);
+  const statsHTML = news && opts.length ? '<div class="so-field"><div class="so-fh"><span>Numbers on the graphic <small class="so-count">Pick up to 2</small></span></div>' +
+    opts.map(o => {
+      const on = chosen.find(c => c.key === o.key);
+      return '<label class="so-stat"><input type="checkbox" data-stat="' + o.key + '"' + (on ? " checked" : "") + (!on && chosen.length >= 2 ? " disabled" : "") + '>' +
+        '<span class="v ' + (o.tone === "gain" ? "pos" : o.tone === "loss" ? "neg" : "") + '">' + esc(o.value) + '</span>' +
+        '<input class="in in-sm" data-stat-label="' + o.key + '" value="' + esc(on ? on.label : o.label) + '"' + (on ? "" : " disabled") + ' aria-label="Label for ' + esc(o.value) + '"></label>';
+    }).join("") + '</div>' : '';
+
+  const img = f.image;
+  const layoutHTML = news
+    ? '<div class="so-row2"><span>Layout</span>' + seg("layout", [["text", "Text"], ["image", "Image"], ["full", "Full bleed"]], img ? (f.layout || "text") : "text") +
+        '<span>Size</span>' + seg("size", [["S", "S"], ["M", "M"], ["L", "L"]], (f.size || "M").toUpperCase()) + '</div>' +
+      '<div class="so-field"><div class="so-imgrow">' +
+        '<label class="btn btn-quiet btn-sm">' + (img ? "Replace image" : "Add image") + '<input type="file" accept="image/*" data-so="img" hidden></label>' +
+        (img ? '<button class="link" type="button" data-so="img-rm">Remove image</button><span class="adm-note">Drag on the preview to set the focus.</span>'
+             : '<span class="adm-note">Use press images from the company\u2019s newsroom, never photos from the article.</span>') +
+      '</div></div>' +
+      '<div class="so-field"><label class="so-check"><input type="checkbox" data-car="angle"' + ((f.carousel || {}).angle ? " checked" : "") + (ctx.startup ? "" : " disabled") + '>Add the certificate slide to the carousel</label>' +
+        '<label class="so-check"><input type="checkbox" data-car="cta"' + ((f.carousel || {}).cta ? " checked" : "") + '>Add the join slide to the carousel</label></div>'
+    : '<div class="so-row2"><span>Headline size</span>' + seg("size", [["S", "S"], ["M", "M"], ["L", "L"]], (f.size || "M").toUpperCase()) + '</div>';
+
+  const st = p.status;
+  const actions = '<div class="so-actions">' +
+    (st === "draft" ? '<button class="btn btn-primary btn-sm" type="button" data-so="approve">Approve</button>' : '') +
+    (st !== "posted" ? '<button class="btn ' + (st === "approved" ? "btn-primary" : "btn-quiet") + ' btn-sm" type="button" data-so="posted-open">Mark as posted</button>' : '') +
+    (st !== "draft" ? '<button class="link" type="button" data-so="to-draft">Move back to drafts</button>' : '') +
+    '<button class="link danger-link" type="button" data-so="delete" style="color:var(--loss)">Delete</button>' +
+    '<span class="so-saved" id="so-saved">' + (st === "posted" && p.posted_at ? "Posted " + fmtDate(p.posted_at) + "." : "") + '</span>' +
+    '<div class="so-posted" id="so-posted" hidden>' +
+      '<input class="in in-sm" id="so-xurl" placeholder="Link to the X post (optional)" value="' + esc(p.posted_x_url || "") + '">' +
+      '<input class="in in-sm" id="so-igurl" placeholder="Link to the Instagram post (optional)" value="' + esc(p.posted_ig_url || "") + '">' +
+      '<div><button class="btn btn-primary btn-sm" type="button" data-so="posted">Save as posted</button></div></div>' +
+  '</div>';
+
+  $("so-edit").innerHTML =
+    '<div class="fd-top"><button class="link" type="button" data-so="back">All posts</button>' +
+      '<h2 class="h2">' + esc(f.headline || "Untitled") + '</h2>' +
+      '<p class="sub">' + SO_KIND[p.kind] + (p.startup_name ? ". " + esc(p.startup_name) : "") + '. <span class="tag' + (st !== "draft" ? " st-" + st : "") + '" style="margin:0">' + SO_STATUS[st] + '</span></p></div>' +
+    '<div class="so-edit"><div>' + srcHTML +
+      '<section class="panel" style="margin-top:16px">' +
+        SO_TEXT.filter(d => news || !d.news).slice(0, 2).map(soFieldHTML).join("") +
+        statsHTML + layoutHTML +
+        SO_TEXT.filter(d => news || !d.news).slice(2).map(soFieldHTML).join("") +
+        actions +
+      '</section></div>' +
+      '<div class="so-side"><div class="chips so-tabs" id="so-tabs" role="tablist"></div>' +
+        '<div class="so-frame" id="so-frame"></div>' +
+        '<div class="so-dl"><button class="btn btn-quiet btn-sm" type="button" data-so="dl">Download this image</button>' +
+        '<button class="btn btn-quiet btn-sm" type="button" data-so="dl-all">Download all</button><span class="so-saved" id="so-dlmsg"></span></div>' +
+      '</div></div>';
+  renderPreview();
+}
+function renderPreview(){
+  const views = soViews();
+  if(!views.find(v => v.key === soView)) soView = views[0].key;
+  $("so-tabs").innerHTML = views.map(v => '<button class="chip" type="button" role="tab" data-view="' + v.key + '" aria-selected="' + (v.key === soView) + '">' + v.label + '</button>').join("");
+  const v = views.find(x => x.key === soView);
+  const frame = $("so-frame");
+  frame.innerHTML = v.html();
+  soFit();
+}
+function soFit(){
+  const frame = $("so-frame"); if(!frame || !frame.firstElementChild) return;
+  const v = soViews().find(x => x.key === soView); if(!v) return;
+  const [w, h] = SP_SIZE[v.fmt];
+  const s = frame.clientWidth / w;
+  frame.style.height = Math.round(h * s) + "px";
+  frame.firstElementChild.style.transform = "scale(" + s + ")";
+}
+function setField(k, v, rerender){
+  soCur.fields[k] = v;
+  soDirty[k] = v === undefined ? null : v;
+  clearTimeout(soSaveTimer);
+  const saved = $("so-saved"); if(saved) saved.textContent = "Unsaved changes";
+  soSaveTimer = setTimeout(soSave, 1200);
+  if(rerender) renderEditor(); else soPreviewSoon();
+}
+let soRaf = 0;
+function soPreviewSoon(){ cancelAnimationFrame(soRaf); soRaf = requestAnimationFrame(() => { if(soCur && $("so-frame")) renderPreview(); }); }
+async function soSave(){
+  clearTimeout(soSaveTimer);
+  if(!soCur || !Object.keys(soDirty).length) return true;
+  const patch = soDirty; soDirty = {};
+  try{
+    await call("admin_post_save", Object.assign(T(), {p_id:soCur.id, p_fields:patch, p_status:null, p_x_url:null, p_ig_url:null}));
+    const saved = $("so-saved"); if(saved) saved.textContent = "Saved";
+    return true;
+  }catch(e){
+    soDirty = Object.assign(patch, soDirty);
+    const saved = $("so-saved"); if(saved) saved.textContent = e.message;
+    return false;
+  }
+}
+async function soStatus(status){
+  if(!(await soSave())) return;
+  const args = Object.assign(T(), {p_id:soCur.id, p_fields:null, p_status:status,
+    p_x_url:status === "posted" ? $("so-xurl").value : null, p_ig_url:status === "posted" ? $("so-igurl").value : null});
+  try{
+    await call("admin_post_save", args);
+    toast(status === "approved" ? "Approved. Approved posts teach the drafts your voice." : status === "posted" ? "Marked as posted." : "Back in drafts.");
+    if(status === "posted") soFilter = "posted";
+    openPost(soCur.id);
+  }catch(e){ toast(e.message); }
+}
+async function soRewrite(k, note, btn){
+  btn.disabled = true; btn.textContent = "Rewriting…";
+  await soSave();
+  try{
+    const r = await soFn({action:"regenerate", post_id:soCur.id, field:k, note:note || ""});
+    setField(k, r.value, false);
+    const box = document.querySelector('.so-field[data-field="' + k + '"]');
+    if(box){ box.querySelector("textarea").value = r.value; soFieldUpdate(k); box.querySelector("[data-rw]").hidden = true; }
+    if(r.flags && r.flags.length) toast(r.flags[0]);
+  }catch(e){ toast(e.message); }
+  btn.disabled = false; btn.textContent = "Rewrite";
+}
+function soFieldUpdate(k){
+  const box = document.querySelector('.so-field[data-field="' + k + '"]'); if(!box) return;
+  const d = SO_TEXT.find(x => x.k === k), v = soF(k), c = soCount(d, v);
+  const cnt = box.querySelector("[data-count]"); cnt.textContent = c.text; cnt.className = "so-count" + (c.over ? " over" : "");
+  box.querySelector("[data-issues]").innerHTML = soCheck(k, v).map(i => '<li>' + esc(i) + '</li>').join("");
+}
+function soCopy(text, btn){
+  const done = () => { btn.textContent = "Copied"; setTimeout(() => { btn.textContent = "Copy"; }, 1600); };
+  try{ navigator.clipboard.writeText(text).then(done, () => toast("Couldn't copy. Select the text and copy it.")); }
+  catch(e){ toast("Couldn't copy. Select the text and copy it."); }
+}
+function soImage(file){
+  if(!file) return;
+  if(!/^image\//.test(file.type)) return toast("That isn't an image.");
+  const url = URL.createObjectURL(file);
+  const im = new Image();
+  im.onload = () => {
+    const max = 1800, s = Math.min(1, max / Math.max(im.width, im.height));
+    const c = document.createElement("canvas"); c.width = Math.round(im.width * s); c.height = Math.round(im.height * s);
+    c.getContext("2d").drawImage(im, 0, 0, c.width, c.height);
+    let q = .86, data = c.toDataURL("image/jpeg", q);
+    while(data.length > 1900000 && q > .5){ q -= .1; data = c.toDataURL("image/jpeg", q); }
+    URL.revokeObjectURL(url);
+    soCur.fields.focal = {x:50, y:50}; soDirty.focal = soCur.fields.focal;
+    if(!soCur.fields.layout || soCur.fields.layout === "text"){ soCur.fields.layout = "image"; soDirty.layout = "image"; }
+    setField("image", data, true);
+  };
+  im.onerror = () => { URL.revokeObjectURL(url); toast("Couldn't read that image."); };
+  im.src = url;
+}
+
+/* ---- export ---- */
+async function soExport(keys){
+  const msg = $("so-dlmsg");
+  msg.textContent = "Preparing…";
+  try{
+    await soLoadScript(H2I_SRC);
+    if(document.fonts && document.fonts.ready) await document.fonts.ready;
+    const stage = $("so-stage");
+    for(const key of keys){
+      const v = soViews().find(x => x.key === key); if(!v) continue;
+      const [w, h] = SP_SIZE[v.fmt];
+      stage.innerHTML = v.html();
+      const node = stage.firstElementChild;
+      // Fonts are embedded per slide type: the certificate also needs the script face for its signature.
+      const fk = node.querySelector(".sp-sig") ? "sig" : "base";
+      if(!soFontCSS[fk]) soFontCSS[fk] = await window.htmlToImage.getFontEmbedCSS(node);
+      const png = await window.htmlToImage.toPng(node, {width:w, height:h, pixelRatio:1, fontEmbedCSS:soFontCSS[fk], cacheBust:false});
+      const a = document.createElement("a");
+      a.href = png; a.download = "ffl-" + soCur.id + "-" + key + ".png";
+      document.body.appendChild(a); a.click(); a.remove();
+      await new Promise(r => setTimeout(r, 350));
+    }
+    stage.innerHTML = "";
+    msg.textContent = keys.length > 1 ? plural(keys.length, "image", "images") + " downloaded." : "Downloaded.";
+  }catch(e){ msg.textContent = ""; toast(e.message || "Export failed. Try again."); }
+}
+
+/* ---- wiring ---- */
+function soEditClick(e){
+  const view = e.target.closest("[data-view]");
+  if(view){ soView = view.dataset.view; renderPreview(); return; }
+  const sg = e.target.closest("[data-seg]");
+  if(sg){
+    if(sg.dataset.seg === "layout" && sg.dataset.v !== "text" && !soF("image")){ toast("Add an image first."); return; }
+    setField(sg.dataset.seg, sg.dataset.v, true); return;
+  }
+  const b = e.target.closest("[data-so]");
+  if(!b) return;
+  const act = b.dataset.so, k = b.dataset.k;
+  if(act === "back"){ soSave().then(soShowList); return; }
+  if(act === "copy"){ soCopy(soF(k) || "", b); return; }
+  if(act === "rw-open"){ const box = b.closest(".so-field").querySelector("[data-rw]"); box.hidden = !box.hidden; if(!box.hidden) box.querySelector("input").focus(); return; }
+  if(act === "rw-go"){ soRewrite(k, b.closest("[data-rw]").querySelector("input").value.trim(), b); return; }
+  if(act === "img-rm"){ soCur.fields.layout = "text"; soDirty.layout = "text"; setField("image", undefined, true); delete soCur.fields.image; return; }
+  if(act === "approve"){ soStatus("approved"); return; }
+  if(act === "to-draft"){ soStatus("draft"); return; }
+  if(act === "posted-open"){ const box = $("so-posted"); box.hidden = !box.hidden; return; }
+  if(act === "posted"){ soStatus("posted"); return; }
+  if(act === "dl"){ soExport([soView]); return; }
+  if(act === "dl-all"){ soExport(soViews().map(v => v.key)); return; }
+  if(act === "delete"){
+    if(!b.dataset.armed){
+      b.dataset.armed = "1"; b.textContent = "Tap again to delete";
+      setTimeout(() => { if(b.isConnected){ b.textContent = "Delete"; delete b.dataset.armed; } }, 4000);
+      return;
+    }
+    clearTimeout(soSaveTimer); soDirty = {};
+    call("admin_post_delete", Object.assign(T(), {p_id:soCur.id})).then(() => { toast("Deleted."); soShowList(); }, err => toast(err.message));
+  }
+}
+function soEditInput(e){
+  const t = e.target;
+  if(t.dataset.f){ soCur.fields[t.dataset.f] = t.value; soFieldUpdate(t.dataset.f); setField(t.dataset.f, t.value, false); return; }
+  if(t.dataset.statLabel){
+    const s = (soCur.fields.stats || []).find(x => x && x.key === t.dataset.statLabel);
+    if(s){ s.label = t.value; setField("stats", soCur.fields.stats, false); }
+  }
+}
+function soEditChange(e){
+  const t = e.target;
+  if(t.dataset.so === "img"){ soImage(t.files && t.files[0]); t.value = ""; return; }
+  if(t.dataset.car){ const c = Object.assign({}, soF("carousel") || {}); c[t.dataset.car] = t.checked; setField("carousel", c, false); return; }
+  if(t.dataset.stat){
+    const opt = (soCtx().stat_options || []).find(o => o.key === t.dataset.stat);
+    let list = (soF("stats") || []).filter(Boolean);
+    if(t.checked && opt && list.length < 2) list.push(Object.assign({}, opt));
+    if(!t.checked) list = list.filter(x => x.key !== t.dataset.stat);
+    setField("stats", list, true);
+  }
+}
+let soDrag = false;
+function soFocal(e){
+  const el = e.target.closest && e.target.closest("[data-sp-img]");
+  if(!el) return;
+  const r = el.getBoundingClientRect();
+  const x = Math.max(0, Math.min(100, Math.round((e.clientX - r.left) / r.width * 100)));
+  const y = Math.max(0, Math.min(100, Math.round((e.clientY - r.top) / r.height * 100)));
+  el.style.backgroundPosition = x + "% " + y + "%";
+  soCur.fields.focal = {x, y};
+}
+function soWire(){
+  $("so-new").addEventListener("click", e => {
+    const b = e.target.closest("[data-new]"); if(!b) return;
+    if(b.dataset.new === "link"){
+      const f = $("so-linkform"); f.hidden = !f.hidden;
+      if(!f.hidden){ $("so-l-co").innerHTML = '<option value="">Not in the pool</option>' + companyOptions(); $("so-l-url").focus(); }
+      return;
+    }
+    soDraft({kind:b.dataset.new}, "Drafting the " + SO_KIND[b.dataset.new].toLowerCase() + " post. This takes about 20 seconds.");
+  });
+  $("so-linkform").addEventListener("submit", e => {
+    e.preventDefault();
+    const url = $("so-l-url").value.trim(), text = $("so-l-text").value.trim(), title = $("so-l-title").value.trim();
+    if(!url && !text) return toast("Paste a link or the article text.");
+    if(url && !/^https?:\/\//i.test(url)) return toast("Links start with http:// or https://.");
+    const sid = Number($("so-l-co").value) || null;
+    soDraft({kind:"news", url, text, title, startup_id:sid});
+  });
+  $("so-filter").addEventListener("click", e => { const c = e.target.closest("[data-sof]"); if(c){ soFilter = c.dataset.sof; loadPosts(); } });
+  $("so-list").addEventListener("click", e => { const b = e.target.closest("[data-post]"); if(b) openPost(b.dataset.post); });
+  const ed = $("so-edit");
+  ed.addEventListener("click", soEditClick);
+  ed.addEventListener("input", soEditInput);
+  ed.addEventListener("change", soEditChange);
+  ed.addEventListener("pointerdown", e => { if(e.target.closest("[data-sp-img]")){ soDrag = true; e.preventDefault(); soFocal(e); } });
+  window.addEventListener("pointermove", e => { if(soDrag) soFocal(e); });
+  window.addEventListener("pointerup", () => { if(soDrag){ soDrag = false; setField("focal", soCur.fields.focal, false); } });
+  window.addEventListener("resize", soFit);
+  window.addEventListener("beforeunload", () => { if(soCur && Object.keys(soDirty).length) soSave(); });
+}
+function loadSocial(){
+  if(!startups.length) fetchPool();
+  if(!soCur) soShowList();
+}
+soWire();
 
 setInterval(tickCountdowns, 30000);
 
