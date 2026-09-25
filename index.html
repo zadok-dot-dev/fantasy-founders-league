@@ -724,6 +724,10 @@ textarea.in{resize:vertical;line-height:1.45;font-size:15px;min-height:0}
 .so-frame .sp-img{cursor:crosshair}
 .so-frame .sp-top,.so-frame .sp-body,.so-frame .sp-foot{pointer-events:none}
 .so-dl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+.so-ready{margin-top:12px;display:grid;gap:10px;justify-items:start}
+.so-ready .adm-note{margin:0}
+.so-ready-imgs{display:flex;gap:8px;overflow-x:auto;max-width:100%}
+.so-ready-imgs img{height:180px;width:auto;border-radius:8px;flex:none;-webkit-touch-callout:default}
 .so-actions{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
 .so-saved{font-size:13px;color:var(--ink-3)}
 .so-posted{display:grid;gap:8px;margin-top:12px}
@@ -3126,6 +3130,7 @@ function seg(name, opts, cur){
     '<button type="button" data-seg="' + name + '" data-v="' + o[0] + '" aria-pressed="' + (o[0] === cur) + '">' + o[1] + '</button>').join("") + '</div>';
 }
 function renderEditor(){
+  soClearReady();
   const p = soCur, f = p.fields, src = p.source || {}, ctx = soCtx(), news = p.kind === "news";
   const flags = Array.isArray(p.flags) ? p.flags : (p.flags ? [String(p.flags)] : []);
   const facts = (f.facts || []);
@@ -3192,6 +3197,7 @@ function renderEditor(){
         '<div class="so-frame" id="so-frame"></div>' +
         '<div class="so-dl"><button class="btn btn-quiet btn-sm" type="button" data-so="dl">Download this image</button>' +
         '<button class="btn btn-quiet btn-sm" type="button" data-so="dl-all">Download all</button><span class="so-saved" id="so-dlmsg"></span></div>' +
+        '<div class="so-ready" id="so-ready" hidden></div>' +
       '</div></div>';
   renderPreview();
 }
@@ -3214,6 +3220,7 @@ function soFit(){
 }
 function setField(k, v, rerender){
   soCur.fields[k] = v;
+  soClearReady();
   soDirty[k] = v === undefined ? null : v;
   clearTimeout(soSaveTimer);
   const saved = $("so-saved"); if(saved) saved.textContent = "Unsaved changes";
@@ -3291,29 +3298,66 @@ function soImage(file){
 }
 
 /* ---- export ---- */
+// Phones only save a file from a tap that is still fresh, and rendering takes seconds, so on touch screens
+// the images are rendered first and saved from a second tap through the share sheet (or a long press).
+const SO_TOUCH = !!(window.matchMedia && matchMedia("(pointer: coarse)").matches);
+const SO_WEBKIT = /AppleWebKit/.test(navigator.userAgent) && !/Chrome|Chromium|Android/.test(navigator.userAgent);
+let soReady = [];
+async function soRender(keys){
+  await soLoadScript(H2I_SRC);
+  if(document.fonts && document.fonts.ready) await document.fonts.ready;
+  const stage = $("so-stage"), out = [];
+  for(const key of keys){
+    const v = soViews().find(x => x.key === key); if(!v) continue;
+    const [w, h] = SP_SIZE[v.fmt];
+    stage.innerHTML = v.html();
+    const node = stage.firstElementChild;
+    // Fonts are embedded per slide type: the certificate also needs the script face for its signature.
+    const fk = node.querySelector(".sp-sig") ? "sig" : "base";
+    if(!soFontCSS[fk]) soFontCSS[fk] = await window.htmlToImage.getFontEmbedCSS(node);
+    const opts = {width:w, height:h, pixelRatio:1, fontEmbedCSS:soFontCSS[fk], cacheBust:false};
+    // Safari can drop fonts and images from the first render of a node; the second one is complete.
+    if(SO_WEBKIT) await window.htmlToImage.toBlob(node, opts);
+    const blob = await window.htmlToImage.toBlob(node, opts);
+    if(!blob) throw new Error("Couldn't draw the image. Try again.");
+    out.push(new File([blob], "ffl-" + soCur.id + "-" + key + ".png", {type:"image/png"}));
+  }
+  stage.innerHTML = "";
+  return out;
+}
+function soClearReady(){
+  soReady.forEach(r => URL.revokeObjectURL(r.url));
+  soReady = [];
+  const box = $("so-ready"); if(box){ box.hidden = true; box.innerHTML = ""; }
+}
+function soOffer(files){
+  soClearReady();
+  soReady = files.map(f => ({file:f, url:URL.createObjectURL(f)}));
+  const share = navigator.canShare && navigator.canShare({files});
+  const box = $("so-ready");
+  box.innerHTML = (share ? '<button class="btn btn-primary btn-sm" type="button" data-so="share">' + (files.length > 1 ? "Save or share " + files.length + " images" : "Save or share image") + '</button>' : '') +
+    '<p class="adm-note">' + (share ? "Or press and hold an image to save it." : "Press and hold an image, then choose Save.") + '</p>' +
+    '<div class="so-ready-imgs">' + soReady.map(r => '<img src="' + r.url + '" alt="' + esc(r.file.name) + '">').join("") + '</div>';
+  box.hidden = false;
+}
+async function soShare(){
+  try{ await navigator.share({files:soReady.map(r => r.file)}); }
+  catch(e){ if(e.name !== "AbortError") toast("Couldn't open the share sheet. Press and hold an image to save it."); }
+}
 async function soExport(keys){
   const msg = $("so-dlmsg");
   msg.textContent = "Preparing…";
   try{
-    await soLoadScript(H2I_SRC);
-    if(document.fonts && document.fonts.ready) await document.fonts.ready;
-    const stage = $("so-stage");
-    for(const key of keys){
-      const v = soViews().find(x => x.key === key); if(!v) continue;
-      const [w, h] = SP_SIZE[v.fmt];
-      stage.innerHTML = v.html();
-      const node = stage.firstElementChild;
-      // Fonts are embedded per slide type: the certificate also needs the script face for its signature.
-      const fk = node.querySelector(".sp-sig") ? "sig" : "base";
-      if(!soFontCSS[fk]) soFontCSS[fk] = await window.htmlToImage.getFontEmbedCSS(node);
-      const png = await window.htmlToImage.toPng(node, {width:w, height:h, pixelRatio:1, fontEmbedCSS:soFontCSS[fk], cacheBust:false});
-      const a = document.createElement("a");
-      a.href = png; a.download = "ffl-" + soCur.id + "-" + key + ".png";
+    const files = await soRender(keys);
+    if(SO_TOUCH){ msg.textContent = files.length > 1 ? plural(files.length, "image", "images") + " ready." : "Ready."; soOffer(files); return; }
+    for(const f of files){
+      const url = URL.createObjectURL(f), a = document.createElement("a");
+      a.href = url; a.download = f.name;
       document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
       await new Promise(r => setTimeout(r, 350));
     }
-    stage.innerHTML = "";
-    msg.textContent = keys.length > 1 ? plural(keys.length, "image", "images") + " downloaded." : "Downloaded.";
+    msg.textContent = files.length > 1 ? plural(files.length, "image", "images") + " downloaded." : "Downloaded.";
   }catch(e){ msg.textContent = ""; toast(e.message || "Export failed. Try again."); }
 }
 
@@ -3334,6 +3378,7 @@ function soEditClick(e){
   if(act === "rw-open"){ const box = b.closest(".so-field").querySelector("[data-rw]"); box.hidden = !box.hidden; if(!box.hidden) box.querySelector("input").focus(); return; }
   if(act === "rw-go"){ soRewrite(k, b.closest("[data-rw]").querySelector("input").value.trim(), b); return; }
   if(act === "img-rm"){ soCur.fields.layout = "text"; soDirty.layout = "text"; setField("image", undefined, true); delete soCur.fields.image; return; }
+  if(act === "share"){ soShare(); return; }
   if(act === "approve"){ soStatus("approved"); return; }
   if(act === "to-draft"){ soStatus("draft"); return; }
   if(act === "posted-open"){ const box = $("so-posted"); box.hidden = !box.hidden; return; }
