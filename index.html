@@ -859,6 +859,15 @@ textarea.in{resize:vertical;line-height:1.45;font-size:15px;min-height:0}
 .sp.x .sp-rows.dense .nm{font-size:29px}
 .sp.x .sp-rows.dense .v{font-size:32px}
 .sp.x .sp-rows.dense .nm small{display:none}
+.sp.ig .sp-rows.dense li{padding:9px 0}
+.sp.ig .sp-rows.dense .nm{font-size:30px}
+.sp.ig .sp-rows.dense .v{font-size:32px}
+.sp.ig .sp-rows.dense .nm small{display:none}
+.sp-rows.nn li{grid-template-columns:minmax(0,1fr) auto}
+.sp-rows.two{display:grid;grid-template-columns:1fr 1fr;column-gap:44px}
+.sp-out{margin-top:28px;font-size:26px;line-height:1.35;color:var(--i2)}
+.sp.ig .sp-out{font-size:29px}
+.sp-out b{font-stretch:110%;font-weight:760;color:var(--dn);margin-right:14px}
 @media (max-width:1039px){.so-side{order:-1}}
 </style>
 </head>
@@ -1177,6 +1186,7 @@ textarea.in{resize:vertical;line-height:1.45;font-size:15px;min-height:0}
           <button class="btn btn-quiet btn-sm" type="button" data-new="deadline">Deadline post</button>
           <button class="btn btn-quiet btn-sm" type="button" data-new="table">Table post</button>
           <button class="btn btn-quiet btn-sm" type="button" data-new="movers">Movers post</button>
+          <button class="btn btn-quiet btn-sm" type="button" data-new="draft">Draft news post</button>
         </div>
         <form class="panel form-grid so-linkform" id="so-linkform" hidden novalidate>
           <label class="field"><span>Link to the story</span><input class="in in-sm" id="so-l-url" type="url" inputmode="url" placeholder="https://" autocomplete="off"></label>
@@ -2839,7 +2849,7 @@ const SP_RINGS = '<img class="sp-rings" alt="" src="data:image/svg+xml;charset=u
     {R:.66, A:.055, lobes:38, count:18, steps:420},
     {R:.44, A:.07,  lobes:24, count:14, steps:300}
   ], .55).replace("<svg ", '<svg xmlns="http://www.w3.org/2000/svg" ').replace('stroke="currentColor"', 'stroke="#3E7C61"')) + '">';
-const SO_KIND = {news:"News", deadline:"Deadline", table:"Table", movers:"Movers"};
+const SO_KIND = {news:"News", deadline:"Deadline", table:"Table", movers:"Movers", draft:"Draft news"};
 const SO_STATUS = {draft:"Draft", approved:"Approved", posted:"Posted"};
 const SO_TEXT = [
   {k:"headline",   label:"Headline",           rows:2, words:12, where:"On the graphic"},
@@ -2979,6 +2989,19 @@ function spWeekly(fmt){
       '<li><span class="n">' + r.rank + '</span><span class="nm">' + esc(r.fund_name) + (r.is_house ? '<span class="house">House</span>' : '') +
       '<small>' + (r.is_house ? "Fund to beat" : "GP " + esc(r.display_name)) + '</small></span>' +
       '<span class="v">' + r.total_points + '<small class="' + pcls(r.week_points) + '">' + pts(r.week_points) + ' this week</small></span></li>').join("") + '</ol>';
+  }else if(k === "draft"){
+    const joined = ctx.joined || [], left = ctx.left || [];
+    chip = '<b>The draft</b><span>' + [joined.length ? joined.length + " joining" : "", left.length ? left.length + " leaving" : ""].filter(Boolean).join(", ") + '</span>';
+    // Joiners get the room: one column with details up to six, then two compact columns. Departures fit on one line.
+    const two = joined.length > 6, cap = two ? (fmt === "x" ? 14 : 12) : 6;
+    const shown = joined.length > cap ? joined.slice(0, cap - 1) : joined, more = joined.length - shown.length;
+    const row = c => '<li><span class="nm">' + esc(c.name) + '<small>' + esc(stageName(c.tier) + " stage" + (c.sector ? ", " + c.sector : "")) + '</small></span>' +
+      '<span class="v">' + money(c.cost_millions) + '</span></li>';
+    const outNames = left.slice(0, 3).map(c => c.name);
+    const outText = left.length > 3 ? outNames.join(", ") + " and " + (left.length - 3) + " more" : outNames.join(left.length === 2 ? " and " : ", ");
+    list = '<div>' + (shown.length ? '<p class="sp-rows-h">Joining</p><ol class="sp-rows nn' + (two ? " dense two" : "") + '">' + shown.map(row).join("") +
+        (more ? '<li><span class="nm">+ ' + more + ' more<small></small></span><span class="v"></span></li>' : '') + '</ol>' : '') +
+      (left.length ? '<p class="sp-out"><b>Leaving</b>' + esc(outText) + '</p>' : '') + '</div>';
   }else{
     chip = '<b>Gameweek ' + ctx.last_scored_gw + '</b><span>Movers</span>';
     const all = ctx.movers || [];
@@ -3365,7 +3388,8 @@ function soWire(){
       if(!f.hidden){ $("so-l-co").innerHTML = '<option value="">Not in the pool</option>' + companyOptions(); $("so-l-url").focus(); }
       return;
     }
-    soDraft({kind:b.dataset.new}, "Drafting the " + SO_KIND[b.dataset.new].toLowerCase() + " post. This takes about 20 seconds.");
+    soDraft({kind:b.dataset.new}, b.dataset.new === "draft" ? "Writing up who’s joining the draft. This takes about 20 seconds."
+      : "Drafting the " + SO_KIND[b.dataset.new].toLowerCase() + " post. This takes about 20 seconds.");
   });
   $("so-linkform").addEventListener("submit", e => {
     e.preventDefault();
