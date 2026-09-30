@@ -18,6 +18,12 @@
 <meta name="twitter:title" content="Fantasy Founders League">
 <meta name="twitter:description" content="You get $100M. Write five checks. Fantasy football for startups.">
 <meta name="theme-color" content="#0F3B2B">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="FFL">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
@@ -873,6 +879,36 @@ textarea.in{resize:vertical;line-height:1.45;font-size:15px;min-height:0}
 .sp.ig .sp-out{font-size:29px}
 .sp-out b{font-stretch:110%;font-weight:760;color:var(--dn);margin-right:14px}
 @media (max-width:1039px){.so-side{order:-1}}
+
+/* ============ claim your fund + notifications ============ */
+.notice{display:grid;gap:10px;background:var(--paper-hi);border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:16px;padding:16px 18px;margin-bottom:22px}
+.notice-h{font-weight:720;font-size:16.5px;font-stretch:106%}
+.notice p{color:var(--ink-2);font-size:15px;max-width:62ch}
+.notice-row{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+.claim-f{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.claim-f .in{flex:1 1 220px;width:auto}
+.claim-f .btn{margin-top:0}
+.hint{font-size:14px;color:var(--ink-2);margin-top:8px}
+.how-to{margin:2px 0 0;padding-left:22px;color:var(--ink-2);font-size:15px}
+.how-to li{padding:3px 0}
+.how-to b{color:var(--ink);font-weight:650}
+.settings-grid{display:grid;gap:18px;margin-top:24px}
+@media (min-width:960px){.settings-grid{grid-template-columns:1fr 1fr;align-items:start}}
+.settings-grid .panel{padding:20px 20px 18px}
+.settings-grid .panel .sub{margin:0 0 14px}
+.set-email{font-weight:680;font-size:17px;overflow-wrap:anywhere}
+.set-actions{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin-top:14px}
+.pick-list{display:grid;gap:8px;margin:0 0 14px;padding:0;border:0;min-width:0}
+.pick-list legend{font-size:14px;font-weight:600;color:var(--ink-2);margin-bottom:6px;padding:0}
+.pick{display:flex;gap:12px;align-items:center;padding:12px 14px;border:1px solid var(--line-2);border-radius:11px;cursor:pointer;background:var(--paper)}
+.pick:has(input:checked){border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.pick b{font-weight:650}
+.pick small{display:block;color:var(--ink-3);font-size:13px}
+.lp-foot .link{color:var(--note-ink);font-weight:600}
+.notify-sec .panel{max-width:620px}
+form[data-claim] .msg:empty{min-height:0;margin:0}
+.notice .sub{margin-top:0}
+@media (max-width:420px){.tabs button{padding:9px 4px;font-size:14px}}
 </style>
 </head>
 <body>
@@ -932,6 +968,7 @@ textarea.in{resize:vertical;line-height:1.45;font-size:15px;min-height:0}
   <section class="lp-sec join-sec" id="join">
     <div class="wrap">
       <div class="join-card">
+        <div id="join-pane">
         <h2 class="h2" id="join-title">Welcome back</h2>
         <p class="sub" id="join-note">Your fund name and PIN. That's it.</p>
         <form id="join-form" novalidate>
@@ -941,8 +978,43 @@ textarea.in{resize:vertical;line-height:1.45;font-size:15px;min-height:0}
           <button class="btn btn-primary btn-block" id="b-go" type="submit">Sign in</button>
         </form>
         <p class="join-alt"><span id="alt-q">New here?</span> <button class="link" id="b-mode" type="button">Raise a fund instead</button></p>
+        <p class="join-alt" id="forgot-row"><button class="link" type="button" data-pane="forgot">Forgot your PIN?</button></p>
         <p class="msg" id="gate-msg" role="status" aria-live="polite"></p>
+        </div>
+
+        <div id="forgot-pane" hidden>
+          <h2 class="h2">Forgot your PIN?</h2>
+          <p class="sub">Enter the email you claimed your fund with. We'll send a link to set a new PIN.</p>
+          <form id="forgot-form" novalidate>
+            <label class="field"><span>Email</span><input class="in js-email" id="fg-email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" maxlength="254"></label>
+            <p class="hint js-typo" hidden style="margin:-6px 0 12px"></p>
+            <button class="btn btn-primary btn-block" id="fg-go" type="submit">Send the link</button>
+          </form>
+          <p class="msg" id="fg-msg" role="status" aria-live="polite"></p>
+          <p class="join-alt">No email on your fund? Contact <a href="mailto:fantasyfoundersleague@gmail.com">fantasyfoundersleague@gmail.com</a>.</p>
+          <p class="join-alt"><button class="link" type="button" data-pane="join">Back to sign in</button></p>
+        </div>
+
+        <div id="reset-pane" hidden>
+          <h2 class="h2">Set a new PIN</h2>
+          <p class="sub" id="rs-note">Checking your link…</p>
+          <form id="reset-form" novalidate hidden>
+            <fieldset class="pick-list" id="rs-funds" hidden></fieldset>
+            <label class="field"><span>New PIN</span><input class="in" id="rs-pin" type="password" inputmode="numeric" autocomplete="new-password" placeholder="At least 4 digits" maxlength="12"></label>
+            <button class="btn btn-primary btn-block" id="rs-go" type="submit">Save PIN and sign in</button>
+          </form>
+          <p class="msg" id="rs-msg" role="status" aria-live="polite"></p>
+          <p class="join-alt"><button class="link" type="button" data-pane="forgot">Send a new link</button> or <button class="link" type="button" data-pane="join">sign in</button></p>
+        </div>
       </div>
+    </div>
+  </section>
+
+  <section class="lp-sec notify-sec" id="notifications" hidden>
+    <div class="wrap">
+      <div class="sec-head"><div><h2 class="h2">Get notifications</h2>
+        <p class="sub">Put FFL on your home screen and hear about deadlines and results without opening the site.</p></div></div>
+      <section class="panel js-notify"></section>
     </div>
   </section>
 
@@ -950,6 +1022,7 @@ textarea.in{resize:vertical;line-height:1.45;font-size:15px;min-height:0}
     <div class="wrap">
       <span class="mark"><span class="js-mark"></span><span>Fantasy Founders League</span></span>
       <p class="quip">Not investment advice. Not investments either.</p>
+      <p><button class="link" type="button" data-go-notify>Get notifications</button></p>
       <p>Prices come from recent reported valuations and are approximate. Scores are logged weekly by the commissioner from public news. Headlines link to their original publishers.</p>
     </div>
   </footer>
@@ -964,6 +1037,7 @@ textarea.in{resize:vertical;line-height:1.45;font-size:15px;min-height:0}
         <button type="button" data-screen="fund">Your fund</button>
         <button type="button" data-screen="league">League</button>
         <button type="button" data-screen="how">Rules</button>
+        <button type="button" data-screen="settings">Settings</button>
         <button type="button" data-screen="admin" id="tab-admin" hidden>Admin</button>
       </nav>
       <button class="signout" type="button" id="b-signout">Sign out</button>
@@ -974,6 +1048,9 @@ textarea.in{resize:vertical;line-height:1.45;font-size:15px;min-height:0}
   </div>
 
   <main class="app-main">
+    <!-- one prompt at a time: claim your fund, or install the app -->
+    <div class="notice" id="prompt" hidden></div>
+
     <!-- ============ fund ============ -->
     <section id="s-fund">
       <header class="fund-head">
@@ -1115,6 +1192,18 @@ textarea.in{resize:vertical;line-height:1.45;font-size:15px;min-height:0}
       <div id="how-app"></div>
     </section>
 
+    <!-- ============ settings ============ -->
+    <section id="s-settings" hidden>
+      <header class="fund-head">
+        <h1 class="h1">Settings</h1>
+        <p class="sub">Your fund's email and notifications on this device.</p>
+      </header>
+      <div class="settings-grid">
+        <section class="panel" id="set-email"></section>
+        <section class="panel js-notify" id="notify-app"></section>
+      </div>
+    </section>
+
     <!-- ============ scoring desk (commissioner) ============ -->
     <section id="s-admin" hidden>
       <header class="fund-head">
@@ -1127,6 +1216,7 @@ textarea.in{resize:vertical;line-height:1.45;font-size:15px;min-height:0}
         <button class="chip" type="button" role="tab" data-adm="news" aria-selected="false">News</button>
         <button class="chip" type="button" role="tab" data-adm="review" aria-selected="false">Review<span class="chip-n" id="review-n" hidden></span></button>
         <button class="chip" type="button" role="tab" data-adm="social" aria-selected="false">Social</button>
+        <button class="chip" type="button" role="tab" data-adm="push" aria-selected="false">Push</button>
       </div>
 
       <div id="adm-scoring">
@@ -1212,6 +1302,20 @@ textarea.in{resize:vertical;line-height:1.45;font-size:15px;min-height:0}
         </div>
         <div id="so-edit" hidden></div>
       </div>
+
+      <div id="adm-push" hidden>
+        <p class="adm-note" id="push-sub"></p>
+        <section class="panel" style="max-width:620px">
+          <h2 class="h3">Send a test notification</h2>
+          <form class="form-grid" id="f-push" novalidate>
+            <label class="field"><span>Title</span><input class="in in-sm" id="pu-title" maxlength="80" value="Fantasy Founders League"></label>
+            <label class="field"><span>Message</span><input class="in in-sm" id="pu-body" maxlength="200" value="Test notification. If you can read this, push works."></label>
+            <label class="field"><span>Send to</span><select class="in in-sm" id="pu-scope"><option value="mine">My devices</option><option value="all">Every device</option></select></label>
+            <button class="btn btn-primary" type="submit">Send test</button>
+            <p class="msg" id="pu-msg" role="status" aria-live="polite"></p>
+          </form>
+        </section>
+      </div>
     </section>
   </main>
 
@@ -1251,6 +1355,18 @@ textarea.in{resize:vertical;line-height:1.45;font-size:15px;min-height:0}
   </div>
 </dialog>
 
+<dialog class="sheet" id="claim-dialog" aria-labelledby="cl-title">
+  <div class="sheet-in">
+    <p class="sheet-k">Your fund is signed</p>
+    <h2 class="h2" id="cl-title">Claim your fund</h2>
+    <p class="cd-desc">Add an email so you can get back in if you ever lose your PIN. It's only for that. You'll still sign in with your fund name and PIN.</p>
+    <div id="cl-form" style="margin-top:16px"></div>
+    <div class="sheet-actions" style="margin-top:12px">
+      <button class="btn btn-quiet btn-block" type="button" data-claim-later>Not right now</button>
+    </div>
+  </div>
+</dialog>
+
 <dialog class="sheet" id="co-dialog" aria-labelledby="cd-name">
   <div class="sheet-in">
     <p class="sheet-k" id="cd-k"></p>
@@ -1284,6 +1400,10 @@ const SB_KEY = "sb_publishable_Pn-9srwR262fL859vOOtsA_UEsnNT3f";
 const ANON_JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImprYnFwanFlaHpjamNzam5vb2JpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5MjIzMjcsImV4cCI6MjEwNTQ5ODMyN30.E9yEVD6jDLJD87IgsoIUtfyDEfB39fEm0thlv-FR6g8";
 const FN_NEWS = SB_URL + "/functions/v1/news-ingest";
 const SHARE_URL = "https://ffl.zadok.dev";
+const FN_EMAIL = SB_URL + "/functions/v1/fund-email";
+const FN_PUSH = SB_URL + "/functions/v1/push-send";
+// Public half of the VAPID pair; the private key lives in Supabase secrets.
+const VAPID_PUBLIC = "BLbC4lZvNR_Zgtgl2U-RnDFLBnWa7mmFtx8cFRPAiDn8yr-o4JZNhcNxNtFel8upddFoin3yv69ViPMzwT8YyN0";
 const db = window.supabase.createClient(SB_URL, SB_KEY);
 
 const BUDGET = 100;
@@ -1316,6 +1436,7 @@ const XLABEL = {ok:"Buy", picked:"Selected", selling:"Selling", held:"In your fu
 /* ================= state ================= */
 const OWNER_ID = 2; // commissioner's own manager id; fund-rename UI is client-side gated to this (server enforces it too)
 let session = null;      // {token, id, fund_name, display_name, is_admin}
+let account = null;      // {email, claimed_at}; null until my_account loads
 let fund = null;         // my_fund payload
 let startups = [];
 let gameweeks = [];
@@ -1342,6 +1463,9 @@ const pcls = p => p > 0 ? "pos" : p < 0 ? "neg" : "";
 const plural = (n, one, many) => n + " " + (n === 1 ? one : many);
 function store(k, v){ try{ v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); }catch(e){} }
 function recall(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+// per-visit flags (cleared when the tab or installed app is closed)
+function sstore(k, v){ try{ v === null ? sessionStorage.removeItem(k) : sessionStorage.setItem(k, v); }catch(e){} }
+function srecall(k){ try{ return sessionStorage.getItem(k); }catch(e){ return null; } }
 function say(id, text, kind){ const n = $(id); if(!n) return; n.textContent = text || ""; n.className = "msg" + (kind ? " " + kind : ""); }
 function fmtDate(d){ try{ return new Date(d).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}); }catch(e){ return ""; } }
 function fmtShort(d){ try{ return new Date(d).toLocaleDateString("en-US",{month:"short",day:"numeric"}); }catch(e){ return ""; } }
@@ -1378,6 +1502,16 @@ async function call(fn, args){
   return r.data;
 }
 const T = () => ({p_token: session.token});
+async function callFn(url, body){
+  const r = await fetch(url, {method:"POST", headers:{"Authorization":"Bearer " + ANON_JWT, "Content-Type":"application/json"}, body:JSON.stringify(body)});
+  const j = await r.json().catch(() => ({}));
+  if(!r.ok || j.error){
+    const msg = j.error || "That didn't go through. Try again in a minute.";
+    if(/session expired|sign in to continue/i.test(msg)) expire();
+    throw new Error(msg);
+  }
+  return j;
+}
 
 /* ================= season ================= */
 function season(){
@@ -1589,6 +1723,7 @@ async function loadLanding(){
   }
 }
 function openJoin(m){
+  showPane("join");
   setMode(m);
   $("join").scrollIntoView({behavior, block:"start"});
   setTimeout(() => $("f-fund").focus({preventScroll:true}), reduceMotion ? 0 : 450);
@@ -1637,6 +1772,7 @@ function setMode(next){
   $("alt-q").textContent = creating ? "Already have a fund?" : "New here?";
   $("b-mode").textContent = creating ? "Sign in instead" : "Raise a fund instead";
   $("f-pin").setAttribute("autocomplete", creating ? "new-password" : "current-password");
+  $("forgot-row").hidden = creating;
   say("gate-msg", "");
 }
 async function signIn(fund, pin, quiet){
@@ -1674,11 +1810,13 @@ async function submitJoin(e){
 function signedIn(s){
   session = {token:s.token, id:s.id, fund_name:s.fund_name, display_name:s.display_name, is_admin:!!s.is_admin};
   store("ffl_session", JSON.stringify(session));
+  sstore("ffl_claim_later", null);
   say("gate-msg", "");
   enterApp();
 }
 function resetLocal(){
-  session = null; fund = null; picks = {}; active = 1; query = ""; xfer = null; leagues = []; leagueSel = "global";
+  session = null; account = null; fund = null; picks = {}; active = 1; query = ""; xfer = null; leagues = []; leagueSel = "global";
+  emailEditing = false; $("prompt").hidden = true;
   confirming = false; locking = false; clearTimeout(confirmTimer);
   store("ffl_session", null);
 }
@@ -1705,12 +1843,14 @@ function show(next){
   if(authed){
     if(screen === "admin" && !session.is_admin) screen = "fund";
     $("tab-admin").hidden = !session.is_admin;
-    ["fund", "league", "how", "admin"].forEach(s => { $("s-" + s).hidden = s !== screen; });
+    ["fund", "league", "how", "settings", "admin"].forEach(s => { $("s-" + s).hidden = s !== screen; });
     document.querySelectorAll(".tabs [data-screen]").forEach(b => {
       if(b.dataset.screen === screen) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
     });
     if(screen === "league") renderLeague();
     if(screen === "admin") renderAdmin();
+    if(screen === "settings"){ renderSettings(); renderNotifyAll(); }
+    renderPrompt();
   }
   renderSign();
 }
@@ -1724,6 +1864,7 @@ function setPhase(p, errText){
   $("fund-closed").hidden = p !== "closed";
   if(errText) $("fund-err-text").textContent = errText;
   renderSign();
+  if(session) renderPrompt();
 }
 async function loadFund(){
   fund = await call("my_fund", T());
@@ -1749,14 +1890,18 @@ async function enterApp(){
     if(session) setPhase("error", "Your fund didn't load: " + e.message);
     return;
   }
+  loadAccount();
+  if(nState.sub) syncSub(nState.sub);
   fetchNews().then(renderWire).then(() => { if(phase === "desk") renderMyNews(); });
   joinPending();
 }
 
 /* ================= wire ================= */
 function renderWire(){
-  if(!news.length){ $("wire").hidden = true; return; }
-  const items = news.map(n =>
+  const tip = wireTip();
+  wireTipShown = tip;
+  if(!news.length && !tip){ $("wire").hidden = true; return; }
+  const items = tip + news.map(n =>
     '<a class="wr" href="' + esc(n.url) + '" target="_blank" rel="noopener"><b>' + esc(n.startups ? n.startups.name : "") + '</b><span>' + esc(n.title) + '</span></a>'
   ).join("");
   $("wire-track").innerHTML = items + '<span aria-hidden="true" style="display:inline-flex">' + items.replace(/<a /g, '<a tabindex="-1" ') + '</span>';
@@ -1910,6 +2055,9 @@ async function sign(){
     locking = false;
     window.scrollTo({top:0, behavior});
     renderDesk(true);
+    sstore("ffl_no_install", "1"); // don't stack prompts: install waits for the next visit
+    const ask = () => { if(account && !account.email) setTimeout(openClaimDialog, reduceMotion ? 300 : 1400); };
+    if(account) ask(); else loadAccount().then(ask);
   }catch(e){
     locking = false;
     say("draft-msg", e.message, "bad");
@@ -2336,13 +2484,14 @@ let admTab = "scoring";
 function showAdm(tab){
   if(admTab === "social" && tab !== "social" && soCur) soSave();
   admTab = tab;
-  ["scoring", "funds", "news", "review", "social"].forEach(t => { $("adm-" + t).hidden = t !== tab; });
+  ["scoring", "funds", "news", "review", "social", "push"].forEach(t => { $("adm-" + t).hidden = t !== tab; });
   document.querySelectorAll("#adm-nav [data-adm]").forEach(c => c.setAttribute("aria-selected", String(c.dataset.adm === tab)));
   if(tab === "scoring"){ loadInbox(); loadRecent(); }
   if(tab === "funds") loadFunds();
   if(tab === "news") loadRaw();
   if(tab === "review") loadReview();
   if(tab === "social") loadSocial();
+  if(tab === "push") loadPush();
 }
 function ago(d){
   if(!d) return "never";
@@ -2432,7 +2581,8 @@ function renderFundDetail(){
     '<div class="fd-top"><button class="link" type="button" data-fd="back">All funds</button>' +
       '<h2 class="h2">' + esc(m.fund_name) + (house ? ' <span class="tag house">House</span>' : '') + '</h2>' +
       '<p class="sub">' + (house ? "Fund to beat" : "GP " + esc(m.display_name)) + '. ' + pts(Number(f.total_points) || 0) + ' points. ' +
-      money(deployed) + ' deployed.' + (house ? '' : ' Raised ' + fmtDate(f.created_at) + ', last seen ' + ago(f.last_seen) + '.') + '</p></div>' +
+      money(deployed) + ' deployed.' + (house ? '' : ' Raised ' + fmtDate(f.created_at) + ', last seen ' + ago(f.last_seen) + '.') +
+      (house ? '' : f.email ? ' Claimed with ' + esc(f.email) + '.' : ' Not claimed, so no email restore.') + '</p></div>' +
     '<div class="fd-grid"><div>' +
       '<section class="panel"><h3 class="h3">' + (g ? "Lineup for GW" + g : "Final lineup") + '</h3>' +
         (house && g ? '<p class="adm-note" style="margin:0 0 4px">House swaps follow the normal rules (same stage, under $100M) and count from GW' + g + '. They don\'t use a weekly transfer.</p>' : '') +
@@ -3462,15 +3612,415 @@ function loadSocial(){
 }
 soWire();
 
+/* ================= claim your fund ================= */
+// Email only ever restores a lost PIN. Sign-up and sign-in stay fund name + PIN.
+const MAIL_DOMAINS = ["gmail.com", "googlemail.com", "yahoo.com", "ymail.com", "hotmail.com", "outlook.com", "live.com", "msn.com",
+  "icloud.com", "me.com", "mac.com", "aol.com", "proton.me", "protonmail.com", "hey.com", "fastmail.com", "comcast.net",
+  "yahoo.co.uk", "hotmail.co.uk", "btinternet.com"];
+const validEmail = v => v.length <= 254 && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v);
+function lev(a, b){
+  const d = Array.from({length:b.length + 1}, (_, i) => i);
+  for(let i = 1; i <= a.length; i++){
+    let prev = d[0]; d[0] = i;
+    for(let j = 1; j <= b.length; j++){
+      const t = d[j];
+      d[j] = Math.min(d[j] + 1, d[j - 1] + 1, prev + (a[i - 1] === b[j - 1] ? 0 : 1));
+      prev = t;
+    }
+  }
+  return d[b.length];
+}
+// "jo@gmial.com" -> "jo@gmail.com". A suggestion only; the address is saved as typed if they ignore it.
+function emailTypo(v){
+  const m = /^([^@\s]+)@([^@\s]+\.[^@\s]+)$/.exec(String(v).trim().toLowerCase());
+  if(!m || MAIL_DOMAINS.indexOf(m[2]) >= 0) return null;
+  let best = null, bd = 99;
+  MAIL_DOMAINS.forEach(k => { const x = lev(m[2], k); if(x < bd){ bd = x; best = k; } });
+  if(bd <= (m[2].length > 8 ? 2 : 1)) return m[1] + "@" + best;
+  const fixed = m[2].replace(/\.(con|cmo|ocm|comm|vom|xom|cpm)$/, ".com").replace(/\.(ney|nte|nett)$/, ".net");
+  return fixed !== m[2] ? m[1] + "@" + fixed : null;
+}
+function showTypo(input){
+  const hint = input.form && input.form.querySelector(".js-typo");
+  if(!hint) return;
+  const fix = emailTypo(input.value);
+  hint.hidden = !fix;
+  hint.innerHTML = fix ? 'Did you mean <button class="link" type="button" data-typo-fix="' + esc(fix) + '">' + esc(fix) + '</button>?' : "";
+}
+function claimFormHTML(changing){
+  return '<form data-claim novalidate><div class="claim-f">' +
+    '<input class="in js-email" type="email" name="email" inputmode="email" autocomplete="email" placeholder="you@example.com" maxlength="254" aria-label="Email">' +
+    (changing ? '<input class="in" type="password" name="pin" inputmode="numeric" autocomplete="current-password" placeholder="Your PIN" maxlength="12" aria-label="Your PIN">' : '') +
+    '<button class="btn btn-primary" type="submit">' + (changing ? 'Save email' : 'Claim fund') + '</button></div>' +
+    '<p class="hint js-typo" hidden></p><p class="msg" role="status" aria-live="polite"></p></form>';
+}
+function loadAccount(){
+  if(!session) return Promise.resolve();
+  return call("my_account", T()).then(a => { account = a || {email:null}; renderPrompt(); renderSettings(); }, () => {});
+}
+async function submitClaim(form){
+  const email = form.email.value.trim(), pin = form.pin ? form.pin.value.trim() : null;
+  const msg = form.querySelector(".msg"), btn = form.querySelector('button[type="submit"]');
+  const put = (t, k) => { msg.textContent = t; msg.className = "msg" + (k ? " " + k : ""); };
+  if(!validEmail(email)) return put("Enter an email address, like you@example.com.", "bad");
+  if(form.pin && pin.length < 4) return put("Enter your PIN to change the email.", "bad");
+  btn.disabled = true; put("Saving…");
+  try{
+    const r = await callFn(FN_EMAIL, {action:"claim", token:session.token, email, pin});
+    account = Object.assign({}, account, {email:r.email});
+    emailEditing = false;
+    const d = $("claim-dialog"); if(d.open) d.close();
+    renderPrompt(); renderSettings();
+    toast(r.sent === false ? "Saved, but the confirmation email didn't send. Check the address in Settings."
+      : (form.pin ? "Email updated. " : "Fund claimed. ") + "We sent a note to " + r.email + ".");
+  }catch(e){ put(e.message, "bad"); btn.disabled = false; }
+}
+function openClaimDialog(){
+  if(!session || !account || account.email) return;
+  const d = $("claim-dialog");
+  $("cl-form").innerHTML = claimFormHTML(false);
+  claimShown = true;
+  $("prompt").hidden = true;
+  if(d.showModal){ if(!d.open) d.showModal(); } else d.setAttribute("open", "");
+}
+function claimLater(){
+  sstore("ffl_claim_later", "1");
+  const d = $("claim-dialog"); if(d.open) d.close();
+  renderPrompt();
+}
+
+/* ================= settings ================= */
+let emailEditing = false;
+function renderSettings(){
+  const el = $("set-email");
+  if(!session) return;
+  if(!account){ el.innerHTML = '<h2 class="h3">Recovery email</h2><p class="empty-note">Loading…</p>'; return; }
+  if(!account.email){
+    el.innerHTML = '<h2 class="h3">Claim your fund</h2><p class="sub">Add an email so you can get back in if you ever lose your PIN. It\'s never used to sign in.</p>' + claimFormHTML(false);
+  }else if(emailEditing){
+    el.innerHTML = '<h2 class="h3">Change your recovery email</h2><p class="sub">Confirm your PIN to change it. We\'ll let the old address know.</p>' + claimFormHTML(true) +
+      '<div class="set-actions"><button class="link" type="button" data-email-edit="0">Cancel</button></div>';
+  }else{
+    el.innerHTML = '<h2 class="h3">Recovery email</h2><p class="sub">Lose your PIN? Tap Forgot your PIN? on the sign-in screen and we\'ll send a link here.</p>' +
+      '<p class="set-email">' + esc(account.email) + '</p>' +
+      '<div class="set-actions"><button class="btn btn-quiet btn-sm" type="button" data-email-edit="1">Change email</button></div>';
+  }
+}
+
+/* ================= lost PIN ================= */
+let resetToken = null;
+function showPane(p){
+  ["join", "forgot", "reset"].forEach(k => { $(k + "-pane").hidden = k !== p; });
+  if(p !== "reset") resetToken = null;
+  if(p === "join") setMode("signin");
+  if(p === "forgot"){ say("fg-msg", ""); setTimeout(() => $("fg-email").focus({preventScroll:true}), 50); }
+}
+function readReset(){
+  try{
+    const u = new URL(location.href), t = u.searchParams.get("reset");
+    if(t){ u.searchParams.delete("reset"); history.replaceState(null, "", u.pathname + (u.search || "") + u.hash); }
+    return t;
+  }catch(e){ return null; }
+}
+async function openReset(t){
+  resetToken = t;
+  showPane("reset");
+  $("reset-form").hidden = true; say("rs-msg", ""); $("rs-note").textContent = "Checking your link…";
+  $("join").scrollIntoView({block:"start"});
+  try{
+    const funds = ((await call("pin_reset_check", {p_token:t})) || {}).funds || [];
+    if(!funds.length){ $("rs-note").textContent = "This link has expired or was already used. Ask for a new one."; return; }
+    const one = funds.length === 1;
+    $("rs-note").textContent = one ? "Choose a new PIN for " + funds[0].fund_name + "." : "This email has claimed " + funds.length + " funds. Pick the one to reset.";
+    $("rs-funds").hidden = one;
+    $("rs-funds").innerHTML = '<legend>Fund</legend>' + funds.map(f =>
+      '<label class="pick"><input type="radio" name="rs-fund" value="' + f.id + '"' + (one ? ' checked' : '') + '><span><b>' + esc(f.fund_name) + '</b><small>GP ' + esc(f.display_name) + '</small></span></label>'
+    ).join("");
+    $("reset-form").hidden = false;
+    $("join").scrollIntoView({block:"start"});
+    setTimeout(() => $("rs-pin").focus({preventScroll:true}), 50);
+  }catch(e){ $("rs-note").textContent = e.message; }
+}
+
+/* ================= web app + notifications ================= */
+// Install state belongs to the device, so it lives in localStorage; nothing here is tied to the fund.
+const UA = navigator.userAgent || "";
+const P = (() => {
+  const ios = /iPad|iPhone|iPod/.test(UA) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const android = /Android/i.test(UA);
+  // In-app browsers (Instagram, Facebook, X, TikTok…) can't install or show notifications.
+  const inapp = /FBAN|FBAV|FB_IAB|Instagram|Twitter|LinkedInApp|Snapchat|TikTok|musical_ly|BytedanceWebview|Pinterest|Line\/|GSA\/|Discord|; wv\)/i.test(UA);
+  return {ios, android, mobile:ios || android, inapp};
+})();
+const pushOK = () => "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
+const standalone = () => !!((window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone === true);
+const platformName = () => P.ios ? "ios" : P.android ? "android" : "desktop";
+let nState = {known:false, sub:null};
+let installEvt = null, claimShown = false, wireTipShown = "";
+function notifyStatus(){
+  const perm = "Notification" in window ? Notification.permission : "unsupported";
+  const on = perm === "granted" && !!nState.sub;
+  // Done means nothing left to nudge: notifications on, and on a phone, running as the installed app.
+  return {known:nState.known, perm, on, done:on && (standalone() || !P.mobile)};
+}
+function b64u(s){
+  const raw = atob((s + "=".repeat((4 - s.length % 4) % 4)).replace(/-/g, "+").replace(/_/g, "/"));
+  return Uint8Array.from(raw, c => c.charCodeAt(0));
+}
+function syncSub(sub){
+  const j = sub.toJSON();
+  db.rpc("push_subscribe", {p_token:session ? session.token : null, p_endpoint:j.endpoint, p_keys:j.keys, p_platform:platformName()}).then(() => {}, () => {});
+}
+async function refreshNotify(){
+  try{
+    const reg = pushOK() ? await navigator.serviceWorker.getRegistration() : null;
+    nState.sub = reg ? await reg.pushManager.getSubscription() : null;
+    if(nState.sub) syncSub(nState.sub);
+  }catch(e){ nState.sub = null; }
+  nState.known = true;
+  if(notifyStatus().done) store("ffl_installed", "1");
+  renderNotifyAll();
+}
+async function enableNotify(btn){
+  if(!pushOK()){ toast(P.ios ? "Add FFL to your home screen, then open it from there." : "This browser can't show notifications."); return; }
+  if(btn) btn.disabled = true;
+  try{
+    // First thing in the tap handler: iOS only allows the permission prompt from a user gesture.
+    const perm = await Notification.requestPermission();
+    if(perm !== "granted"){
+      toast(perm === "denied" ? "Notifications are blocked. Turn them on in your settings for this site." : "Notifications stay off for now.");
+      return;
+    }
+    const reg = await navigator.serviceWorker.register("sw.js");
+    await navigator.serviceWorker.ready;
+    const sub = await reg.pushManager.getSubscription() || await reg.pushManager.subscribe({userVisibleOnly:true, applicationServerKey:b64u(VAPID_PUBLIC)});
+    const j = sub.toJSON();
+    await call("push_subscribe", {p_token:session ? session.token : null, p_endpoint:j.endpoint, p_keys:j.keys, p_platform:platformName()});
+    nState.sub = sub; nState.known = true;
+    if(notifyStatus().done) store("ffl_installed", "1");
+    toast("Notifications are on for this device.");
+  }catch(e){ toast("Notifications didn't turn on. " + e.message); }
+  finally{ if(btn) btn.disabled = false; renderNotifyAll(); }
+}
+async function disableNotify(){
+  const sub = nState.sub;
+  nState.sub = null;
+  if(sub){
+    const ep = sub.endpoint;
+    try{ await sub.unsubscribe(); }catch(e){}
+    db.rpc("push_unsubscribe", {p_endpoint:ep}).then(() => {}, () => {});
+  }
+  toast("Notifications are off for this device.");
+  renderNotifyAll();
+}
+async function installNow(){
+  if(!installEvt) return;
+  const e = installEvt; installEvt = null;
+  e.prompt();
+  try{ const c = await e.userChoice; if(c && c.outcome === "accepted") store("ffl_install_said", "1"); }catch(err){}
+  renderNotifyAll();
+}
+function copyLink(btn){
+  const done = () => { btn.textContent = "Link copied"; setTimeout(() => { if(btn.isConnected) btn.textContent = "Copy link"; }, 2000); };
+  if(navigator.clipboard) navigator.clipboard.writeText(SHARE_URL).then(done, () => toast(SHARE_URL));
+  else toast(SHARE_URL);
+}
+const IOS_STEPS = () => '<ol class="how-to">' +
+  (/CriOS|FxiOS|EdgiOS/.test(UA) ? '<li>Tap <b>Share</b> in the address bar.</li>' : '<li>Tap <b>Share</b> at the bottom of Safari (the square with an arrow).</li>') +
+  '<li>Scroll down and tap <b>Add to Home Screen</b>, then <b>Add</b>.</li>' +
+  '<li>Open <b>FFL</b> from your home screen and turn on notifications there.</li></ol>';
+const ANDROID_STEPS = '<ol class="how-to"><li>Tap the <b>&#8942;</b> menu in Chrome.</li><li>Tap <b>Install app</b> or <b>Add to Home screen</b>.</li><li>Open <b>FFL</b> from your home screen.</li></ol>';
+const INAPP_NOTE = () => '<p class="sub">You\'re in an app\'s built-in browser, which can\'t install FFL or show notifications. Open this page in ' +
+  (P.ios ? 'Safari' : 'Chrome') + ' first: tap the <b>&#8943;</b> menu and choose <b>Open in browser</b>, or copy the link.</p>' +
+  '<div class="set-actions"><button class="btn btn-primary btn-sm" type="button" data-notify="copy">Copy link</button></div>';
+function notifyCtl(st){
+  if(!pushOK()) return '<p class="sub">This browser can\'t show notifications.</p>';
+  if(st.on) return '<p class="sub">Notifications are on for this device.</p><div class="set-actions"><button class="link" type="button" data-notify="off">Turn them off</button></div>';
+  if(st.perm === "denied") return '<p class="sub">Notifications are blocked for this site. Allow them in your browser or phone settings, then come back.</p>';
+  return '<div class="set-actions"><button class="btn btn-primary" type="button" data-notify="on">Turn on notifications</button></div>';
+}
+// The permanent "Get notifications" section: Settings in the app, and the footer link on the landing page.
+function notifyHTML(){
+  const st = notifyStatus(), sa = standalone();
+  let h = '<h2 class="h3">Get notifications</h2>';
+  if(!st.known) return h + '<p class="empty-note">Checking this device…</p>';
+  if(P.inapp) return h + INAPP_NOTE();
+  if(P.ios && !sa){
+    return h + '<p class="sub">iPhones get notifications from FFL once it\'s on your home screen.</p>' + IOS_STEPS() +
+      (st.on ? '<p class="sub" style="margin-top:12px">This browser already gets notifications.</p>' : '');
+  }
+  if(P.android && !sa){
+    h += '<p class="sub">Install FFL to open it like an app. Notifications work either way.</p>' +
+      (installEvt ? '<div class="set-actions" style="margin:0 0 14px"><button class="btn btn-quiet" type="button" data-install="now">Install FFL</button></div>' : ANDROID_STEPS);
+  }else{
+    h += '<p class="sub">Deadlines and results, on this ' + (P.mobile ? 'phone' : 'computer') + '.</p>';
+  }
+  return h + notifyCtl(st);
+}
+// The nudge at the top of the app. Mobile only, from the visit after the draft, never alongside the claim prompt.
+function installPrompt(){
+  if(claimShown || srecall("ffl_no_install") || srecall("ffl_install_later")) return "";
+  const st = notifyStatus(), sa = standalone();
+  if(!st.known || st.done || !P.mobile) return "";
+  let h, body;
+  if(P.inapp){ h = "Get FFL on your phone"; body = INAPP_NOTE(); }
+  else if(sa){
+    if(st.perm === "denied" || !pushOK()) return "";
+    h = "Turn on notifications";
+    body = '<p>Hear about deadlines and results without opening FFL.</p><div class="notice-row"><button class="btn btn-primary btn-sm" type="button" data-notify="on">Turn on notifications</button></div>';
+  }else if(P.ios){
+    const said = !!recall("ffl_install_said");
+    h = said ? "Open FFL from your home screen" : "Add FFL to your home screen";
+    body = '<p>' + (said ? 'Already added it? Open FFL from the home screen icon and turn on notifications there. If not:' : 'That\'s how iPhones get notifications from FFL.') + '</p>' + IOS_STEPS();
+  }else{
+    h = "Install FFL";
+    body = '<p>Put FFL on your home screen and get notifications for deadlines and results.</p>' +
+      (installEvt ? '<div class="notice-row"><button class="btn btn-primary btn-sm" type="button" data-install="now">Install FFL</button></div>' : ANDROID_STEPS);
+  }
+  return '<p class="notice-h">' + h + '</p>' + body + '<div class="notice-row">' +
+    (sa || P.inapp ? '' : '<button class="link" type="button" data-install="done">I\'ve done this</button>') +
+    '<button class="link" type="button" data-install="later">Not now</button></div>';
+}
+function wireTip(){
+  const st = notifyStatus();
+  if(!st.known || st.done) return "";
+  return '<a class="wr" href="#notifications" data-go-notify><b>FFL</b><span>' +
+    (P.mobile ? 'Put FFL on your home screen and get notifications' : 'Turn on FFL notifications') + '</span></a>';
+}
+function renderPrompt(){
+  const el = $("prompt");
+  if(!session || screen === "settings" || screen === "admin"){ el.hidden = true; return; }
+  const claimDue = !!(account && !account.email && phase === "desk" && !srecall("ffl_claim_later") && !$("claim-dialog").open);
+  if(claimDue){
+    if(el.dataset.kind === "claim" && !el.hidden) return; // keep whatever they're typing
+    claimShown = true;
+    el.dataset.kind = "claim";
+    el.innerHTML = '<p class="notice-h">Claim your fund.</p><p>Add an email so you can get back in if you ever lose your PIN.</p>' + claimFormHTML(false) +
+      '<div class="notice-row"><button class="link" type="button" data-claim-later>Not right now</button></div>';
+    el.hidden = false;
+    return;
+  }
+  const inst = phase === "desk" || phase === "closed" ? installPrompt() : "";
+  el.dataset.kind = inst ? "install" : "";
+  el.innerHTML = inst;
+  el.hidden = !inst;
+}
+function renderNotifyAll(){
+  document.querySelectorAll(".js-notify").forEach(el => { el.innerHTML = notifyHTML(); });
+  renderPrompt();
+  if(session && wireTip() !== wireTipShown) renderWire();
+}
+function goNotify(){
+  if(session){ show("settings"); $("notify-app").scrollIntoView({behavior, block:"start"}); return; }
+  $("notifications").hidden = false;
+  renderNotifyAll();
+  $("notifications").scrollIntoView({behavior, block:"start"});
+}
+
+/* ================= admin: push ================= */
+async function loadPush(){
+  $("push-sub").textContent = "Loading…";
+  try{
+    const s = await call("admin_push_stats", T());
+    const names = {ios:"iPhone", android:"Android", desktop:"desktop"};
+    const pl = Object.keys(s.platforms || {}).map(k => s.platforms[k] + " " + (names[k] || k)).join(", ");
+    $("push-sub").textContent = (s.devices ? plural(s.devices, "device gets", "devices get") + " notifications" + (pl ? " (" + pl + ")" : "") +
+      ". " + s.mine + " of them " + (s.mine === 1 ? "is" : "are") + " yours." : "No devices get notifications yet.") +
+      " " + s.claimed + " of " + plural(s.players, "fund is", "funds are") + " claimed with an email.";
+  }catch(e){ $("push-sub").textContent = e.message; }
+}
+async function sendTestPush(e){
+  e.preventDefault();
+  const btn = e.target.querySelector('button[type="submit"]');
+  btn.disabled = true; say("pu-msg", "Sending…");
+  try{
+    const r = await callFn(FN_PUSH, {token:session.token, scope:$("pu-scope").value, title:$("pu-title").value, body:$("pu-body").value, url:"/"});
+    if(!r.devices) say("pu-msg", "No devices to send to. Turn on notifications on your phone first.", "bad");
+    else say("pu-msg", "Sent to " + r.sent + " of " + plural(r.devices, "device", "devices") + "." +
+      (r.removed ? " Removed " + plural(r.removed, "device", "devices") + " that unsubscribed." : "") +
+      (r.errors && r.errors.length ? " " + r.errors.join("; ") : ""), r.sent === r.devices ? "ok" : "bad");
+    loadPush();
+  }catch(err){ say("pu-msg", err.message, "bad"); }
+  finally{ btn.disabled = false; }
+}
+
+/* ---- wiring ---- */
+document.addEventListener("submit", e => {
+  const f = e.target.closest("form[data-claim]");
+  if(f){ e.preventDefault(); submitClaim(f); }
+});
+let typoTimer = null;
+document.addEventListener("input", e => {
+  if(!e.target.classList.contains("js-email")) return;
+  clearTimeout(typoTimer); typoTimer = setTimeout(() => showTypo(e.target), 450);
+});
+document.addEventListener("click", e => {
+  const t = e.target.closest("[data-typo-fix],[data-claim-later],[data-email-edit],[data-pane],[data-notify],[data-install],[data-go-notify]");
+  if(!t) return;
+  if(t.dataset.typoFix){ const f = t.closest("form"); const inp = f.querySelector(".js-email"); inp.value = t.dataset.typoFix; t.parentNode.hidden = true; inp.focus(); return; }
+  if(t.hasAttribute("data-claim-later")) return claimLater();
+  if(t.dataset.emailEdit){ emailEditing = t.dataset.emailEdit === "1"; renderSettings(); if(emailEditing) $("set-email").querySelector(".js-email").focus(); return; }
+  if(t.dataset.pane) return showPane(t.dataset.pane);
+  if(t.hasAttribute("data-go-notify")){ e.preventDefault(); return goNotify(); }
+  const n = t.dataset.notify;
+  if(n === "on") return enableNotify(t);
+  if(n === "off") return disableNotify();
+  if(n === "copy") return copyLink(t);
+  const i = t.dataset.install;
+  if(i === "now") return installNow();
+  if(i === "done"){ store("ffl_install_said", "1"); sstore("ffl_install_later", "1"); renderPrompt(); return; }
+  if(i === "later"){ sstore("ffl_install_later", "1"); renderPrompt(); }
+});
+$("claim-dialog").addEventListener("close", () => { if(account && !account.email) sstore("ffl_claim_later", "1"); });
+$("forgot-form").addEventListener("submit", async e => {
+  e.preventDefault();
+  const email = $("fg-email").value.trim(), btn = $("fg-go");
+  if(!validEmail(email)) return say("fg-msg", "Enter the email you claimed your fund with.", "bad");
+  btn.disabled = true; say("fg-msg", "Sending…");
+  try{
+    await callFn(FN_EMAIL, {action:"forgot", email});
+    say("fg-msg", "If that email has a claimed fund, we've sent a link. It works for an hour.", "ok");
+  }catch(err){ say("fg-msg", err.message, "bad"); }
+  finally{ btn.disabled = false; }
+});
+$("reset-form").addEventListener("submit", async e => {
+  e.preventDefault();
+  const pick = document.querySelector('input[name="rs-fund"]:checked'), pin = $("rs-pin").value.trim(), btn = $("rs-go");
+  if(!pick) return say("rs-msg", "Pick the fund to reset.", "bad");
+  if(pin.length < 4) return say("rs-msg", "Your PIN needs at least 4 digits.", "bad");
+  btn.disabled = true; say("rs-msg", "Saving…");
+  try{
+    const rows = await call("pin_reset_complete", {p_token:resetToken, p_manager_id:Number(pick.value), p_pin:pin});
+    const s = Array.isArray(rows) ? rows[0] : rows;
+    $("rs-pin").value = "";
+    showPane("join");
+    signedIn(s);
+    toast("New PIN saved. You're signed in.");
+  }catch(err){ say("rs-msg", err.message, "bad"); }
+  finally{ btn.disabled = false; }
+});
+$("f-push").addEventListener("submit", sendTestPush);
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; renderNotifyAll(); });
+window.addEventListener("appinstalled", () => { installEvt = null; store("ffl_install_said", "1"); renderNotifyAll(); });
+document.addEventListener("visibilitychange", () => { if(document.visibilityState === "visible" && nState.known) refreshNotify(); });
+
 setInterval(tickCountdowns, 30000);
 
 /* ================= boot ================= */
 (async function boot(){
   const code = readInvite();
+  const resetTok = readReset();
   try{ const s = JSON.parse(recall("ffl_session") || "null"); session = s && s.token ? s : null; }catch(e){ session = null; }
+  if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").then(refreshNotify, refreshNotify);
+  else refreshNotify();
   store("ffl_me", null); // v1 leftovers
   setMode(code ? "create" : "signin");
   await fetchGameweeks();
+  if(resetTok){
+    // A lost-PIN link: show the reset card even if this device still has a session.
+    session = null; show(); loadLanding(); openReset(resetTok);
+    return;
+  }
   if(session){
     try{
       const rows = await call("auth_me", T());
