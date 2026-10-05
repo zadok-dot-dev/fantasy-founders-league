@@ -738,6 +738,17 @@ textarea.in{resize:vertical;line-height:1.45;font-size:15px;min-height:0}
 .so-saved{font-size:13px;color:var(--ink-3)}
 .so-posted{display:grid;gap:8px;margin-top:12px}
 #so-stage{position:fixed;left:-20000px;top:0;pointer-events:none}
+.so-email{margin-top:20px}
+.em-grid{display:grid;gap:20px}
+@media (min-width:1040px){.em-grid{grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);align-items:start}.em-side{position:sticky;top:112px}}
+.em-grid .field{margin-bottom:12px}
+.em-graphic{display:flex;gap:12px;align-items:center;margin:4px 0 12px}
+.em-graphic img{width:120px;height:auto;border-radius:6px;flex:none}
+.em-graphic .btn{margin-top:8px}
+.em-addr{margin:0 0 8px}
+.em-frame{margin-top:10px;background:#0F3B2B;border-radius:10px;overflow:hidden;box-shadow:var(--shadow)}
+.em-frame iframe{display:block;width:100%;height:640px;border:0;background:#0F3B2B}
+.em-frame.phone{width:375px;max-width:100%;margin-left:auto;margin-right:auto}
 
 /* ============ social post canvases (always the dark brand, whatever the theme) ============ */
 .sp{
@@ -3230,7 +3241,8 @@ async function loadPosts(){
     return '<li><button class="fl" type="button" data-post="' + p.id + '"><span><b>' + esc(p.headline || p.source_title || "Untitled") + '</b>' +
       (p.flag_count ? '<span class="tag warn">' + plural(p.flag_count, "flag", "flags") + '</span>' : '') +
       '<small class="fl-meta">' + esc(meta) + '</small></span>' +
-      '<span class="tag' + (p.status !== "draft" ? " st-" + p.status : "") + '">' + SO_STATUS[p.status] + '</span></button></li>';
+      '<span>' + (p.email_status ? '<span class="tag' + (p.email_status === "sent" ? " st-posted" : "") + '">' + (p.email_status === "sent" ? "Email sent" : "Email drafted") + '</span>' : '') +
+      '<span class="tag' + (p.status !== "draft" ? " st-" + p.status : "") + '">' + SO_STATUS[p.status] + '</span></span></button></li>';
   }).join("");
 }
 function soSetBusy(text){
@@ -3258,7 +3270,7 @@ async function openPost(id){
   try{ soCur = await call("admin_post", Object.assign(T(), {p_id:Number(id)})); }
   catch(e){ el.innerHTML = '<p class="adm-note">' + esc(e.message) + '</p>'; return; }
   soCur.fields = soCur.fields || {};
-  soDirty = {}; soView = null;
+  soDirty = {}; soView = null; soEmailOn = false; soEmailHtml = "";
   renderEditor();
   window.scrollTo(0, 0);
 }
@@ -3324,6 +3336,7 @@ function renderEditor(){
     (st === "draft" ? '<button class="btn btn-primary btn-sm" type="button" data-so="approve">Approve</button>' : '') +
     (st !== "posted" ? '<button class="btn ' + (st === "approved" ? "btn-primary" : "btn-quiet") + ' btn-sm" type="button" data-so="posted-open">Mark as posted</button>' : '') +
     (st !== "draft" ? '<button class="link" type="button" data-so="to-draft">Move back to drafts</button>' : '') +
+    '<button class="btn btn-quiet btn-sm" type="button" data-so="email">' + (f.email_image_url ? "Email" : "Make email") + '</button>' +
     '<button class="link danger-link" type="button" data-so="delete" style="color:var(--loss)">Delete</button>' +
     '<span class="so-saved" id="so-saved">' + (st === "posted" && p.posted_at ? "Posted " + fmtDate(p.posted_at) + "." : "") + '</span>' +
     '<div class="so-posted" id="so-posted" hidden>' +
@@ -3348,8 +3361,10 @@ function renderEditor(){
         '<div class="so-dl"><button class="btn btn-quiet btn-sm" type="button" data-so="dl">Download this image</button>' +
         '<button class="btn btn-quiet btn-sm" type="button" data-so="dl-all">Download all</button><span class="so-saved" id="so-dlmsg"></span></div>' +
         '<div class="so-ready" id="so-ready" hidden></div>' +
-      '</div></div>';
+      '</div></div>' +
+    '<section class="panel so-email" id="so-email" hidden></section>';
   renderPreview();
+  soEmailRender();
 }
 function renderPreview(){
   const views = soViews();
@@ -3511,8 +3526,176 @@ async function soExport(keys){
   }catch(e){ msg.textContent = ""; toast(e.message || "Export failed. Try again."); }
 }
 
+/* ---- email from a post ---- */
+// One click: the X graphic (same render as Download) goes to the public email-graphics bucket, and the
+// copy is seeded from the post. The HTML comes from the email-admin function, the one template every email uses.
+const FN_EMAIL_ADMIN = SB_URL + "/functions/v1/email-admin";
+const EMAIL_MAX_BYTES = 300 * 1024;
+let soEmailOn = false, soEmailHtml = "", soEmailTimer = null, soEmailSeq = 0, soEmailWide = true, soEmailCfg = null, soEmailBusy = false;
+const emFn = body => callFn(FN_EMAIL_ADMIN, Object.assign({token:session.token, post_id:soCur.id}, body));
+function emailLinesFrom(f){
+  // The Instagram caption is already three paragraphs in house voice: the fact, the context, the FFL line.
+  const paras = String(f.ig_caption || "").split(/\n\s*\n/)
+    .map(p => p.replace(/(^|\s)#\w+/g, "").replace(/[^.]*\blink in (our )?bio\b[^.]*\.?/gi, "").replace(/\s+/g, " ").trim())
+    .filter(Boolean);
+  if(paras.length) return paras.slice(0, 3);
+  return f.x_post ? [String(f.x_post).trim()] : [];
+}
+function hashStr(s){ let h = 5381; for(let i = 0; i < s.length; i++) h = (h * 33 + s.charCodeAt(i)) >>> 0; return h.toString(36); }
+function soGraphicSig(){ const v = soViews().find(x => x.key === "x"); return v ? hashStr(v.html()) : ""; }
+function emPayload(){
+  const f = soCur.fields;
+  return {subject:f.email_subject, preheader:f.email_preheader, headline:f.email_headline, lines:f.email_lines || [],
+    image_url:f.email_image_url, image_w:f.email_image_w, image_h:f.email_image_h, button_label:f.email_button};
+}
+async function soEmailOpen(){
+  if(!(await soSave())) return;
+  const f = soCur.fields;
+  if(f.email_subject == null) setField("email_subject", f.headline || "", false);
+  if(f.email_preheader == null) setField("email_preheader", f.subhead || "", false);
+  if(f.email_headline == null) setField("email_headline", f.headline || "", false);
+  if(!Array.isArray(f.email_lines)) setField("email_lines", emailLinesFrom(f), false);
+  if(f.email_button == null) setField("email_button", "Open Fantasy Founders League", false);
+  soEmailOn = true;
+  soEmailRender();
+  $("so-email").scrollIntoView({behavior, block:"start"});
+  if(!soEmailCfg) call("admin_email_config", T()).then(c => { soEmailCfg = c; soEmailRender(); }, () => {});
+  if(!f.email_image_url) await soEmailGraphic(); else soEmailPreview();
+}
+// Smallest JPEG under the size cap, trying full size first.
+async function toEmailJpeg(file){
+  const url = URL.createObjectURL(file);
+  try{
+    const img = await new Promise((ok, bad) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => bad(new Error("Couldn't read the graphic.")); i.src = url; });
+    let last = null;
+    for(const [w, q] of [[1600, .86], [1600, .78], [1600, .7], [1200, .82], [1200, .72]]){
+      const h = Math.round(img.naturalHeight * w / img.naturalWidth);
+      const c = document.createElement("canvas"); c.width = w; c.height = h;
+      const g = c.getContext("2d"); g.fillStyle = "#0F3B2B"; g.fillRect(0, 0, w, h); g.drawImage(img, 0, 0, w, h);
+      const blob = await new Promise(r => c.toBlob(r, "image/jpeg", q));
+      last = {blob, w, h};
+      if(blob && blob.size <= EMAIL_MAX_BYTES) break;
+    }
+    return last;
+  }finally{ URL.revokeObjectURL(url); }
+}
+const blobB64 = blob => new Promise((ok, bad) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(",")[1]); r.onerror = () => bad(new Error("Couldn't read the graphic.")); r.readAsDataURL(blob); });
+async function soEmailGraphic(){
+  if(soEmailBusy) return;
+  soEmailBusy = true; soEmailSay("Rendering the graphic…");
+  try{
+    const [png] = await soRender(["x"]);
+    const jpg = await toEmailJpeg(png);
+    if(!jpg || !jpg.blob) throw new Error("Couldn't compress the graphic.");
+    soEmailSay("Uploading " + Math.round(jpg.blob.size / 1024) + " KB…");
+    const r = await emFn({action:"upload", data:await blobB64(jpg.blob), type:"image/jpeg"});
+    setField("email_image_url", r.url, false);
+    setField("email_image_w", jpg.w, false);
+    setField("email_image_h", jpg.h, false);
+    setField("email_image_kb", Math.round(jpg.blob.size / 1024), false);
+    setField("email_image_sig", soGraphicSig(), false);
+    if(soCur.fields.email_status !== "sent") setField("email_status", "drafted", false);
+    await soSave();
+    soEmailSay("");
+  }catch(e){ soEmailSay(e.message, "bad"); }
+  finally{ soEmailBusy = false; soEmailRender(); soEmailPreview(); }
+}
+function soEmailSay(t, kind){ const m = $("em-msg"); if(m){ m.textContent = t || ""; m.className = "msg" + (kind ? " " + kind : ""); } }
+function soEmailRender(){
+  const box = $("so-email"); if(!box) return;
+  box.hidden = !soEmailOn;
+  if(!soEmailOn) return;
+  const f = soCur.fields, lines = (f.email_lines || []).concat(["", "", ""]).slice(0, 3);
+  const stale = f.email_image_url && f.email_image_sig && f.email_image_sig !== soGraphicSig();
+  const st = f.email_status, cfg = soEmailCfg || {};
+  const field = (k, label, max, hint) => '<label class="field"><span>' + label + (hint ? ' <small class="so-count">' + hint + '</small>' : '') + '</span>' +
+    '<input class="in in-sm" data-ef="' + k + '" maxlength="' + max + '" value="' + esc(f[k] || "") + '"></label>';
+  box.innerHTML =
+    '<div class="panel-head"><h3 class="h3">Email</h3><span>' + (st ? '<span class="tag' + (st === "sent" ? " st-posted" : "") + '" style="margin:0 10px 0 0">' + (st === "sent" ? "Email sent" : "Email drafted") + '</span>' : '') +
+      '<button class="link" type="button" data-so="email-close">Close</button></span></div>' +
+    '<div class="em-grid"><div>' +
+      field("email_subject", "Subject", 150, "Under 60 characters reads best") +
+      field("email_preheader", "Preheader", 200, "The grey line after the subject") +
+      field("email_headline", "Headline", 200) +
+      lines.map((l, i) => '<label class="field"><span>Line ' + (i + 1) + '</span><textarea class="in in-sm" rows="3" data-ef-line="' + i + '" maxlength="600">' + esc(l) + '</textarea></label>').join("") +
+      field("email_button", "Button", 60) +
+      '<div class="em-graphic">' + (f.email_image_url ? '<img src="' + esc(f.email_image_url) + '" alt="">' : '') +
+        '<div><p class="adm-note" style="margin:0">' + (f.email_image_url ? "Graphic hosted" + (f.email_image_kb ? ", " + f.email_image_kb + " KB" : "") + "." : "No graphic yet.") +
+          (stale ? ' <b>The post changed since this graphic was made.</b>' : '') + '</p>' +
+          '<button class="btn btn-quiet btn-sm" type="button" data-so="email-regen"' + (soEmailBusy ? " disabled" : "") + '>' + (f.email_image_url ? "Re-render graphic" : "Render graphic") + '</button></div></div>' +
+      '<p class="adm-note em-addr">Footer address: ' + (soEmailCfg ? (cfg.mailing_address ? esc(cfg.mailing_address) : "<b>not set</b>. Required before sending to anyone but you.") : "loading…") +
+        ' <button class="link" type="button" data-so="email-addr">Edit</button></p>' +
+      '<div class="inline-form" id="em-addr-form" hidden><input class="in in-sm" id="em-addr" maxlength="300" placeholder="PO Box 123, City, ST 00000" value="' + esc(cfg.mailing_address || "") + '">' +
+        '<button class="btn btn-primary btn-sm" type="button" data-so="email-addr-save">Save address</button></div>' +
+      '<div class="so-actions">' +
+        '<button class="btn btn-primary btn-sm" type="button" data-so="email-test">Send test to me</button>' +
+        '<button class="btn btn-quiet btn-sm" type="button" data-so="email-copy">Copy HTML</button>' +
+        '<button class="btn btn-quiet btn-sm" type="button" data-so="email-dl">Download .html</button>' +
+        (st === "sent" ? '<button class="link" type="button" data-so="email-status" data-v="drafted">Move back to drafted</button>'
+                       : '<button class="link" type="button" data-so="email-status" data-v="sent">Mark email as sent</button>') +
+      '</div>' +
+      '<p class="adm-note" style="margin:10px 0 0">Tests go to ' + (cfg.owner ? esc(cfg.owner) : "the owner address") + ' only. In a test, Unsubscribe links to the site; the copied HTML uses Resend’s own unsubscribe link.</p>' +
+      '<p class="msg" id="em-msg" role="status" aria-live="polite"></p>' +
+    '</div><div class="em-side">' +
+      '<div class="so-seg" role="group"><button type="button" data-emview="wide" aria-pressed="' + soEmailWide + '">Desktop</button><button type="button" data-emview="phone" aria-pressed="' + !soEmailWide + '">Phone</button></div>' +
+      '<div class="em-frame' + (soEmailWide ? "" : " phone") + '"><iframe id="em-frame" title="Email preview" sandbox="allow-same-origin"></iframe></div>' +
+    '</div></div>';
+  if(soEmailHtml) soEmailShow();
+}
+function soEmailShow(){
+  const fr = $("em-frame"); if(!fr) return;
+  fr.onload = () => { try{ fr.style.height = (fr.contentDocument.documentElement.scrollHeight + 4) + "px"; }catch(e){} };
+  fr.srcdoc = soEmailHtml.replace("<head>", '<head><base target="_blank">');
+}
+async function soEmailPreview(){
+  clearTimeout(soEmailTimer);
+  if(!soEmailOn || !soCur) return;
+  const seq = ++soEmailSeq;
+  try{
+    const r = await emFn({action:"render", email:emPayload()});
+    if(seq !== soEmailSeq) return;
+    soEmailHtml = r.html;
+    soEmailShow();
+  }catch(e){ if(seq === soEmailSeq) soEmailSay(e.message, "bad"); }
+}
+function soEmailPreviewSoon(){ clearTimeout(soEmailTimer); soEmailTimer = setTimeout(soEmailPreview, 500); }
+async function soEmailFresh(){ if(soEmailTimer){ await soEmailPreview(); } return soEmailHtml; }
+async function soEmailAction(act, b){
+  if(act === "email"){ soEmailOpen(); return; }
+  if(act === "email-close"){ soEmailOn = false; soEmailRender(); return; }
+  if(act === "email-regen"){ soEmailGraphic(); return; }
+  if(act === "email-addr"){ const fm = $("em-addr-form"); fm.hidden = !fm.hidden; if(!fm.hidden) $("em-addr").focus(); return; }
+  if(act === "email-addr-save"){
+    try{ soEmailCfg = await call("admin_email_set_address", Object.assign(T(), {p_address:$("em-addr").value})); soEmailRender(); soEmailPreview(); toast("Footer address saved."); }
+    catch(e){ soEmailSay(e.message, "bad"); }
+    return;
+  }
+  if(act === "email-status"){ setField("email_status", b.dataset.v, false); soEmailRender(); return; }
+  if(act === "email-copy"){
+    const html = await soEmailFresh(); if(!html) return soEmailSay("The preview hasn't loaded yet.", "bad");
+    try{ await navigator.clipboard.writeText(html); soEmailSay("HTML copied.", "ok"); }catch(e){ soEmailSay("Couldn't copy. Use Download instead.", "bad"); }
+    return;
+  }
+  if(act === "email-dl"){
+    const html = await soEmailFresh(); if(!html) return soEmailSay("The preview hasn't loaded yet.", "bad");
+    const url = URL.createObjectURL(new Blob([html], {type:"text/html"})), a = document.createElement("a");
+    a.href = url; a.download = "ffl-email-post-" + soCur.id + ".html";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+    return;
+  }
+  if(act === "email-test"){
+    b.disabled = true; soEmailSay("Sending the test…");
+    try{ await soSave(); const r = await emFn({action:"test", email:emPayload()}); soEmailSay("Test sent to " + r.to + ".", "ok"); }
+    catch(e){ soEmailSay(e.message, "bad"); }
+    finally{ b.disabled = false; }
+  }
+}
+
 /* ---- wiring ---- */
 function soEditClick(e){
+  const ev = e.target.closest("[data-emview]");
+  if(ev){ soEmailWide = ev.dataset.emview === "wide"; soEmailRender(); return; }
   const view = e.target.closest("[data-view]");
   if(view){ soView = view.dataset.view; renderPreview(); return; }
   const sg = e.target.closest("[data-seg]");
@@ -3523,6 +3706,7 @@ function soEditClick(e){
   const b = e.target.closest("[data-so]");
   if(!b) return;
   const act = b.dataset.so, k = b.dataset.k;
+  if(act.startsWith("email")){ soEmailAction(act, b); return; }
   if(act === "back"){ soSave().then(soShowList); return; }
   if(act === "copy"){ soCopy(soF(k) || "", b); return; }
   if(act === "rw-open"){ const box = b.closest(".so-field").querySelector("[data-rw]"); box.hidden = !box.hidden; if(!box.hidden) box.querySelector("input").focus(); return; }
@@ -3547,6 +3731,12 @@ function soEditClick(e){
 }
 function soEditInput(e){
   const t = e.target;
+  if(t.dataset.ef){ setField(t.dataset.ef, t.value, false); soEmailPreviewSoon(); return; }
+  if(t.dataset.efLine){
+    const lines = (soCur.fields.email_lines || []).concat(["", "", ""]).slice(0, 3);
+    lines[Number(t.dataset.efLine)] = t.value;
+    setField("email_lines", lines, false); soEmailPreviewSoon(); return;
+  }
   if(t.dataset.f){ soCur.fields[t.dataset.f] = t.value; soFieldUpdate(t.dataset.f); setField(t.dataset.f, t.value, false); return; }
   if(t.dataset.statLabel){
     const s = (soCur.fields.stats || []).find(x => x && x.key === t.dataset.statLabel);
