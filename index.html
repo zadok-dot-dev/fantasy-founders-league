@@ -1228,6 +1228,7 @@ form[data-claim] .msg:empty{min-height:0;margin:0}
         <button class="chip" type="button" role="tab" data-adm="review" aria-selected="false">Review<span class="chip-n" id="review-n" hidden></span></button>
         <button class="chip" type="button" role="tab" data-adm="social" aria-selected="false">Social</button>
         <button class="chip" type="button" role="tab" data-adm="push" aria-selected="false">Push</button>
+        <button class="chip" type="button" role="tab" data-adm="email" aria-selected="false">Email</button>
       </div>
 
       <div id="adm-scoring">
@@ -1312,6 +1313,16 @@ form[data-claim] .msg:empty{min-height:0;margin:0}
           <ul class="flist" id="so-list"></ul>
         </div>
         <div id="so-edit" hidden></div>
+      </div>
+
+      <div id="adm-email" hidden>
+        <p class="adm-note" id="ae-sub"></p>
+        <section class="panel" style="max-width:720px">
+          <h2 class="h3">Audience</h2>
+          <p class="adm-note">Everyone with a claimed email who hasn't opted out, kept in a Resend audience called FFL funds. The database decides who's in it; Resend mirrors it. Broadcast drafts are made from a post's email panel in Social.</p>
+          <div id="ae-status"></div>
+          <p class="msg" id="ae-msg" role="status" aria-live="polite"></p>
+        </section>
       </div>
 
       <div id="adm-push" hidden>
@@ -2495,7 +2506,7 @@ let admTab = "scoring";
 function showAdm(tab){
   if(admTab === "social" && tab !== "social" && soCur) soSave();
   admTab = tab;
-  ["scoring", "funds", "news", "review", "social", "push"].forEach(t => { $("adm-" + t).hidden = t !== tab; });
+  ["scoring", "funds", "news", "review", "social", "push", "email"].forEach(t => { $("adm-" + t).hidden = t !== tab; });
   document.querySelectorAll("#adm-nav [data-adm]").forEach(c => c.setAttribute("aria-selected", String(c.dataset.adm === tab)));
   if(tab === "scoring"){ loadInbox(); loadRecent(); }
   if(tab === "funds") loadFunds();
@@ -2503,6 +2514,7 @@ function showAdm(tab){
   if(tab === "review") loadReview();
   if(tab === "social") loadSocial();
   if(tab === "push") loadPush();
+  if(tab === "email") loadEmailAdmin();
 }
 function ago(d){
   if(!d) return "never";
@@ -3631,6 +3643,7 @@ function soEmailRender(){
         '<button class="btn btn-primary btn-sm" type="button" data-so="email-test">Send test to me</button>' +
         '<button class="btn btn-quiet btn-sm" type="button" data-so="email-copy">Copy HTML</button>' +
         '<button class="btn btn-quiet btn-sm" type="button" data-so="email-dl">Download .html</button>' +
+        '<button class="btn btn-quiet btn-sm" type="button" data-so="email-draft">' + (f.email_broadcast_id ? "Create another Resend draft" : "Create draft in Resend") + '</button>' +
         (st === "sent" ? '<button class="link" type="button" data-so="email-status" data-v="drafted">Move back to drafted</button>'
                        : '<button class="link" type="button" data-so="email-status" data-v="sent">Mark email as sent</button>') +
       '</div>' +
@@ -3684,12 +3697,108 @@ async function soEmailAction(act, b){
     setTimeout(() => URL.revokeObjectURL(url), 60000);
     return;
   }
+  if(act === "email-draft"){
+    // A draft only: Resend never sends it until you press send there.
+    if(!b.dataset.armed){
+      b.dataset.armed = "1"; b.textContent = "Tap again to create the draft";
+      soEmailSay("This creates a draft broadcast to the FFL funds audience. Nothing is sent; you review and send it in Resend.");
+      setTimeout(() => { if(b.isConnected && b.dataset.armed){ delete b.dataset.armed; b.textContent = "Create draft in Resend"; } }, 6000);
+      return;
+    }
+    delete b.dataset.armed; b.disabled = true; soEmailSay("Creating the draft in Resend…");
+    try{
+      await soSave();
+      const r = await emFn({action:"draft", email:emPayload()});
+      setField("email_broadcast_id", r.id, false);
+      soEmailRender();
+      soEmailSay("Draft created in Resend. Open Broadcasts in Resend to review and send it.", "ok");
+    }catch(e){ soEmailSay(e.message, "bad"); b.disabled = false; b.textContent = "Create draft in Resend"; }
+    return;
+  }
   if(act === "email-test"){
     b.disabled = true; soEmailSay("Sending the test…");
     try{ await soSave(); const r = await emFn({action:"test", email:emPayload()}); soEmailSay("Test sent to " + r.to + ".", "ok"); }
     catch(e){ soEmailSay(e.message, "bad"); }
     finally{ b.disabled = false; }
   }
+}
+
+/* ---- admin: email audience ---- */
+// The database decides who gets marketing email; the Resend segment "FFL funds" mirrors it.
+// Backfill always runs dry first, and only counts ever come back from the server.
+let aeDry = null;
+const aeFn = body => callFn(FN_EMAIL_ADMIN, Object.assign({token:session.token}, body));
+function aeSay(t, kind){ say("ae-msg", t, kind); }
+async function loadEmailAdmin(){
+  $("ae-status").innerHTML = '<p class="empty-note">Loading…</p>';
+  try{ soEmailCfg = await call("admin_email_config", T()); }
+  catch(e){ $("ae-status").innerHTML = '<p class="empty-note">' + esc(e.message) + '</p>'; return; }
+  renderEmailAdmin();
+}
+function renderEmailAdmin(){
+  const c = soEmailCfg || {}, ready = !!c.segment_id;
+  $("ae-sub").textContent = plural(Number(c.funds_claimed) || 0, "fund has", "funds have") + " claimed an email: " +
+    plural(Number(c.addresses) || 0, "address", "addresses") + ", " + (Number(c.opted_out) || 0) + " opted out of marketing email.";
+  $("ae-status").innerHTML =
+    '<dl class="cd-facts" style="margin:0 0 14px">' +
+      '<dt>Audience</dt><dd>' + (ready ? 'FFL funds, connected' : 'Not set up yet') + '</dd>' +
+      '<dt>Sync</dt><dd>' + (c.webhook ? 'New claims join automatically. Unsubscribes, bounces and spam reports come back from Resend.' : 'Not connected yet') + '</dd>' +
+      '<dt>Footer</dt><dd>' + (c.mailing_address ? esc(c.mailing_address) : '<b>No mailing address.</b> Drafting broadcasts stays blocked until it’s set.') + '</dd>' +
+    '</dl>' +
+    '<div class="set-actions" style="margin-top:0">' +
+      (ready && c.webhook ? '' : '<button class="btn btn-primary btn-sm" type="button" data-ae="setup">Set up audience</button>') +
+      (ready ? '<button class="btn btn-quiet btn-sm" type="button" data-ae="dry">Backfill: dry run</button>' : '') +
+      (ready && aeDry && aeDry.todo ? '<button class="btn btn-primary btn-sm" type="button" data-ae="run">Add ' + plural(aeDry.todo, "contact", "contacts") + '</button>' : '') +
+      '<button class="btn btn-quiet btn-sm" type="button" data-ae="csv">Download CSV</button>' +
+      '<button class="link" type="button" data-ae="addr">' + (c.mailing_address ? "Edit footer address" : "Add footer address") + '</button>' +
+    '</div>' +
+    '<div class="inline-form" id="ae-addr-form" hidden style="margin-top:12px"><input class="in in-sm" id="ae-addr" maxlength="300" placeholder="PO Box 123, City, ST 00000" value="' + esc(c.mailing_address || "") + '">' +
+      '<button class="btn btn-primary btn-sm" type="button" data-ae="addr-save">Save address</button></div>';
+}
+function aeSummary(r){
+  const k = r.counts || {}, todo = (k.create || 0) + (k.add || 0);
+  const parts = [
+    plural(todo, "address", "addresses") + (r.dry_run ? " would be added" : " added"),
+    plural(k.already || 0, "is", "are").replace(/^(\d+) /, "$1 ") + " already in the audience",
+  ];
+  if(k.opt_out) parts.push(k.opt_out + (r.dry_run ? " unsubscribed in Resend, so they'd be marked opted out here" : " unsubscribed in Resend, now opted out here"));
+  if(k.unsubscribe) parts.push(k.unsubscribe + (r.dry_run ? " opted out here, so they'd be unsubscribed in Resend" : " opted out here, now unsubscribed in Resend"));
+  if(k.failed) parts.push(k.failed + " failed" + (r.errors && r.errors.length ? " (" + r.errors.join("; ") + ")" : ""));
+  return {todo, text:(r.dry_run ? "Dry run, nothing changed: " : "Done: ") + parts.join(". ") + ". No emails were sent."};
+}
+async function emailAdminAction(b){
+  const act = b.dataset.ae;
+  if(act === "addr"){ const f = $("ae-addr-form"); f.hidden = !f.hidden; if(!f.hidden) $("ae-addr").focus(); return; }
+  if(act === "addr-save"){
+    try{ soEmailCfg = Object.assign({}, soEmailCfg, await call("admin_email_set_address", Object.assign(T(), {p_address:$("ae-addr").value}))); loadEmailAdmin(); toast("Footer address saved."); }
+    catch(e){ aeSay(e.message, "bad"); }
+    return;
+  }
+  if(act === "csv"){
+    try{
+      const rows = await call("admin_email_csv", T()) || [];
+      const cell = v => { const s = v == null ? "" : String(v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+      const csv = ["email,fund_name,claimed_at,opted_out,reason"].concat(rows.map(r => [r.email, r.fund_name, r.claimed_at, r.opted_out, r.reason].map(cell).join(","))).join("\n");
+      const url = URL.createObjectURL(new Blob([csv], {type:"text/csv"})), a = document.createElement("a");
+      a.href = url; a.download = "ffl-claimed-emails-" + new Date().toISOString().slice(0, 10) + ".csv";
+      document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 60000);
+      aeSay(plural(rows.length, "row", "rows") + " downloaded.", "ok");
+    }catch(e){ aeSay(e.message, "bad"); }
+    return;
+  }
+  b.disabled = true;
+  try{
+    if(act === "setup"){ aeSay("Setting up the audience in Resend…"); await aeFn({action:"setup"}); aeSay("Audience and sync are set up. Run a dry run next.", "ok"); }
+    if(act === "dry"){ aeSay("Checking Resend…"); const r = await aeFn({action:"backfill", dry_run:true}); const s = aeSummary(r); aeDry = {todo:s.todo}; aeSay(s.text, r.counts.failed ? "bad" : "ok"); }
+    if(act === "run"){
+      if(!b.dataset.armed){ b.dataset.armed = "1"; b.textContent = "Tap again to add " + plural(aeDry.todo, "contact", "contacts"); b.disabled = false; return; }
+      aeSay("Adding contacts…"); const r = await aeFn({action:"backfill", dry_run:false}); aeDry = null; const s = aeSummary(r); aeSay(s.text, r.counts.failed ? "bad" : "ok");
+    }
+  }catch(e){ aeSay(e.message, "bad"); }
+  b.disabled = false;
+  const msg = $("ae-msg").textContent, cls = $("ae-msg").className;
+  await loadEmailAdmin();
+  $("ae-msg").textContent = msg; $("ae-msg").className = cls;
 }
 
 /* ---- wiring ---- */
@@ -4190,6 +4299,7 @@ $("reset-form").addEventListener("submit", async e => {
   finally{ btn.disabled = false; }
 });
 $("f-push").addEventListener("submit", sendTestPush);
+$("adm-email").addEventListener("click", e => { const b = e.target.closest("[data-ae]"); if(b) emailAdminAction(b); });
 window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; renderNotifyAll(); });
 window.addEventListener("appinstalled", () => { installEvt = null; store("ffl_install_said", "1"); renderNotifyAll(); });
 document.addEventListener("visibilitychange", () => { if(document.visibilityState === "visible" && nState.known) refreshNotify(); });
