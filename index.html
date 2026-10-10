@@ -749,6 +749,7 @@ textarea.in{resize:vertical;line-height:1.45;font-size:15px;min-height:0}
 .em-frame{margin-top:10px;background:#0F3B2B;border-radius:10px;overflow:hidden;box-shadow:var(--shadow)}
 .em-frame iframe{display:block;width:100%;height:640px;border:0;background:#0F3B2B}
 .em-frame.phone{width:375px;max-width:100%;margin-left:auto;margin-right:auto}
+.ge-kill{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
 
 /* ============ social post canvases (always the dark brand, whatever the theme) ============ */
 .sp{
@@ -1003,6 +1004,14 @@ form[data-claim] .msg:empty{min-height:0;margin:0}
           </form>
           <p class="msg" id="fg-msg" role="status" aria-live="polite"></p>
           <p class="join-alt">No email on your fund? Contact <a href="mailto:fantasyfoundersleague@gmail.com">fantasyfoundersleague@gmail.com</a>.</p>
+          <p class="join-alt"><button class="link" type="button" data-pane="join">Back to sign in</button></p>
+        </div>
+
+        <div id="unsub-pane" hidden>
+          <h2 class="h2">Unsubscribe</h2>
+          <p class="sub">Stop gameweek emails and newsletters from Fantasy Founders League. Claim confirmations and PIN reset links still arrive.</p>
+          <button class="btn btn-primary btn-block" id="us-go" type="button">Unsubscribe</button>
+          <p class="msg" id="us-msg" role="status" aria-live="polite"></p>
           <p class="join-alt"><button class="link" type="button" data-pane="join">Back to sign in</button></p>
         </div>
 
@@ -1322,6 +1331,28 @@ form[data-claim] .msg:empty{min-height:0;margin:0}
           <p class="adm-note">Everyone with a claimed email who hasn't opted out, kept in a Resend audience called FFL funds. The database decides who's in it; Resend mirrors it. Broadcast drafts are made from a post's email panel in Social.</p>
           <div id="ae-status"></div>
           <p class="msg" id="ae-msg" role="status" aria-live="polite"></p>
+        </section>
+        <section class="panel" id="ge" style="max-width:720px;margin-top:16px">
+          <h2 class="h3">Gameweek emails</h2>
+          <p class="adm-note">One email per player, built from their own fund: the deadline reminder before a gameweek locks, results after it's scored. Dry run first, then a test to you, then send. Nobody gets the same email twice.</p>
+          <div class="form-2">
+            <label class="field"><span>Email</span><select class="in in-sm" id="ge-type"><option value="deadline">Deadline reminder</option><option value="results">Results</option></select></label>
+            <label class="field"><span>Gameweek</span><select class="in in-sm" id="ge-gw"></select></label>
+          </div>
+          <div class="set-actions" style="margin-top:4px">
+            <button class="btn btn-quiet btn-sm" type="button" data-ge="dry">Dry run</button>
+            <button class="btn btn-quiet btn-sm" type="button" data-ge="test">Send test to me</button>
+            <button class="btn btn-primary btn-sm" type="button" data-ge="send" id="ge-send" disabled>Send to all</button>
+            <span class="adm-note" id="ge-why" style="margin:0"></span>
+          </div>
+          <p class="msg" id="ge-msg" role="status" aria-live="polite"></p>
+          <div id="ge-result"></div>
+          <div class="ge-kill">
+            <button class="switch" type="button" role="switch" aria-checked="false" id="ge-switch" data-ge="switch"><span class="switch-track"><span class="switch-knob"></span></span>Allow gameweek emails to players</button>
+            <p class="adm-note" id="ge-switch-note" style="margin:2px 0 0"></p>
+          </div>
+          <h3 class="h3" style="margin-top:18px">History</h3>
+          <div id="ge-history"></div>
         </section>
       </div>
 
@@ -3734,6 +3765,8 @@ async function loadEmailAdmin(){
   try{ soEmailCfg = await call("admin_email_config", T()); }
   catch(e){ $("ae-status").innerHTML = '<p class="empty-note">' + esc(e.message) + '</p>'; return; }
   renderEmailAdmin();
+  if(!$("ge-gw").options.length) geGwOptions();
+  renderGe(); loadGeHistory();
 }
 function renderEmailAdmin(){
   const c = soEmailCfg || {}, ready = !!c.segment_id;
@@ -3799,6 +3832,115 @@ async function emailAdminAction(b){
   const msg = $("ae-msg").textContent, cls = $("ae-msg").className;
   await loadEmailAdmin();
   $("ae-msg").textContent = msg; $("ae-msg").className = cls;
+}
+
+/* ---- admin: gameweek emails ---- */
+// Personalised deadline and results emails. Order is enforced: dry run, then a test to the owner, then send,
+// and send also needs the kill switch (email_sending_enabled) on. The server re-checks all of it.
+const FN_GW_SEND = SB_URL + "/functions/v1/email-gameweek-send";
+let geDry = null, geTested = false, geSample = 0, geHistory = null;
+const geFn = body => callFn(FN_GW_SEND, Object.assign({token:session.token}, body));
+const geSel = () => ({type:$("ge-type").value, gameweek:Number($("ge-gw").value)});
+const geSame = () => geDry && geDry.type === geSel().type && geDry.gameweek === geSel().gameweek;
+function geSay(t, kind){ say("ge-msg", t, kind); }
+function geGwOptions(){
+  const c = soEmailCfg || {}, type = $("ge-type").value;
+  const def = type === "results" ? (c.last_scored_gw || 1) : (c.next_gw || gameweeks.length || 1);
+  $("ge-gw").innerHTML = (gameweeks.length ? gameweeks : Array.from({length:12}, (_, i) => ({id:i + 1}))).map(g =>
+    '<option value="' + g.id + '"' + (g.id === def ? " selected" : "") + '>GW' + g.id + '</option>').join("");
+}
+function geReset(){ geDry = null; geTested = false; geSample = 0; renderGe(); }
+function renderGe(){
+  const c = soEmailCfg || {}, on = !!c.sending_enabled, d = geSame() ? geDry : null;
+  const send = $("ge-send");
+  const why = !d ? "Run a dry run first." : !d.addresses ? "Nobody to send to." : d.locked ? "This gameweek has locked." :
+    !d.address_set ? "Add the footer address first." : !geTested ? "Send yourself a test first." : !on ? "Sending to players is off." : "";
+  send.disabled = !!why;
+  if(!send.dataset.armed) send.textContent = d && d.addresses ? "Send to " + plural(d.addresses, "player", "players") : "Send to all";
+  $("ge-why").textContent = why;
+  $("ge-switch").setAttribute("aria-checked", String(on));
+  $("ge-switch-note").textContent = on ? "On. Send buttons work after a dry run and a test." : "Off. Dry runs and tests still work; nothing goes to players.";
+  const box = $("ge-result");
+  if(!d){ box.innerHTML = ""; return; }
+  const s = d.skipped || {};
+  box.innerHTML =
+    '<p class="adm-note" style="margin:12px 0 8px">' + (d.addresses ? "Would send " + plural(d.addresses, "email", "emails") + " covering " + plural(d.funds, "fund", "funds") + "." : "No eligible funds.") +
+      (s.already_sent ? " " + s.already_sent + " already sent." : "") + (s.opted_out ? " " + s.opted_out + " opted out." : "") +
+      (d.locked ? " <b>GW" + d.gameweek + " has already locked.</b>" : "") + " Nothing was sent.</p>" +
+    (d.samples && d.samples.length ? '<div class="chips" role="tablist">' + d.samples.map((x, i) =>
+      '<button class="chip" type="button" data-ge-sample="' + i + '" aria-selected="' + (i === geSample) + '">' + esc(x.funds.map(f => f.name).join(", ")) + '</button>').join("") + '</div>' +
+      '<p class="adm-note" style="margin:8px 0 0">To ' + esc(d.samples[geSample].to) + ': ' + esc(d.samples[geSample].subject) + '</p>' +
+      '<div class="em-frame" style="margin-top:8px"><iframe id="ge-frame" title="Email preview" sandbox="allow-same-origin"></iframe></div>' : '');
+  const fr = $("ge-frame");
+  if(fr){
+    fr.onload = () => { try{ fr.style.height = (fr.contentDocument.documentElement.scrollHeight + 4) + "px"; }catch(e){} };
+    fr.srcdoc = d.samples[geSample].html.replace("<head>", '<head><base target="_blank">');
+  }
+}
+async function loadGeHistory(){
+  try{ geHistory = await call("admin_email_sends", T()); }catch(e){ geHistory = null; }
+  const h = geHistory, el = $("ge-history");
+  if(!h || !h.totals.length){ el.innerHTML = '<p class="empty-note">No gameweek emails sent yet.</p>'; return; }
+  el.innerHTML = '<ul class="scores">' + h.totals.map(t =>
+    '<li class="sc"><span><b>GW' + t.gameweek + ' ' + (t.type === "deadline" ? "deadline" : "results") + '</b><small>' +
+      (t.last_sent ? "Last sent " + fmtDate(t.last_sent) : "Not sent") + '</small></span>' +
+    '<span class="pts-cell">' + t.sent + ' sent</span><span>' + (t.failed ? '<span class="neg">' + t.failed + ' failed</span>' : '') +
+      (t.sending ? ' ' + t.sending + ' in progress' : '') + '</span><span></span></li>').join("") + '</ul>' +
+    (h.recent.some(r => r.status === "failed") ? '<p class="adm-note" style="margin-top:8px">Latest failure: ' +
+      esc((h.recent.find(r => r.status === "failed") || {}).error || "") + '</p>' : '');
+}
+async function geAction(b){
+  const act = b.dataset.ge, sel = geSel();
+  if(act === "switch"){
+    const on = !(soEmailCfg && soEmailCfg.sending_enabled);
+    if(on && !b.dataset.armed){ b.dataset.armed = "1"; geSay("Tap the switch again to allow gameweek emails to players."); setTimeout(() => { delete b.dataset.armed; }, 5000); return; }
+    delete b.dataset.armed;
+    try{ soEmailCfg = Object.assign({}, soEmailCfg, await call("admin_email_set_sending", Object.assign(T(), {p_enabled:on}))); geSay(on ? "Sending to players is on." : "Sending to players is off.", "ok"); }
+    catch(e){ geSay(e.message, "bad"); }
+    renderGe(); return;
+  }
+  if(act === "send" && !b.dataset.armed){
+    b.dataset.armed = "1"; b.textContent = "Tap again to send " + plural(geDry.addresses, "email", "emails") + " now";
+    setTimeout(() => { if(b.isConnected){ delete b.dataset.armed; renderGe(); } }, 6000);
+    return;
+  }
+  delete b.dataset.armed;
+  b.disabled = true;
+  try{
+    if(act === "dry"){ geSay("Building every email…"); geDry = await geFn(Object.assign({mode:"dry_run"}, sel)); geTested = false; geSample = 0; geSay("Dry run done. Check the samples, then send yourself a test.", "ok"); }
+    if(act === "test"){
+      const fid = geSame() && geDry.samples[geSample] ? geDry.samples[geSample].funds[0].id : undefined;
+      geSay("Sending the test…");
+      const r = await geFn(Object.assign({mode:"test", fund_id:fid}, sel));
+      if(geSame()) geTested = true;
+      geSay("Test sent to " + r.to + ", with real numbers from " + r.funds.join(" and ") + ".", "ok");
+    }
+    if(act === "send"){
+      geSay("Sending…");
+      const r = await geFn(Object.assign({mode:"send"}, sel));
+      geSay("Sent " + plural(r.emails_sent, "email", "emails") + "." + (r.funds_failed ? " " + plural(r.funds_failed, "fund", "funds") + " failed: " + r.errors.join("; ") : "") +
+        (r.skipped && r.skipped.already_sent ? " " + r.skipped.already_sent + " had already been sent." : ""), r.funds_failed ? "bad" : "ok");
+      geDry = null; geTested = false; loadGeHistory();
+    }
+  }catch(e){ geSay(e.message, "bad"); }
+  b.disabled = false;
+  renderGe();
+}
+
+/* ---- unsubscribe (footer link lands here; the POST one-click link never needs the page) ---- */
+let unsubToken = null;
+function readUnsub(){
+  try{
+    const u = new URL(location.href), t = u.searchParams.get("unsubscribe");
+    if(t){ u.searchParams.delete("unsubscribe"); history.replaceState(null, "", u.pathname + (u.search || "") + u.hash); }
+    return t;
+  }catch(e){ return null; }
+}
+function openUnsub(t){
+  unsubToken = t;
+  showPane("unsub");
+  say("us-msg", ""); $("us-go").hidden = false;
+  $("join").scrollIntoView({block:"start"});
 }
 
 /* ---- wiring ---- */
@@ -4009,7 +4151,7 @@ function renderSettings(){
 /* ================= lost PIN ================= */
 let resetToken = null;
 function showPane(p){
-  ["join", "forgot", "reset"].forEach(k => { $(k + "-pane").hidden = k !== p; });
+  ["join", "forgot", "reset", "unsub"].forEach(k => { $(k + "-pane").hidden = k !== p; });
   if(p !== "reset") resetToken = null;
   if(p === "join") setMode("signin");
   if(p === "forgot"){ say("fg-msg", ""); setTimeout(() => $("fg-email").focus({preventScroll:true}), 50); }
@@ -4299,7 +4441,22 @@ $("reset-form").addEventListener("submit", async e => {
   finally{ btn.disabled = false; }
 });
 $("f-push").addEventListener("submit", sendTestPush);
-$("adm-email").addEventListener("click", e => { const b = e.target.closest("[data-ae]"); if(b) emailAdminAction(b); });
+$("adm-email").addEventListener("click", e => {
+  const b = e.target.closest("[data-ae]"); if(b) return emailAdminAction(b);
+  const g = e.target.closest("[data-ge]"); if(g) return geAction(g);
+  const sm = e.target.closest("[data-ge-sample]"); if(sm){ geSample = Number(sm.dataset.geSample); geTested = false; renderGe(); }
+});
+$("ge-type").addEventListener("change", () => { geGwOptions(); geReset(); });
+$("ge-gw").addEventListener("change", geReset);
+$("us-go").addEventListener("click", async () => {
+  const b = $("us-go"); b.disabled = true; say("us-msg", "Unsubscribing…");
+  try{
+    const r = await call("email_unsubscribe", {p_token:unsubToken});
+    if(!r){ say("us-msg", "That unsubscribe link isn't valid. Reply to any FFL email and we'll take you off the list.", "bad"); b.disabled = false; return; }
+    say("us-msg", "Done. " + r.email + " won't get gameweek emails or newsletters from FFL. Claim confirmations and PIN reset links still arrive.", "ok");
+    b.hidden = true;
+  }catch(e){ say("us-msg", e.message, "bad"); b.disabled = false; }
+});
 window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; renderNotifyAll(); });
 window.addEventListener("appinstalled", () => { installEvt = null; store("ffl_install_said", "1"); renderNotifyAll(); });
 document.addEventListener("visibilitychange", () => { if(document.visibilityState === "visible" && nState.known) refreshNotify(); });
@@ -4310,6 +4467,7 @@ setInterval(tickCountdowns, 30000);
 (async function boot(){
   const code = readInvite();
   const resetTok = readReset();
+  const unsubTok = readUnsub();
   try{ const s = JSON.parse(recall("ffl_session") || "null"); session = s && s.token ? s : null; }catch(e){ session = null; }
   if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").then(refreshNotify, refreshNotify);
   else refreshNotify();
@@ -4319,6 +4477,11 @@ setInterval(tickCountdowns, 30000);
   if(resetTok){
     // A lost-PIN link: show the reset card even if this device still has a session.
     session = null; show(); loadLanding(); openReset(resetTok);
+    return;
+  }
+  if(unsubTok){
+    // An unsubscribe link from an email footer: confirm on the landing page, signed in or not.
+    session = null; show(); loadLanding(); openUnsub(unsubTok);
     return;
   }
   if(session){
